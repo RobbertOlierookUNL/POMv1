@@ -23,8 +23,15 @@ const Table = () => {
 		[]
 	);
 
+
+
 	const columns = React.useMemo(
 		() => [
+			{
+				Header: () => null,
+				id: "expender",
+				
+			},
 			{
 				Header: "Column 1",
 				accessor: "col1", // accessor is the "key" in the data
