@@ -1,5 +1,5 @@
 export default {
-	primary: {color: "#0d009d", text: "white"},
+	primary: {color: "#0d009d",text: "white"},
 	primary_light: {color: "#5933cf", text: "white"},
 	primary_dark: {color: "#00006d", text: "white"},
 
