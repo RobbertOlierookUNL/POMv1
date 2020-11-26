@@ -21,7 +21,7 @@ const Header = () => {
 				<div className={"right_side"}>
 					<div className="welcome_container">Hi {fName + " " + lName}</div>
 					<div className={"gravatar_container"}>
-						<Gravatar first_name={fName} last_name={lName} width={"38px"}/>
+						<Gravatar first_name={fName} last_name={lName} width={"25px"}/>
 					</div>
 				</div>
 			</header>
@@ -36,21 +36,28 @@ const Header = () => {
           background: ${c.primary.color};
           color: ${c.primary.text};
 					padding: 0 12px 0 20px;
+					box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
         }
 				.mid {
-					font-size: 2em;
+					font-size: 1.6em;
 					left: 50%;
 					position: absolute;
 					top: 50%;
 					transform: translate(-50%, -50%);
 				}
+				.right_side{
+					display: flex;
+					align-items: center;
+				}
 				.welcome_container {
+					position: relative;
+					top: 50%;
 					display: inline-block;
 					margin-right: 10px;
 				}
 				.gravatar_container {
 					display: inline-block;
-					padding: 8px;
+					padding: 6px;
 				}
            `}
 			</style>

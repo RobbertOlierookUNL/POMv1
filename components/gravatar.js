@@ -14,15 +14,16 @@ const Gravatar = ({first_name, last_name, width}) => {
 				.container {
 	        display: inline-block;
 	        vertical-align: middle;
-					
+
 
 	        position: relative;
 
 	        background-color: ${c.gray_dark.color};
 	        color: ${c.gray_dark.text};
-					font-size: 1.2em;
-
+					font-size: 0.7em;
 	        border-radius: 50%;
+					border: 1.5px solid white;
+					// box-shadow: 1px 1px 1px white;
 	        height: ${width || "48px"};
 	        width: ${width || "48px"};
 				}

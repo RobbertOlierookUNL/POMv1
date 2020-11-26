@@ -14,7 +14,7 @@ const MenuButton = () => (
       display: inline-block;
       height: 100%;
       vertical-align: center;
-      font-size: 1.5em;
+      font-size: 1.2em;
     }
     `}
 		</style>
