@@ -1,8 +1,6 @@
 import React from "react";
 import {useTable} from "react-table";
 
-const Btn = () => <button>hi</button>;
-
 const Table = () => {
 
 	const data = React.useMemo(
@@ -30,7 +28,7 @@ const Table = () => {
 			{
 				Header: () => null,
 				id: "expender",
-				
+
 			},
 			{
 				Header: "Column 1",
