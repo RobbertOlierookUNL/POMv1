@@ -28,6 +28,7 @@ const Header = () => {
 			<style jsx>
 				{`
         header {
+					z-index: 9;
 					position: relative;
 					display: flex;
 					flex-direction: row;
@@ -44,6 +45,8 @@ const Header = () => {
 					position: absolute;
 					top: 50%;
 					transform: translate(-50%, -50%);
+					cursor: default;
+					pointer-events: none;
 				}
 				.right_side{
 					display: flex;
