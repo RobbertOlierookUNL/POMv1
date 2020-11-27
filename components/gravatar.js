@@ -26,10 +26,19 @@ const Gravatar = ({first_name, last_name, width}) => {
 					font-size: 0.7em;
 	        border-radius: 50%;
 					border: 1.5px solid white;
-					// box-shadow: 1px 1px 1px white;
 	        height: ${width || "48px"};
 	        width: ${width || "48px"};
+					transition: all 0.2s ease-in-out;
+
 				}
+
+				.container:hover {
+					filter: drop-shadow(0px 0px 5px ${c.secondary.color});
+					cursor: pointer;
+					transform: scale(1.2, 1.2);
+
+				}
+
 				.initials {
 					left: 50%;
 	        position: absolute;
