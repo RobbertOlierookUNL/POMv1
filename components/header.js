@@ -62,6 +62,8 @@ const Header = () => {
 					transform: translate(-50%, -50%);
 					cursor: default;
 					pointer-events: none;
+					user-select: none;
+
 				}
 				.right_side{
 					display: flex;
