@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 
@@ -7,14 +7,17 @@ import {Context} from "./globalstate/store";
 
 const MenuButton = () => {
 	const [state, dispatch] = useContext(Context);
+	const ref = useRef(null);
 	const handleClick = () => {
 		dispatch({type: "EXPAND_OPTIONS", payload: !state.options
-			// === "left" ? "none" : "left"
 		});
 	};
+	useEffect(() => {
+		dispatch({type: "SET_MENUBUTTON", payload: ref});
+	}, []);
 	return(
 		<>
-			<div className="container" onClick={handleClick}>
+			<div className="container" onClick={handleClick} ref={ref}>
 				<FontAwesomeIcon icon={faBars} />
 			</div>
 			<style jsx>

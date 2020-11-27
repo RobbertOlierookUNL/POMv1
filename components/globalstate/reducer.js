@@ -6,10 +6,10 @@ const Reducer = (state, action) => {
 			...state,
 			options: action.payload
 		};
-	case "ADD_POST":
+	case "SET_MENUBUTTON":
 		return {
 			...state,
-			posts: state.posts.concat(action.payload)
+			menubutton: action.payload
 		};
 	case "REMOVE_POST":
 		return {

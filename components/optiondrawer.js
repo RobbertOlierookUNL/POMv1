@@ -1,14 +1,32 @@
-import React, {useContext} from "react";
+import React, {useContext, useRef, useEffect} from "react";
 import {Context} from "./globalstate/store";
 
 
 const OptionDrawer = ({children}) => {
-	const [state,] = useContext(Context);
-	// useEffect(() => {}, [state.options]);
+	const [state, dispatch] = useContext(Context);
+	const ref = useRef(null);
+	useEffect(() => {
+
+		function handleClickOutside(event) {
+			if (ref.current && !ref.current.contains(event.target) &&
+       state.menubutton.current && !state.menubutton.current.contains(event.target)) {
+				state.options && dispatch({type: "EXPAND_OPTIONS", payload: false});
+			}
+		}
+
+		document.addEventListener("mouseup", handleClickOutside);
+		return () => {
+			document.removeEventListener("mouseup", handleClickOutside);
+		};
+	}, [ref, state.options]);
+	// const handleClick = () => {
+	// 	state.options && dispatch({type: "EXPAND_OPTIONS", payload: false});
+	// };
 	return (
+
 		<>
-			<div className="drawer">{children}</div>
-			<div className="shadow"></div>
+			<div className="drawer" ref={ref}>{children}</div>
+			<div className="shadow" ></div>
 			<style jsx>{`
         .drawer {
           z-index: 10;
@@ -34,7 +52,9 @@ const OptionDrawer = ({children}) => {
         }
       `}
 			</style>
+
 		</>
+
 	);
 };
 
