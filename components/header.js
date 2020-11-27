@@ -1,14 +1,29 @@
-import React from "react";
+import React, {useContext, useEffect, useRef} from "react";
+
 import c from "./colors";
 import Gravatar from "./Gravatar";
 import MenuButton from "./MenuButton";
 
+import {Context} from "./globalstate/store";
 
 
-const fName="John";
-const lName="Doe";
+
+
+// const fName="John";
+// const lName="Doe";
+
+const fName=null;
+const lName=null;
 
 const Header = () => {
+	const [state, dispatch] = useContext(Context);
+	const ref = useRef(null);
+	useEffect(() => {dispatch({type: "SET_USERBUTTON", payload: ref});},[]);
+
+	const handleClick = () => {
+		dispatch({type: "EXPAND_USERMENU", payload: !state.usermenu});
+	};
+
 	return (
 		<>
 			<header>
@@ -18,8 +33,8 @@ const Header = () => {
 				<div className={"mid"}>
 				POM
 				</div>
-				<div className={"right_side"}>
-					<div className="welcome_container">Hi {fName + " " + lName}</div>
+				<div className={"right_side"} onClick={handleClick} ref={ref}>
+					<div className="welcome_container">{fName && lName ? "Hi " + fName + " " + lName : "Inloggen" }</div>
 					<div className={"gravatar_container"}>
 						<Gravatar first_name={fName} last_name={lName} width={"25px"}/>
 					</div>
@@ -51,6 +66,8 @@ const Header = () => {
 				.right_side{
 					display: flex;
 					align-items: center;
+					cursor: pointer;
+					user-select: none;
 				}
 				.welcome_container {
 					position: relative;
