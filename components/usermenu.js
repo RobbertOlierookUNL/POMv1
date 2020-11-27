@@ -6,20 +6,18 @@ const UserMenu = () => {
 	const [state, dispatch] = useContext(Context);
 	const ref = useRef(null);
 	useEffect(() => {
-
-		function handleClickOutsideUserMenu(event) {
-			console.log("hi");
+		function handleClickOutside(event) {
 			if (ref.current && !ref.current.contains(event.target) &&
        state.userbutton.current && !state.userbutton.current.contains(event.target)) {
 				dispatch({type: "EXPAND_USERMENU", payload: false});
 			}
 		}
-
-		document.addEventListener("mouseup", handleClickOutsideUserMenu);
-		return () => {
-			document.removeEventListener("mouseup", handleClickOutsideUserMenu);
-		};
-	}, [ref, state.options]);
+		if (state.usermenu) {
+			document.addEventListener("mouseup", handleClickOutside);
+		} else {
+			document.removeEventListener("mouseup", handleClickOutside);
+		}
+	}, [ref, state.usermenu]);
 
 	return (
 		<>

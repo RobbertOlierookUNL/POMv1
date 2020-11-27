@@ -10,14 +10,16 @@ const OptionDrawer = ({children}) => {
 		function handleClickOutside(event) {
 			if (ref.current && !ref.current.contains(event.target) &&
        state.menubutton.current && !state.menubutton.current.contains(event.target)) {
-				state.options && dispatch({type: "EXPAND_OPTIONS", payload: false});
+				dispatch({type: "EXPAND_OPTIONS", payload: false});
 			}
 		}
 
-		document.addEventListener("mouseup", handleClickOutside);
-		return () => {
+		if (state.options) {
+			document.addEventListener("mouseup", handleClickOutside);
+		} else {
 			document.removeEventListener("mouseup", handleClickOutside);
-		};
+		}
+
 	}, [ref, state.options]);
 	// const handleClick = () => {
 	// 	state.options && dispatch({type: "EXPAND_OPTIONS", payload: false});
