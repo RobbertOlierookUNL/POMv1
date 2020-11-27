@@ -2,7 +2,10 @@ import React from "react";
 import c from "./colors";
 
 const Gravatar = ({first_name, last_name, width}) => {
-	const initials = first_name.charAt(0) + last_name.charAt(0);
+	let initials = "?";
+	if (first_name && last_name) {
+		initials = first_name.charAt(0) + last_name.charAt(0);
+	}
 	return (
 		<>
 			<div className='container'>

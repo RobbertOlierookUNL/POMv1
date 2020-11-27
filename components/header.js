@@ -5,8 +5,11 @@ import MenuButton from "./MenuButton";
 
 
 
-const fName="John";
-const lName="Doe";
+// const fName="John";
+// const lName="Doe";
+
+const fName=null;
+const lName=null;
 
 const Header = () => {
 	return (
@@ -19,7 +22,7 @@ const Header = () => {
 				POM
 				</div>
 				<div className={"right_side"}>
-					<div className="welcome_container">Hi {fName + " " + lName}</div>
+					<div className="welcome_container">{fName && lName && "Hi " + fName + " " + lName }</div>
 					<div className={"gravatar_container"}>
 						<Gravatar first_name={fName} last_name={lName} width={"25px"}/>
 					</div>
