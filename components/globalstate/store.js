@@ -4,7 +4,10 @@ import Reducer from "./Reducer";
 
 const initialState = {
 	options: false,
-	menubutton: {current: null}
+	usermenu: false,
+	menubutton: {current: null},
+	userbutton: {current: null}
+
 };
 
 const Store = ({children}) => {

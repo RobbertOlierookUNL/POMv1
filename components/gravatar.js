@@ -44,6 +44,8 @@ const Gravatar = ({first_name, last_name, width}) => {
 	        position: absolute;
 	        top: 50%;
 	        transform: translate(-50%, -50%);
+					pointer-events: none;
+					user-select: none;
 				}
         `}
 			</style>

@@ -11,15 +11,15 @@ const Reducer = (state, action) => {
 			...state,
 			menubutton: action.payload
 		};
-	case "REMOVE_POST":
+	case "EXPAND_USERMENU":
 		return {
 			...state,
-			posts: state.posts.filter(post => post.id !== action.payload)
+			usermenu: action.payload
 		};
-	case "SET_ERROR":
+	case "SET_USERBUTTON":
 		return {
 			...state,
-			error: action.payload
+			userbutton: action.payload
 		};
 	default:
 		return state;
