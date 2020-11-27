@@ -1,19 +1,22 @@
-import Head from "next/head";
-// import styles from "../styles/Home.module.css";
 import React from "react";
+import Head from "next/head";
 import Header from "../components/header";
+import OptionDrawer from"../components/OptionDrawer";
+import Store from "../components/globalstate/store";
+
 
 export default function Home() {
 	return (
-		<div >
+		<Store>
 			<Head>
-				<title>Create Next App</title>
-				<link rel="icon" href="/favicon.ico" />
+				<title>POM</title>
+				<link rel="icon" href="/unilever.ico" />
 			</Head>
 			<Header/>
+			<OptionDrawer/>
 
 
 
-		</div>
+		</Store>
 	);
 }
