@@ -1,8 +1,14 @@
 import React from "react";
+import Row from "./row.js";
 
-const TableBody = () => {
+const TableBody = ({data, keys}) => {
+	const rows = Object.keys(data);
 	return (
-		<tbody></tbody>
+		<tbody>
+			{rows.map((row, i) => (
+				<Row data={data[row]} keys={keys} key={i}/>
+			))}
+		</tbody>
 	);
 };
 

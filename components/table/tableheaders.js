@@ -1,14 +1,14 @@
 import React from "react";
 import TableHeadCell from "./tableheadcell";
 
-const TableHeaders = ({meta, cols}) => {
+const TableHeaders = ({meta, keys}) => {
 
 
 	return (
 		<thead>
 			<tr>
 				{
-					cols.map((col, i) => (
+					keys.map((col, i) => (
 						<TableHeadCell data={meta[col]} key={i}/>
 					))
 				}

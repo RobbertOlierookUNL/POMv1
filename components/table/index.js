@@ -1,6 +1,9 @@
 import React from "react";
-import TableHeaders from "./tableheaders";
+
 import TableBody from "./tablebody";
+import TableColGroup from "./tablecolgroup";
+import TableHeaders from "./tableheaders";
+
 
 
 
@@ -36,11 +39,11 @@ const colmeta = {
 const data = {
 	product1: {
 		description: "test",
-		qty: 8000,
+		quantity: 8000,
 	},
 	product2: {
+		quantity: 8200,
 		description: "test2",
-		qty: 8200,
 	}
 
 };
@@ -51,13 +54,23 @@ const view = "meetingview";
 const Table = () => {
 	const meta = colmeta[view];
 	const cols = Object.keys(meta);
+	const keys = {
+		compact: [],
+		expanded: [],
+	};
+	cols.forEach((col, i) => {
+		if (meta[col].display === "compact") {
+			keys.compact.push(cols[i]);
+		}
+	});
 
 	return (
 		<>
 			<div className="tableContainer">
 				<table className="table">
-					<TableHeaders meta={meta} cols={cols}/>
-					<TableBody/>
+					<TableColGroup/>
+					<TableHeaders meta={meta} keys={keys.compact}/>
+					<TableBody data={data} keys={keys.compact}/>
 				</table>
 			</div>
 			<style jsx>{`
