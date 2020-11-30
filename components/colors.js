@@ -9,5 +9,7 @@ export default {
 
 	gray: {color: "#9e9e9e", text: "black"},
 	gray_light: {color: "#cfcfcf", text: "black"},
+	gray_very_light: {color: "#f2f2f2", text: "black"},
+
 	gray_dark: {color: "#707070", text: "white"},
 };

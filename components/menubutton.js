@@ -20,8 +20,7 @@ const MenuButton = () => {
 			<div className="container" onClick={handleClick} ref={ref}>
 				<FontAwesomeIcon icon={faBars} />
 			</div>
-			<style jsx>
-				{`
+			<style jsx>{`
     .container {
       position: relative;
       display: inline-block;
