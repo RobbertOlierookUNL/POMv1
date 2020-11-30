@@ -6,9 +6,6 @@ import MenuButton from "./MenuButton";
 
 import {Context} from "./globalstate/store";
 
-
-
-
 // const fName="John";
 // const lName="Doe";
 
@@ -34,7 +31,7 @@ const Header = () => {
 				POM
 				</div>
 				<div className={"right_side"} onClick={handleClick} ref={ref}>
-					<div className="welcome_container">{fName && lName ? "Hi " + fName + " " + lName : "Inloggen" }</div>
+					<div className="welcome_container">{fName && lName ? fName + " " + lName : "Inloggen" }</div>
 					<div className={"gravatar_container"}>
 						<Gravatar first_name={fName} last_name={lName} width={"25px"}/>
 					</div>

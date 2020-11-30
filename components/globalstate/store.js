@@ -7,7 +7,6 @@ const initialState = {
 	usermenu: false,
 	menubutton: {current: null},
 	userbutton: {current: null}
-
 };
 
 const Store = ({children}) => {

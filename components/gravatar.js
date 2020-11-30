@@ -2,7 +2,7 @@ import React from "react";
 import c from "./colors";
 
 const Gravatar = ({first_name, last_name, width}) => {
-	let initials = "?";
+	let initials;
 	if (first_name && last_name) {
 		initials = first_name.charAt(0) + last_name.charAt(0);
 	}
@@ -15,12 +15,10 @@ const Gravatar = ({first_name, last_name, width}) => {
 			</div>
 			<style jsx>{`
 				.container {
+					opacity: ${first_name && last_name ? 1 : 0};
 	        display: inline-block;
 	        vertical-align: middle;
-
-
 	        position: relative;
-
 	        background-color: ${c.gray_dark.color};
 	        color: ${c.gray_dark.text};
 					font-size: 0.7em;

@@ -2,7 +2,7 @@ import React, {useContext, useRef, useEffect} from "react";
 import {Context} from "./globalstate/store";
 
 
-const UserMenu = () => {
+const UserMenu = ({children}) => {
 	const [state, dispatch] = useContext(Context);
 	const ref = useRef(null);
 	useEffect(() => {
@@ -22,7 +22,7 @@ const UserMenu = () => {
 	return (
 		<>
 			<div className="usermenu_container" ref={ref}>
-      yolo
+				{children}
 			</div>
 			<style jsx>{`
         .usermenu_container {
