@@ -6,11 +6,11 @@ import MenuButton from "./MenuButton";
 
 import {Context} from "./globalstate/store";
 
-// const fName="John";
-// const lName="Doe";
+const fName="John";
+const lName="Doe";
 
-const fName=null;
-const lName=null;
+// const fName=null;
+// const lName=null;
 
 const Header = () => {
 	const [state, dispatch] = useContext(Context);
@@ -37,8 +37,7 @@ const Header = () => {
 					</div>
 				</div>
 			</header>
-			<style jsx>
-				{`
+			<style jsx>{`
         header {
 					z-index: 9;
 					position: relative;
@@ -48,11 +47,13 @@ const Header = () => {
 					align-items: center;
           background: ${c.primary.color};
           color: ${c.primary.text};
-					padding: 0 12px 0 20px;
+					padding: 0 10px 0 15px;
 					box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
         }
 				.mid {
 					font-size: 1.6em;
+					font-weight: bolder;
+					text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 					left: 50%;
 					position: absolute;
 					top: 50%;
@@ -60,6 +61,7 @@ const Header = () => {
 					cursor: default;
 					pointer-events: none;
 					user-select: none;
+
 
 				}
 				.right_side{

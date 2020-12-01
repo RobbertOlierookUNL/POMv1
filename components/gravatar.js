@@ -10,7 +10,7 @@ const Gravatar = ({first_name, last_name, width}) => {
 		<>
 			<div className='container'>
 				<div className='initials'>
-					{initials}
+					<b>{initials}</b>
 				</div>
 			</div>
 			<style jsx>{`
@@ -19,13 +19,13 @@ const Gravatar = ({first_name, last_name, width}) => {
 	        display: inline-block;
 	        vertical-align: middle;
 	        position: relative;
-	        background-color: ${c.gray_dark.color};
-	        color: ${c.gray_dark.text};
+	        background-color: ${c.quadiary.color};
+	        color: ${c.quadiary.text};
 					font-size: 0.7em;
 	        border-radius: 50%;
-					border: 1.5px solid white;
+					border: 1.5px solid ${c.quadiary.color};
 	        height: ${width || "48px"};
-	        width: ${width || "48px"};
+	        width: ${first_name && last_name ? (width || "48px") : 0};
 					transition: all 0.2s ease-in-out;
 
 				}

@@ -1,15 +1,15 @@
 export default {
-	primary: {color: "#0d009d",text: "white"},
-	primary_light: {color: "#5933cf", text: "white"},
-	primary_dark: {color: "#00006d", text: "white"},
+	primary: {color: "#1F36C7",text: "white"},
+	primary_light: {color: "#005eef", text: "white"},
+	primary_dark: {color: "#001f82", text: "white"},
 
-	secondary: {color: "#00acc1", text: "black"},
-	secondary_light: {color: "#5ddef4", text: "black"},
-	secondary_dark: {color: "#007c91", text: "white"},
+	secondary: {color: "#00d7c4", text: "white"},
+	tertiary: {color: "#cf98d9", text: "white"},
+	quadiary: {color: "#ffe300", text: "#1F36C7"},
+
 
 	gray: {color: "#9e9e9e", text: "black"},
 	gray_light: {color: "#cfcfcf", text: "black"},
 	gray_very_light: {color: "#f2f2f2", text: "black"},
-
 	gray_dark: {color: "#707070", text: "white"},
 };

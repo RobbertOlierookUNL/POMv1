@@ -1,5 +1,6 @@
 import React from "react";
 import TableHeadCell from "./tableheadcell";
+import c from "../colors";
 
 const TableHeaders = ({meta, keys}) => {
 
@@ -15,11 +16,11 @@ const TableHeaders = ({meta, keys}) => {
 
 			</tr>
 			<style jsx>{`
-          tr {
-            display: flex;
-          }
-        `}
-			</style>
+        thead {
+          background-color: ${c.quadiary.color};
+          color: ${c.quadiary.text};
+        }
+      `}</style>
 		</thead>
 	);
 };

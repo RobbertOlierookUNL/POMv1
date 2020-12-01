@@ -3,6 +3,7 @@ import React from "react";
 import TableBody from "./tablebody";
 import TableColGroup from "./tablecolgroup";
 import TableHeaders from "./tableheaders";
+import c from "../colors";
 
 
 
@@ -68,7 +69,7 @@ const Table = () => {
 		<>
 			<div className="tableContainer">
 				<table className="table">
-					<TableColGroup/>
+					<TableColGroup meta={meta} keys={keys.compact}/>
 					<TableHeaders meta={meta} keys={keys.compact}/>
 					<TableBody data={data} keys={keys.compact}/>
 				</table>
@@ -76,11 +77,13 @@ const Table = () => {
 			<style jsx>{`
 				.tableContainer {
 					width: 100%;
-					background-color: red;
+					padding: 15px 15px;
 				}
 				.table {
 					border-collapse: collapse;
+					background-color: white;
 					width: 100%;
+					box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 				}
 			`}
 			</style>

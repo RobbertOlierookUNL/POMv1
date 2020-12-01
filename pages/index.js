@@ -5,6 +5,7 @@ import Header from "../components/header";
 import OptionDrawer from "../components/optiondrawer";
 import UserMenu from "../components/usermenu";
 import Table from "../components/table";
+import c from "../components/colors";
 
 import Store from "../components/globalstate/store";
 
@@ -20,6 +21,11 @@ export default function Home() {
 			<OptionDrawer/>
 			<UserMenu/>
 			<Table/>
+			<style jsx global>{`
+				body, html{
+					background-color: ${c.secondary.color};
+				}
+			`}</style>
 		</Store>
 	);
 }
