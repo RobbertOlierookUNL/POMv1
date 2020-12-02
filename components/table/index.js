@@ -8,13 +8,16 @@ import c from "../colors";
 
 
 
+
 const colmeta = {
 	defaultview: {
 		description: {
+			title: "description",
 			display: "compact",
 			widthweight: 3,
 		},
 		quantity: {
+			title: "qty",
 			display: "expanded",
 			widthweight: 2,
 		},
@@ -45,11 +48,19 @@ const data = {
 	product2: {
 		quantity: 8200,
 		description: "test2",
-	}
+	},
+	product3: {
+		description: "test",
+		quantity: 8000,
+	},
+	product4: {
+		quantity: 8200,
+		description: "test2",
+	},
 
 };
 
-const view = "meetingview";
+const view = "defaultview";
 
 
 const Table = () => {
@@ -62,16 +73,25 @@ const Table = () => {
 	cols.forEach((col, i) => {
 		if (meta[col].display === "compact") {
 			keys.compact.push(cols[i]);
+		} else if (meta[col].display === "expanded") {
+			keys.expanded.push(cols[i]);
 		}
+	});
+
+	let totalWidthCount = 0;
+	keys.compact.forEach((col) => {
+		totalWidthCount += meta[col].widthweight;
 	});
 
 	return (
 		<>
 			<div className="tableContainer">
 				<table className="table">
-					<TableColGroup meta={meta} keys={keys.compact}/>
-					<TableHeaders meta={meta} keys={keys.compact}/>
-					<TableBody data={data} keys={keys.compact}/>
+					{//<TableColGroup meta={meta} keys={keys.compact}/>
+					}
+					<TableHeaders meta={meta} keys={keys.compact} totalWidth={totalWidthCount}/>
+					<TableBody meta={meta} data={data} keys={keys.compact} additionalKeys={keys.expanded} totalWidth={totalWidthCount}>
+					</TableBody>
 				</table>
 			</div>
 			<style jsx>{`
