@@ -21,6 +21,11 @@ const Reducer = (state, action) => {
 			...state,
 			userbutton: action.payload
 		};
+	case "SET_ACTIVE":
+		return {
+			...state,
+			active: action.payload
+		};
 	default:
 		return state;
 	}

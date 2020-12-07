@@ -1,23 +1,45 @@
-import React from "react";
+import React, {useRef, useEffect, useState} from "react";
+import c from "../colors";
 
 const Expand = ({keys, data, active}) => {
-	console.log(keys);
+	const expandCell = useRef(null);
+	const [height, setHeight] = useState("auto");
+
+	useEffect(async () => {
+		await setHeight("auto");
+		setHeight(expandCell.current.scrollHeight + 11.33 + "px");
+	}, []);
 	return (
-		<td className={!active && "hide"}>
+		<td ref={expandCell} className={active && "active"}>
 			{keys && keys.map((key) =>{
-				console.log(key);
 				return(
-					data[key]
+					key + ": " + data[key]
 				);}
 			)
 			}
 			<style jsx>{`
         td {
-          display: grid;
+          transform: scaleY(0);
+          transition: transform 100ms ease-in, height 100ms ease-in, padding 100ms ease-in;
+          padding: 0;
+          height: 0;
           grid-column: 1/-1;
+          background-color: white;
+          background-color: ${c.primary_very_light.color};
+
+
         }
-        .hide{
-          display: none;
+        .active{
+          display: grid;
+          transform: scaleY(1);
+          max-height: 300px;
+          grid-column: 1/-1;
+          color: black;
+          border: 1px solid ${c.gray_light.color};
+          border-width: 0 0 1px 0;
+          padding: 5px;
+          height: ${height};
+          visibility: visible;
         }
       `}</style>
 		</td>

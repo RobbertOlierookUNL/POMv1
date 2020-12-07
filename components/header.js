@@ -6,11 +6,11 @@ import MenuButton from "./MenuButton";
 
 import {Context} from "./globalstate/store";
 
-const fName="John";
-const lName="Doe";
+// const fName="Rohn";
+// const lName="Doe";
 
-// const fName=null;
-// const lName=null;
+const fName=null;
+const lName=null;
 
 const Header = () => {
 	const [state, dispatch] = useContext(Context);
