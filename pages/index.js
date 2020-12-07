@@ -11,11 +11,12 @@ import Store from "../components/globalstate/store";
 
 
 export default function Home() {
-	if(process.env.MYSQL_USERNAME) {
+	if(process.env.MYSQL_HOST) {
 		console.log("It is set!");
 	}
 	else {
 		console.log("No set!");
+		console.log(process);
 	}
 	return (
 		<Store>
