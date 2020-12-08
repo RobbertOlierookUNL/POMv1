@@ -14,6 +14,16 @@ export function useEntries() {
   }
 }
 
+export function useViews() {
+  const { data, error } = useSWR(`/api/get-views`, fetcher)
+
+  return {
+    views: data,
+    isLoading: !error && !data,
+    isError: error,
+  }
+}
+
 export function useEntry(id: string) {
   return useSWR(`/api/get-entry?id=${id}`, fetcher)
 }
