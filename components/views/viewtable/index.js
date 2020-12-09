@@ -1,23 +1,33 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import c from "../../colors";
+import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
-const ViewTable = ({data}) => {
-	const {view_name, created_at, updated_at, ...viewdata} = data;
+
+const ViewTable = ({data, mode}) => {
+	const {view_name, created_at, updated_at, ...viewdata} = data || {};
 	// belangrijk om alle niet-JSON hierboven weg te filteren
+	const [dataState, setDataState] = useState(viewdata);
 	const allOptions = ["widthweight", "title", "display"];
 	Object.keys(viewdata).map(key => {
 		viewdata[key] = JSON.parse(viewdata[key]);
-		/*
-		// for dynamic keys
-		if (viewdata[key]) {
-			Object.keys(viewdata[key]).map(k => {
-				if (!allOptions.includes(k)) {
-					allOptions.push(k);
-				}
-			});
-		}
-		*/
 	});
+	const fakedata = new Array(50).fill(".");
+
+	// useEffect(() => {
+	// 	Object.keys(viewdata).map(key => {
+	// 		viewdata[key] = JSON.parse(viewdata[key]);
+	// 		/*
+	// 		// for dynamic keys
+	// 		if (viewdata[key]) {
+	// 			Object.keys(viewdata[key]).map(k => {
+	// 				if (!allOptions.includes(k)) {
+	// 					allOptions.push(k);
+	// 				}
+	// 			});
+	// 		}
+	// 		*/
+	// 	});
+	// }, [viewdata]);
 	return (
 		<div className="container">
 			<table>
@@ -32,34 +42,60 @@ const ViewTable = ({data}) => {
 					</tr>
 				</thead>
 				<tbody>
-					{Object.keys(viewdata).map((attribute, i) => (
-						<tr key={i}>
-							<td key={0} className="firstcol">{attribute}</td>
-							{allOptions.map((option, i) => <td key={i+1}>
-								{viewdata[attribute] ? viewdata[attribute][option] : "-"}
-							</td>)}
-						</tr>
-					))}
+					{Object.keys(viewdata)[0] ?
+						Object.keys(viewdata).map((attribute, i) => (
+							<tr key={i}>
+								<td key={0} className="firstcol">{attribute}</td>
+								{allOptions.map((option, i) =>
+									<td key={i+1}>
+										{viewdata[attribute] ? viewdata[attribute][option] : "-"}
+									</td>
 
+								)}
+							</tr>
+						))
+						:
+						<>
+							{fakedata.map((dot, row) => (
+								<tr key={row}>
+									<td key={0}>
+										<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+											<Skeleton />
+										</SkeletonTheme>
+									</td>
+									{allOptions.map((option, i) =>
+										<td key={i+1}>
+											<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+												<Skeleton color={c.primary.color} highlightColor={c.primary_very_light}/>
+											</SkeletonTheme>
+										</td>
+									)}
+								</tr>
+							))}
+						</>
+					}
 				</tbody>
 			</table>
 			<style jsx>{`
 				.container{
-					width: 100%;
-					padding: 15px;
+					width: calc(100% - 30px);
+					overflow: auto;
+					height: calc(100vh - 68.67px);
+					position: relative;
+					top: 15px;
+					left: 15px;
+					/* right: -15px;
+					bottom: -15px; */
 				}
 				.evencols{
 					width: ${(1/(allOptions.length+1)) * 100}%;
 				}
 				table{
 					background-color: white;
-					width: 100%;
 					border-collapse: collapse;
+					width: 100%;
 				}
-				thead {
-					background-color: ${c.primary.color};
-					color: ${c.primary.text};
-				}
+
 				tr:nth-child(even){
 					background-color: ${c.gray_very_light.color};
 				}
@@ -77,8 +113,12 @@ const ViewTable = ({data}) => {
 					border-width: 0 0 1px 0;
 				}
 				th{
+					background-color: ${c.primary.color};
+					color: ${c.primary.text};
 					border: 1px solid ${c.gray_light.color};
 					border-width: 0 1px 0 0;
+					position: sticky;
+					top: 0;
 				}
 				th:last-child {
 					border-width: 0;

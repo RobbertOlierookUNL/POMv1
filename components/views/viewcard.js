@@ -48,8 +48,6 @@ const ViewCard = ({view}) => {
 		setUndef(undef_counter);
 	});
 
-	console.log(moment.locale("nl"));
-
 	return (
 		<div className="card">
 			<div className="head">
@@ -67,17 +65,21 @@ const ViewCard = ({view}) => {
 				<br/>
 				<div className="button-container">
 					<Link href={`/view-manager/${view_name}`}>
-						<Button style={{fontSize: "0.9em"}}>Bekijken</Button>
+						<div>
+							<Button style={{fontSize: "0.9em"}}>Bekijken</Button>
+						</div>
 					</Link>
 					<Link href={`/view-manager/${view_name}?v=edit`}>
-						<Button style={{fontSize: "0.9em"}}>Aanpassen</Button>
+						<div>
+							<Button style={{fontSize: "0.9em"}}>Aanpassen</Button>
+						</div>
 					</Link>
 					<Link href={`/view-manager/${view_name}?v=delete`}>
-						<Button style={{fontSize: "0.9em"}}>Verwijderen</Button>
+						<div>
+							<Button style={{fontSize: "0.9em"}}>Verwijderen</Button>
+						</div>
 					</Link>
-
 				</div>
-
 			</div>
 			<style jsx>{`
         .card{

@@ -7,6 +7,9 @@ const handler: NextApiHandler = async (req, res) => {
     if (!view) {
       return res.status(400).json({ message: '`view` required' })
     }
+    if (view === "undefined") {
+      return;
+    }
     const results = await query(
       `
       SELECT *

@@ -9,17 +9,24 @@ import { useView } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import Header from "../../components/header";
 import Store from "../../components/globalstate/store";
+// import TableLoader from "../../components/tableloader";
 import ViewTable from "../../components/views/viewtable/index.js";
 import c from "../../components/colors";
 
 
 
+
 const View = () => {
 	const router = useRouter();
-	const { view, v } = router.query;
+	const {view, v } = router.query;
 	const { data } = useView(view);
-	console.log(data);
-
+	// const [mounted, setMounted] = useState(false);
+	// const { data } = useView(mounted ? view : null);
+	// useEffect(() => {
+	// 	if (view) {
+	// 		setMounted(true);
+	// 	}
+	// }, [view]);
 
 	return (
 		<Store>
@@ -29,13 +36,15 @@ const View = () => {
 			</Head>
 			<Header>
 				<Link href="/view-manager">
-					<Button style={{fontSize: "1.1em"}}>
-						<FontAwesomeIcon icon={faArrowLeft} />
-					</Button>
+					<div>
+						<Button style={{fontSize: "1.1em"}}>
+							<FontAwesomeIcon icon={faArrowLeft} />
+						</Button>
+					</div>
 				</Link>
 				{view}
 			</Header>
-			{data && <ViewTable data={data} mode={v}/>}
+			<ViewTable data={data} mode={v}/>
 			<style jsx global>{`
         body, html{
           background-color: ${c.secondary.color};

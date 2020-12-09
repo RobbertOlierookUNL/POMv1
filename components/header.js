@@ -40,6 +40,8 @@ const Header = ({children}) => {
         header {
 					z-index: 9;
 					position: relative;
+					width: 100%;
+					top: 0;
 					display: flex;
 					flex-direction: row;
 					justify-content: space-between;

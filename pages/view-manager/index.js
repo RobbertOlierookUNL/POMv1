@@ -10,16 +10,15 @@ import GetViews from "../../components/views/getviews";
 import Header from "../../components/header";
 import Store from "../../components/globalstate/store";
 import c from "../../components/colors";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 
 const Views = () => {
 	const {views, isLoading, isError} = useViews();
-	if (isLoading) {
-		return <p>loading</p>;
-	}
-	else if (isError) {
+	if (isError) {
 		return <p>error</p>;
 	}
-	else if (views.message) {
+	else if (!isLoading && views.message) {
 		return <p>not connected</p>;
 	}  else {
 		return (
@@ -30,14 +29,31 @@ const Views = () => {
 				</Head>
 				<Header>
 					<Button style={{fontSize: "1.1em"}}>
-						<FontAwesomeIcon icon={faPlusSquare} />
+						<div>
+							<FontAwesomeIcon icon={faPlusSquare} />
+						</div>
 					</Button>
         View Manager
 				</Header>
-				<GetViews views={views}/>
+				{isLoading ?
+					<div className="circle-container">
+						<CircularProgress/>
+					</div>
+					:
+					<GetViews views={views}/>}
 				<style jsx global>{`
 				body, html{
 					background-color: ${c.secondary.color};
+				}
+				.circle-container {
+					width: 100%;
+					height: 100vh;
+					position: absolute;
+					top: 0;
+					left: 0;
+					justify-content: center;
+					align-items: center;
+					display: flex;
 				}
 			`}</style>
 			</Store>
