@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import Link from "next/link";
 import moment from "moment";
 
 import Button from "../button";
@@ -65,9 +66,16 @@ const ViewCard = ({view}) => {
 				<br/>
 				<br/>
 				<div className="button-container">
-					<Button style={{fontSize: "0.9em"}}>Bekijken</Button>
-					<Button style={{fontSize: "0.9em"}}>Aanpassen</Button>
-					<Button style={{fontSize: "0.9em"}}>Verwijderen</Button>
+					<Link href={`/view-manager/${view_name}`}>
+						<Button style={{fontSize: "0.9em"}}>Bekijken</Button>
+					</Link>
+					<Link href={`/view-manager/${view_name}?v=edit`}>
+						<Button style={{fontSize: "0.9em"}}>Aanpassen</Button>
+					</Link>
+					<Link href={`/view-manager/${view_name}?v=delete`}>
+						<Button style={{fontSize: "0.9em"}}>Verwijderen</Button>
+					</Link>
+
 				</div>
 
 			</div>

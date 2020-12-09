@@ -27,3 +27,8 @@ export function useViews() {
 export function useEntry(id: string) {
   return useSWR(`/api/get-entry?id=${id}`, fetcher)
 }
+
+export function useView(view: string) {
+  return useSWR(`/api/get-view?view=${view}`, fetcher)
+
+}
