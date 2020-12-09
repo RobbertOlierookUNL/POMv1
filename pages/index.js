@@ -1,30 +1,28 @@
-import React from "react";
 import Head from "next/head";
+import React from "react";
 
 import Header from "../components/header";
+import MenuButton from "../components/menubutton";
 import OptionDrawer from "../components/optiondrawer";
-import UserMenu from "../components/usermenu";
+import Store from "../components/globalstate/store";
 import Table from "../components/table";
+import UserMenu from "../components/usermenu";
 import c from "../components/colors";
 
-import Store from "../components/globalstate/store";
 
 
 export default function Home() {
-	if(process.env.MYSQL_HOST) {
-		console.log("It is set!");
-	}
-	else {
-		console.log("No set!");
-		console.log(process);
-	}
+
 	return (
 		<Store>
 			<Head>
 				<title>POM</title>
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
-			<Header/>
+			<Header>
+				<MenuButton/>
+				POM
+			</Header>
 			<OptionDrawer/>
 			<UserMenu/>
 			<Table/>

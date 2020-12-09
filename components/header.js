@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useRef} from "react";
 
 import c from "./colors";
 import Gravatar from "./Gravatar";
-import MenuButton from "./MenuButton";
 
 import {Context} from "./globalstate/store";
 
@@ -12,7 +11,7 @@ import {Context} from "./globalstate/store";
 const fName=null;
 const lName=null;
 
-const Header = () => {
+const Header = ({children}) => {
 	const [state, dispatch] = useContext(Context);
 	const ref = useRef(null);
 	useEffect(() => {dispatch({type: "SET_USERBUTTON", payload: ref});},[]);
@@ -25,10 +24,10 @@ const Header = () => {
 		<>
 			<header>
 				<div className={"left_side"}>
-					<MenuButton/>
+					{children[0]}
 				</div>
 				<div className={"mid"}>
-				POM
+					{children[1]}
 				</div>
 				<div className={"right_side"} onClick={handleClick} ref={ref}>
 					<div className="welcome_container">{fName && lName ? fName + " " + lName : "Inloggen" }</div>
@@ -53,7 +52,7 @@ const Header = () => {
 				.mid {
 					font-size: 1.6em;
 					font-weight: bolder;
-					text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+					/* text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); */
 					left: 50%;
 					position: absolute;
 					top: 50%;

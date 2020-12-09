@@ -7,7 +7,6 @@ const handler: NextApiHandler = async (req, res) => {
       const results = await query(/* sql */`
         SELECT * FROM view_metadata_table_v3test
         ORDER BY view_name DESC
-        LIMIT 1
     `)
 
       return res.json(results)

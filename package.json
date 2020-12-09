@@ -8,8 +8,6 @@
     "start": "next start",
     "migrate": "node scripts/migrate-db.js",
     "seed": "node scripts/create-test-view.js"
-
-
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
@@ -17,12 +15,13 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.13",
     "dotenv": "^8.2.0",
+    "moment": "^2.29.1",
     "next": "10.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-loading-skeleton": "^2.1.1",
     "react-table": "^7.6.1",
     "react-transition-group": "^1.2.1",
-    "react-loading-skeleton": "^2.1.1",
     "serverless-mysql": "^1.5.4",
     "swr": "^0.3.9"
   },
