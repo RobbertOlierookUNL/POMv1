@@ -1,5 +1,7 @@
 import React, {useContext, useRef, useEffect} from "react";
-import {Context} from "./globalstate/store";
+
+import { Context } from "./globalstate/store";
+
 
 
 const UserMenu = ({children}) => {

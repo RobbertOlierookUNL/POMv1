@@ -1,5 +1,8 @@
 import React, {useRef, useEffect, useState} from "react";
-import c from "../colors";
+
+import { c } from "../../config/colors";
+
+
 
 const Expand = ({keys, data, active}) => {
 	const expandCell = useRef(null);

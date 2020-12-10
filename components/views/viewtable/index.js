@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
-import { allOptions } from "../../viewOptions";
-import c from "../../colors";
+
+import { allOptions } from "../../../config/viewOptions";
+import { c } from "../../../config/colors";
+
+
 
 
 

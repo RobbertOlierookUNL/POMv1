@@ -1,10 +1,10 @@
 import React, {useContext} from "react";
 
+import {Context} from "../globalstate/store";
+import { c } from "../../config/colors";
 import Cell from "./cell";
 import Expand from "./expand";
-import c from "../colors";
 
-import {Context} from "../globalstate/store";
 
 
 

@@ -1,9 +1,13 @@
-import React, {useContext, useEffect, useRef} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import React, {useContext, useEffect, useRef} from "react";
 
-import c from "./colors";
-import {Context} from "./globalstate/store";
+import { Context } from "../globalstate/store";
+import { c } from "../../config/colors";
+
+
+
+
 
 const MenuButton = () => {
 	const [state, dispatch] = useContext(Context);

@@ -1,9 +1,14 @@
 import React, {useContext, useEffect, useRef} from "react";
 
-import c from "./colors";
-import Gravatar from "./Gravatar";
+import { Context } from "../globalstate/store";
+import { c } from "../../config/colors";
+import Gravatar from "../gravatar";
 
-import {Context} from "./globalstate/store";
+
+
+
+
+
 
 // const fName="Rohn";
 // const lName="Doe";

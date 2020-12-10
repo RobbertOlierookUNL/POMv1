@@ -1,13 +1,18 @@
 import Head from "next/head";
 import React from "react";
 
+import { c } from "../config/colors";
 import Header from "../components/header";
-import MenuButton from "../components/menubutton";
-import OptionDrawer from "../components/optiondrawer";
+import MenuButton from "../components/header/menubutton";
+import OptionDrawer from "../components/header/optiondrawer";
 import Store from "../components/globalstate/store";
 import Table from "../components/table";
 import UserMenu from "../components/usermenu";
-import c from "../components/colors";
+
+
+
+
+
 
 
 

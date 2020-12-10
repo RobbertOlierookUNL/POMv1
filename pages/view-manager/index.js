@@ -1,16 +1,17 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Head from "next/head";
 import React from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { c } from "../../config/colors";
 import { useViews } from "../../lib/swr-hooks";
-import AddViewForm from "../../components/views/addviewform";
 import Button from "../../components/button";
 import GetViews from "../../components/views/getviews";
 import Header from "../../components/header";
 import Store from "../../components/globalstate/store";
-import c from "../../components/colors";
-import CircularProgress from "@material-ui/core/CircularProgress";
+
+
 
 
 const Views = () => {

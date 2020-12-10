@@ -1,9 +1,8 @@
 import React from "react";
 
 import TableBody from "./tablebody";
-import TableColGroup from "./tablecolgroup";
 import TableHeaders from "./tableheaders";
-import c from "../colors";
+
 
 
 

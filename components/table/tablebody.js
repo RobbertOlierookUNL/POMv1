@@ -1,5 +1,7 @@
 import React from "react";
+
 import Row from "./row.js";
+
 
 const TableBody = ({meta, data, keys, additionalKeys}) => {
 	const rows = Object.keys(data);

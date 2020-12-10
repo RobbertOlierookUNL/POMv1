@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const Colwidth = ({data, totalWidth}) => {
 	return (
 		<>

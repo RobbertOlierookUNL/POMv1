@@ -1,9 +1,12 @@
-import React, {useState, useEffect} from "react";
 import Link from "next/link";
+import React, {useState, useEffect} from "react";
 import moment from "moment";
 
+import { c } from "../../config/colors";
 import Button from "../button";
-import c from "../colors";
+
+
+
 
 
 const ViewCard = ({view}) => {

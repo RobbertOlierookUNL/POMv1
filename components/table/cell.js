@@ -1,6 +1,7 @@
 import React, {useContext} from "react";
-import c from "../colors";
 import {Context} from "../globalstate/store";
+import { c } from "../../config/colors";
+
 
 
 const Cell = ({data, width, rowId}) => {

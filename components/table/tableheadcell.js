@@ -1,5 +1,9 @@
 import React from "react";
-import c from "../colors";
+
+import { c } from "../../config/colors";
+
+
+
 
 const TableHeadCell = ({data}) => {
 	return (

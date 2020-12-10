@@ -1,5 +1,7 @@
 import React from "react";
-import c from "./colors";
+
+import { c } from "../config/colors";
+
 
 const Button = ({appearance, children, ...transport}) => {
 	return (

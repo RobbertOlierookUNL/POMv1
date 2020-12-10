@@ -1,6 +1,8 @@
 import React from "react";
+
+import { c } from "../../config/colors";
 import TableHeadCell from "./tableheadcell";
-import c from "../colors";
+
 
 const TableHeaders = ({meta, keys, totalWidth}) => {
 

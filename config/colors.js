@@ -1,4 +1,4 @@
-export default {
+export const c = {
 	primary: {color: "#1F36C7",text: "white"},
 	primary_very_light: {color: "rgb(209,213,236)", text: "black"},
 	primary_light: {color: "#005eef", text: "white"},

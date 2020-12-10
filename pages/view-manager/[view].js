@@ -3,15 +3,18 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import React, {useState, useEffect} from "react";
+import React from "react";
 
+import { c } from "../../config/colors";
 import { useView } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import Header from "../../components/header";
 import Store from "../../components/globalstate/store";
-// import TableLoader from "../../components/tableloader";
-import ViewTable from "../../components/views/viewtable/index.js";
-import c from "../../components/colors";
+import ViewTable from "../../components/views/viewtable";
+
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 import React from "react";
-import c from "./colors";
+import { c } from "../config/colors";
+
 
 const Gravatar = ({first_name, last_name, width}) => {
 	let initials;
