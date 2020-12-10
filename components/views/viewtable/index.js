@@ -1,33 +1,59 @@
 import React, {useState, useEffect} from "react";
-import c from "../../colors";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
+import { allOptions } from "../../viewOptions";
+import c from "../../colors";
+
+
 
 
 const ViewTable = ({data, mode}) => {
+	console.log(mode);
 	const {view_name, created_at, updated_at, ...viewdata} = data || {};
 	// belangrijk om alle niet-JSON hierboven weg te filteren
-	const [dataState, setDataState] = useState(viewdata);
-	const allOptions = ["widthweight", "title", "display"];
-	Object.keys(viewdata).map(key => {
-		viewdata[key] = JSON.parse(viewdata[key]);
-	});
+	const [dataState, setDataState] = useState({});
 	const fakedata = new Array(50).fill(".");
+	useEffect(() => {
+		let _dataState = {};
+		Object.keys(viewdata).map(key => {
+			_dataState[key] = JSON.parse(viewdata[key]);
+			// // for dynamic keys
+			// if (_dataState[key]) {
+			// 	Object.keys(_dataState[key]).map(k => {
+			// 		if (!allOptions.includes(k)) {
+			// 			allOptions.push(k);
+			// 		}
+			// 	});
+			// }
+			setDataState(_dataState);
 
-	// useEffect(() => {
-	// 	Object.keys(viewdata).map(key => {
-	// 		viewdata[key] = JSON.parse(viewdata[key]);
-	// 		/*
-	// 		// for dynamic keys
-	// 		if (viewdata[key]) {
-	// 			Object.keys(viewdata[key]).map(k => {
-	// 				if (!allOptions.includes(k)) {
-	// 					allOptions.push(k);
-	// 				}
-	// 			});
-	// 		}
-	// 		*/
-	// 	});
-	// }, [viewdata]);
+		});
+	}, [Object.keys(viewdata)[0]]);
+	const saveData = async (attr) => {
+		const value = JSON.stringify(dataState[attr]);
+		if (value !== viewdata[attr]) {
+			try {
+				console.log(value);
+				const res = await fetch("/api/edit-view", {
+					method: "PATCH",
+					body: JSON.stringify({
+						attr,
+						view_name,
+						value
+					}),
+					headers: {
+						"Content-type": "application/json; charset=UTF-8"
+					}
+				});
+				console.log(2);
+				const json = await res.json();
+				console.log(3);
+				if (!res.ok) throw Error(json.message);
+			} catch (e) {
+				throw Error(e.message);
+			}
+		}
+	};
+
 	return (
 		<div className="container">
 			<table>
@@ -42,13 +68,26 @@ const ViewTable = ({data, mode}) => {
 					</tr>
 				</thead>
 				<tbody>
-					{Object.keys(viewdata)[0] ?
-						Object.keys(viewdata).map((attribute, i) => (
+					{Object.keys(dataState)[0] ?
+						Object.keys(dataState).map((attribute, i) => (
 							<tr key={i}>
 								<td key={0} className="firstcol">{attribute}</td>
 								{allOptions.map((option, i) =>
 									<td key={i+1}>
-										{viewdata[attribute] ? viewdata[attribute][option] : "-"}
+										{mode === "edit" ?
+											<>
+												<input
+													value={dataState[attribute] && dataState[attribute][option] ? dataState[attribute][option] : ""}
+													placeholder={dataState[attribute] && dataState[attribute][option] ? null : "-"  }
+													onChange={(event) => setDataState({...dataState, [attribute]: {...dataState[attribute], [option]: event.target.value}})}
+													onBlur={() => saveData(attribute)}
+												/>
+											</>
+											:
+											<>
+												{dataState[attribute] && dataState[attribute][option] ? dataState[attribute][option] : "-"}
+											</>
+										}
 									</td>
 
 								)}
