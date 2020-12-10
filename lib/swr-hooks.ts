@@ -8,7 +8,7 @@ export function useEntries() {
   const { data, error } = useSWR(`/api/get-entries`, fetcher)
 
   return {
-    entries: data,
+    data,
     isLoading: !error && !data,
     isError: error,
   }

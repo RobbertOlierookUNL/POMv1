@@ -26,6 +26,19 @@ async function query(q) {
 	}
 }
 
+async function drop() {
+	try {
+		await query(/* sql */`
+		DROP TABLE IF EXISTS view_metadata_table_v3test
+		`);
+		console.log("migration ran successfully");
+	} catch (e) {
+		console.log(e);
+		console.error("could not run migration, double check your credentials.");
+		process.exit(1);
+	}
+}
+
 // Create "entries" table if doesn't exist
 async function migrate() {
 	try {
@@ -106,6 +119,7 @@ async function migrate() {
 			usr_s JSON,
 			werks JSON,
 			y_bbd JSON,
+			config LONGTEXT,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at
         TIMESTAMP
@@ -122,4 +136,4 @@ async function migrate() {
 	}
 }
 
-migrate().then(() => process.exit());
+drop().then(() => migrate().then(() => process.exit()));

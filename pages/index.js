@@ -9,13 +9,6 @@ import Store from "../components/globalstate/store";
 import Table from "../components/table";
 import UserMenu from "../components/usermenu";
 
-
-
-
-
-
-
-
 export default function Home() {
 
 	return (

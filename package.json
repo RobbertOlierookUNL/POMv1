@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "migrate": "node scripts/migrate-db.js",
-    "seed": "node scripts/create-test-view.js"
+    "seed": "node scripts/create-template-view.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",

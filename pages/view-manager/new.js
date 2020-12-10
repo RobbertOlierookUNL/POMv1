@@ -9,6 +9,7 @@ import { c } from "../../config/colors";
 import { useView } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import Header from "../../components/header/index";
+import NewViewName from "../../components/views/newviewname";
 import Store from "../../components/globalstate/store";
 import ViewTable from "../../components/views/viewtable";
 
@@ -20,10 +21,9 @@ import ViewTable from "../../components/views/viewtable";
 
 
 
+
 const View = () => {
-	const router = useRouter();
-	const {view, v } = router.query;
-	const { data } = useView(view);
+	const { data } = useView("template");
 	// const [mounted, setMounted] = useState(false);
 	// const { data } = useView(mounted ? view : null);
 	// useEffect(() => {
@@ -35,7 +35,7 @@ const View = () => {
 	return (
 		<Store>
 			<Head>
-				<title>{view}</title>
+				<title>Nieuwe view</title>
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
 			<Header>
@@ -46,9 +46,24 @@ const View = () => {
 						</Button>
 					</div>
 				</Link>
-				{view}
+				Nieuwe view
 			</Header>
-			<ViewTable data={data} mode={v}/>
+			<div className="viewname-container">
+				<NewViewName/>
+			</div>
+			<style jsx>{`
+				.viewname-container {
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					top: 0;
+					left: 0;
+					justify-content: center;
+					align-items: center;
+					display: flex;
+					transform: translateY(-50px);
+				}
+			`}</style>
 			<style jsx global>{`
         body, html{
           background-color: ${c.secondary.color};

@@ -10,7 +10,7 @@ import Button from "../button";
 
 
 const ViewCard = ({view}) => {
-	const {view_name, created_at, updated_at, ...viewdata} = view;
+	const {view_name, created_at, updated_at, config, ...viewdata} = view;
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [compact, setCompact] = useState(0);
 	const [hidden, setHidden] = useState(0);
@@ -77,11 +77,15 @@ const ViewCard = ({view}) => {
 							<Button style={{fontSize: "0.9em"}}>Aanpassen</Button>
 						</div>
 					</Link>
-					<Link href={`/view-manager/${view_name}?v=delete`}>
-						<div>
-							<Button style={{fontSize: "0.9em"}}>Verwijderen</Button>
-						</div>
-					</Link>
+					{view_name !== "template" ?
+						<Link href={`/view-manager/${view_name}?v=delete`}>
+							<div>
+								<Button style={{fontSize: "0.9em"}}>Verwijderen</Button>
+							</div>
+						</Link>
+						:
+						<Button disabled style={{fontSize: "0.9em", visibility: "hidden"}}>Verwijderen</Button>
+					}
 				</div>
 			</div>
 			<style jsx>{`

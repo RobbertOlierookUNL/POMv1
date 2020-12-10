@@ -11,7 +11,7 @@ import { c } from "../../../config/colors";
 
 const ViewTable = ({data, mode}) => {
 	console.log(mode);
-	const {view_name, created_at, updated_at, ...viewdata} = data || {};
+	const {view_name, created_at, updated_at, config, ...viewdata} = data || {};
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
 	const fakedata = new Array(50).fill(".");
