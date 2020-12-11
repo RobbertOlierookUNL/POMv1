@@ -21,6 +21,7 @@
     "react": "17.0.1",
     "react-content-loader": "^5.1.4",
     "react-dom": "17.0.1",
+    "react-in-viewport": "^1.0.0-alpha.15",
     "react-loading-skeleton": "^2.1.1",
     "react-table": "^7.6.1",
     "react-transition-group": "^1.2.1",

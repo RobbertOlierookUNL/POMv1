@@ -11,18 +11,18 @@ const TableHeaders = ({meta, keys, totalWidth}) => {
 			<tr>
 				{
 					keys.map((col, i) => (
-						<TableHeadCell data={meta[col]} key={i}/>
+						<TableHeadCell data={meta[col]} backup={col} key={i}/>
 					))
 				}
 
 			</tr>
-			<style jsx>{`
+			{/* <style jsx>{`
         thead {
           background-color: ${c.quadiary.color};
           color: ${c.quadiary.text};
         }
 
-      `}</style>
+      `}</style> */}
 			<style jsx global>{`
 				tr {
 					display: grid;

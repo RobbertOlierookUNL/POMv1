@@ -4,19 +4,22 @@ import {Context} from "../globalstate/store";
 import { c } from "../../config/colors";
 import Cell from "./cell";
 import Expand from "./expand";
+import handleViewport from "react-in-viewport";
 
 
 
 
-const Row = ({id, meta, data, keys, additionalKeys}) => {
+const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}) => {
 	const [state] = useContext(Context);
 
 	return (
-		<tr className={state.active === id && "active"}>
-			{keys.map((key, i) =>
-				<Cell data={data[key]} width={meta[key].widthweight} key={i} rowId={id}/>)
-			}
-			<Expand keys={additionalKeys} data={data} active={state.active === id}/>
+		<tr className={state.active === id && "active"} ref={forwardedRef}>
+			<>
+				{keys.map((key, i) =>
+					<Cell data={data === false ? data : data[key]} width={meta[key].widthweight} key={i} rowId={id}/>
+				)}
+				<Expand keys={additionalKeys} data={data} active={state.active === id}/>
+			</>
 			<style jsx>{`
         tr:nth-child(even){background-color: ${c.gray_very_light.color};}
         tr:hover {background-color: ${c.gray_light.color};}
@@ -30,6 +33,7 @@ const Row = ({id, meta, data, keys, additionalKeys}) => {
 	);
 };
 
+const Row = handleViewport(PreRow);
 
 
 export default Row;

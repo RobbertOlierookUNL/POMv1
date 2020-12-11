@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 
 import { useEntries, useView } from "../../lib/swr-hooks";
 import TableBody from "./tablebody";
@@ -57,13 +57,13 @@ import TableHeaders from "./tableheaders";
 //
 // };
 
-const view = "testview";
+const view = "salesview";
 
 
 const Table = () => {
 	const {data: _metaString} = useView(view);
 	const {data: preData} = useEntries();
-	const {view_name, created_at, updated_at, ...metaString} = _metaString || {};
+	const {view_name, created_at, updated_at, config, ...metaString} = _metaString || {};
 	const [..._data] = preData || [];
 	console.log(_data[0]);
 	const [meta, setMeta] = useState({});
@@ -72,7 +72,7 @@ const Table = () => {
 	const [totalWidthCount, setTotalWidthCount] = useState(0);
 	const [data, setData] = useState({});
 
-	useEffect(() => {
+	useMemo(() => {
 		const cols = Object.keys(metaString);
 		const keys = {
 			compact: [],
@@ -84,7 +84,7 @@ const Table = () => {
 			_meta[col] = JSON.parse(metaString[col]);
 			if (_meta[col].display === "compact") {
 				keys.compact.push(cols[i]);
-				_totalWidthCount += _meta[col].widthweight;
+				_totalWidthCount += parseInt(_meta[col].widthweight);
 			} else if (_meta[col].display === "expanded") {
 				keys.expanded.push(cols[i]);
 			}
@@ -94,12 +94,13 @@ const Table = () => {
 		setTotalWidthCount(_totalWidthCount);
 		setMeta(_meta);
 	}, [ Object.keys(metaString)[0]]);
-	useEffect(() => {
+	useMemo(() => {
 		setData(_data);
 	}, [Object.keys(_data)[0]]);
 	return (
 		<>
 			<div className="tableContainer">
+				{console.log(data)}
 				<table className="table">
 					{//<TableColGroup meta={meta} keys={keys.compact}/>
 					}
@@ -110,14 +111,19 @@ const Table = () => {
 			</div>
 			<style jsx>{`
 				.tableContainer {
-					width: 100%;
-					padding: 15px 15px;
+					width: calc(100% - 30px);
+					overflow: auto;
+					height: calc(100vh - 68.67px);
+					position: relative;
+					top: 15px;
+					left: 15px;
 				}
 				.table {
 					border-collapse: collapse;
 					background-color: white;
 					width: 100%;
 					box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+					font-size: 0.7em
 				}
 			`}
 			</style>
