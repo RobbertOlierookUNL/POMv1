@@ -23,7 +23,7 @@ const Cell = ({data, width, rowId}) => {
 					<Skeleton />
 				</SkeletonTheme>
 				:
-				data
+				(!data || data === "0") ? "" : data
 			}
 			<style jsx>{`
         td {
@@ -32,10 +32,11 @@ const Cell = ({data, width, rowId}) => {
 					grid-column-end: span ${width};
 					cursor: pointer;
 					padding: 2px;
+			 	${state.active === rowId || (`
 					text-overflow: ellipsis;
 					white-space: nowrap;
-					overflow: hidden;
-
+					overflow: hidden;`)
+		}
         }
         td:nth-last-child(2) {
           border-width: 0 0 1px 0;

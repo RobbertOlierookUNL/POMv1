@@ -4,25 +4,25 @@ import { c } from "../../config/colors";
 import TableHeadCell from "./tableheadcell";
 
 
-const TableHeaders = ({meta, keys, totalWidth}) => {
+const TableHeaders = ({meta, keys, totalWidth, requestSort}) => {
 
 	return (
 		<thead>
 			<tr>
 				{
 					keys.map((col, i) => (
-						<TableHeadCell data={meta[col]} backup={col} key={i}/>
+						<TableHeadCell requestSort={requestSort} data={meta[col]} backup={col} key={i}/>
 					))
 				}
 
 			</tr>
-			{/* <style jsx>{`
-        thead {
-          background-color: ${c.quadiary.color};
-          color: ${c.quadiary.text};
+			<style jsx>{`
+        tr {
+			    position: sticky;
+					top: 0;
         }
 
-      `}</style> */}
+      `}</style>
 			<style jsx global>{`
 				tr {
 					display: grid;

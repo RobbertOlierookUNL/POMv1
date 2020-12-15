@@ -4,26 +4,32 @@ import { c } from "../../config/colors";
 
 
 
-const Expand = ({keys, data, active}) => {
+const Expand = ({keys, data, meta, active}) => {
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
-
 	useEffect(async () => {
 		await setHeight("auto");
 		setHeight(expandCell.current.scrollHeight + 11.33 + "px");
-	}, []);
+	}, [expandCell.current !== null && expandCell.current.scrollHeight]);
+
+
 	return (
-		<td ref={expandCell} className={active && "active"}>
-			{keys && keys.map((key) =>{
-				return(
-					key + ": " + data[key]
-				);}
-			)
-			}
+		<td ref={expandCell} height={height} className={`expandCell ${active && "active"}`}>
+			{keys && <div><dl className={"expandList"}>
+				{keys.map((key, i) =>(
+					<>
+						<dt key={"dt" + i}>{meta[key].title || key}</dt>
+						<dd key={"dd" + i}>{data[key]}</dd>
+					</>
+				))
+				}
+
+			</dl></div>}
+
 			<style jsx>{`
         td {
           transform: scaleY(0);
-          transition: transform 100ms ease-in, height 100ms ease-in, padding 100ms ease-in;
+          transition: transform 10ms linear, height 10ms linear, padding 10ms linear;
           padding: 0;
           height: 0;
           grid-column: 1/-1;
@@ -44,6 +50,9 @@ const Expand = ({keys, data, active}) => {
           height: ${height};
           visibility: visible;
         }
+				.expandList {
+				}
+
       `}</style>
 		</td>
 	);

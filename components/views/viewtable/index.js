@@ -1,8 +1,12 @@
 import React, {useState, useEffect} from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 import { allOptions } from "../../../config/viewOptions";
 import { c } from "../../../config/colors";
+import { useSortableData } from "../../../lib/custom-hooks";
+
 
 
 
@@ -10,32 +14,26 @@ import { c } from "../../../config/colors";
 
 
 const ViewTable = ({data, mode}) => {
-	console.log(mode);
 	const {view_name, created_at, updated_at, config, ...viewdata} = data || {};
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
+	const { keys, requestSort, sortConfig } = useSortableData(dataState);
+
 	const fakedata = new Array(50).fill(".");
 	useEffect(() => {
 		let _dataState = {};
 		Object.keys(viewdata).map(key => {
+			console.log(viewdata[key]);
 			_dataState[key] = JSON.parse(viewdata[key]);
-			// // for dynamic keys
-			// if (_dataState[key]) {
-			// 	Object.keys(_dataState[key]).map(k => {
-			// 		if (!allOptions.includes(k)) {
-			// 			allOptions.push(k);
-			// 		}
-			// 	});
-			// }
 			setDataState(_dataState);
 
 		});
 	}, [Object.keys(viewdata)[0]]);
+
 	const saveData = async (attr) => {
 		const value = JSON.stringify(dataState[attr]);
 		if (value !== viewdata[attr]) {
 			try {
-				console.log(value);
 				const res = await fetch("/api/edit-view", {
 					method: "PATCH",
 					body: JSON.stringify({
@@ -47,9 +45,7 @@ const ViewTable = ({data, mode}) => {
 						"Content-type": "application/json; charset=UTF-8"
 					}
 				});
-				console.log(2);
 				const json = await res.json();
-				console.log(3);
 				if (!res.ok) throw Error(json.message);
 			} catch (e) {
 				throw Error(e.message);
@@ -66,20 +62,29 @@ const ViewTable = ({data, mode}) => {
 				</colgroup>
 				<thead>
 					<tr>
-						<th className="crossdivider">x</th>
-						{allOptions.map((h, i) => <th key={i}>{h}</th>)}
+						<th className="crossdivider" onClick={() => requestSort(null)}>{sortConfig && sortConfig.key && <FontAwesomeIcon icon={faTimes} />}</th>
+						{allOptions.map((h, i) => <th key={i} onClick={() => requestSort(h)}>{h}
+							{
+								sortConfig && sortConfig.key === h &&
+							(
+								sortConfig.direction === "ascending" && <FontAwesomeIcon icon={faArrowDown} />
+							||
+								sortConfig.direction === "descending" && <FontAwesomeIcon icon={faArrowUp} />
+							)}
+						</th>)}
 					</tr>
 				</thead>
 				<tbody>
 					{Object.keys(dataState)[0] ?
-						Object.keys(dataState).map((attribute, i) => (
+						keys.map((attribute, i) => (
 							<tr key={i}>
 								<td key={0} className="firstcol">{attribute}</td>
-								{allOptions.map((option, i) =>
-									<td key={i+1}>
+								{allOptions.map((option, j) =>
+									<td key={j+1}>
 										{mode === "edit" ?
 											<>
 												<input
+													className={"optionInput"}
 													value={dataState[attribute] && dataState[attribute][option] ? dataState[attribute][option] : ""}
 													placeholder={dataState[attribute] && dataState[attribute][option] ? null : "-"  }
 													onChange={(event) => setDataState({...dataState, [attribute]: {...dataState[attribute], [option]: event.target.value}})}
@@ -141,6 +146,9 @@ const ViewTable = ({data, mode}) => {
 				tr:nth-child(even){
 					background-color: ${c.gray_very_light.color};
 				}
+				colgroup {
+					width: 100%;
+				}
 				.crossdivider {
 					background-color: ${c.primary_very_light.color};
 					color: ${c.primary_very_light.text};
@@ -161,6 +169,7 @@ const ViewTable = ({data, mode}) => {
 					border-width: 0 1px 0 0;
 					position: sticky;
 					top: 0;
+					cursor: pointer;
 				}
 				th:last-child {
 					border-width: 0;
@@ -168,6 +177,11 @@ const ViewTable = ({data, mode}) => {
 				.firstcol{
 					font-weight: bold;
 					text-align: left;
+				}
+				.optionInput{
+					width: inherit;
+					/* border: 2px solid ${c.primary.color}; */
+
 				}
 
 			`}</style>

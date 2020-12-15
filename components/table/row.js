@@ -18,7 +18,7 @@ const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}
 				{keys.map((key, i) =>
 					<Cell data={data === false ? data : data[key]} width={meta[key].widthweight} key={i} rowId={id}/>
 				)}
-				<Expand keys={additionalKeys} data={data} active={state.active === id}/>
+				<Expand keys={additionalKeys} meta={meta} data={data} active={state.active === id}/>
 			</>
 			<style jsx>{`
         tr:nth-child(even){background-color: ${c.gray_very_light.color};}

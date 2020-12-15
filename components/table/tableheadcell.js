@@ -1,13 +1,15 @@
 import React from "react";
 
 import { c } from "../../config/colors";
+import { useSortableData } from "../../lib/custom-hooks";
 
 
 
 
-const TableHeadCell = ({data, backup}) => {
+
+const TableHeadCell = ({data, backup, requestSort}) => {
 	return (
-		<th>
+		<th onClick={() => requestSort(backup)}>
 			{data.title || backup}
 			<style jsx>{`
           th{
@@ -18,6 +20,7 @@ const TableHeadCell = ({data, backup}) => {
 						grid-column-end: span ${data.widthweight};
 						position: sticky;
 						top: 0;
+						cursor: pointer;
           }
           th:last-child {
             border-width: 0;

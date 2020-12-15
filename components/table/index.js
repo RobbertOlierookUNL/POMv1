@@ -1,8 +1,10 @@
 import React, {useState, useEffect, useMemo} from "react";
 
 import { useEntries, useView } from "../../lib/swr-hooks";
+import { useSortableData } from "../../lib/custom-hooks";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
+
 
 
 //
@@ -71,6 +73,9 @@ const Table = () => {
 	const [expanded, setExpanded] = useState([]);
 	const [totalWidthCount, setTotalWidthCount] = useState(0);
 	const [data, setData] = useState({});
+	const { keys: sortedKeys, requestSort } = useSortableData(data);
+
+
 
 	useMemo(() => {
 		const cols = Object.keys(metaString);
@@ -89,8 +94,11 @@ const Table = () => {
 				keys.expanded.push(cols[i]);
 			}
 		});
-		setCompact(keys.compact);
-		setExpanded(keys.expanded);
+		const onIndex = (a, b) => (
+			(_meta[a].indexweight || 10) - (_meta[b].indexweight || 10)
+		);
+		setCompact(keys.compact.sort(onIndex));
+		setExpanded(keys.expanded.sort(onIndex));
 		setTotalWidthCount(_totalWidthCount);
 		setMeta(_meta);
 	}, [ Object.keys(metaString)[0]]);
@@ -104,8 +112,8 @@ const Table = () => {
 				<table className="table">
 					{//<TableColGroup meta={meta} keys={keys.compact}/>
 					}
-					<TableHeaders meta={meta} keys={compact} totalWidth={totalWidthCount}/>
-					<TableBody meta={meta} data={data} keys={compact} additionalKeys={expanded} totalWidth={totalWidthCount}>
+					<TableHeaders requestSort={requestSort} meta={meta} keys={compact} totalWidth={totalWidthCount}/>
+					<TableBody meta={meta} data={data} keys={compact} additionalKeys={expanded} sortedKeys={sortedKeys} totalWidth={totalWidthCount}>
 					</TableBody>
 				</table>
 			</div>

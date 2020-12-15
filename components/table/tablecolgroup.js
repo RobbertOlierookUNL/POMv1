@@ -10,6 +10,7 @@ const TableColGroup = ({keys, meta}) => {
 	keys.forEach((col) => {
 		totalWidthCount += meta[col].widthweight;
 	});
+	console.log(keys);
 	return (
 		<colgroup>
 			{keys.map((col, i) => (
