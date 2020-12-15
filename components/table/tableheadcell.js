@@ -10,7 +10,7 @@ import { useSortableData } from "../../lib/custom-hooks";
 const TableHeadCell = ({data, backup, requestSort}) => {
 	return (
 		<th onClick={() => requestSort(backup)}>
-			{data.title || backup}
+
 			<style jsx>{`
           th{
 						background-color: ${c.primary.color};
@@ -22,9 +22,21 @@ const TableHeadCell = ({data, backup, requestSort}) => {
 						top: 0;
 						cursor: pointer;
           }
+					th::after {
+					  content: "${data.title || backup}";
+					}
           th:last-child {
             border-width: 0;
           }
+					th:hover {
+						z-index: 5;
+						position: relative;
+						min-width: 100%;
+						width: fit-content;
+					}
+					th:hover::after {
+						content: "${data.hovername || data.title || backup}";
+					}
         `}</style>
 		</th>
 

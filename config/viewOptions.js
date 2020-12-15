@@ -1,18 +1,24 @@
 export const allOptionsWithData = {
 	title: {
-		default: null
+		default: null,
+		input: "text",
 	},
 	display: {
-		default: null
+		default: null,
+		input: [null, "compact", "expanded", "hidden"],
 	},
 	widthweight: {
-		default: 12
+		default: 12,
+		input: "number",
 	},
 	indexweight: {
-		default: 10
+		default: 10,
+		input: "number",
 	},
 	hovername: {
-		default: null
+		default: null,
+		input: "text",
+
 	}
 
 

@@ -86,10 +86,10 @@ const Table = () => {
 		let _meta = {};
 		let _totalWidthCount = 0;
 		cols.map((col, i) => {
-			_meta[col] = JSON.parse(metaString[col]);
+			_meta[col] = metaString[col] ? JSON.parse(metaString[col]) : {};
 			if (_meta[col].display === "compact") {
 				keys.compact.push(cols[i]);
-				_totalWidthCount += parseInt(_meta[col].widthweight);
+				_totalWidthCount += _meta[col].widthweight ? parseInt(_meta[col].widthweight) : 12;
 			} else if (_meta[col].display === "expanded") {
 				keys.expanded.push(cols[i]);
 			}

@@ -3,7 +3,7 @@ import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
-import { allOptions } from "../../../config/viewOptions";
+import { allOptions, allOptionsWithData } from "../../../config/viewOptions";
 import { c } from "../../../config/colors";
 import { useSortableData } from "../../../lib/custom-hooks";
 
@@ -19,15 +19,23 @@ const ViewTable = ({data, mode}) => {
 	const [dataState, setDataState] = useState({});
 	const { keys, requestSort, sortConfig } = useSortableData(dataState);
 
+
 	const fakedata = new Array(50).fill(".");
 	useEffect(() => {
 		let _dataState = {};
 		Object.keys(viewdata).map(key => {
 			console.log(viewdata[key]);
-			_dataState[key] = JSON.parse(viewdata[key]);
-			setDataState(_dataState);
-
+			_dataState[key] = JSON.parse(viewdata[key]) || {};
+			allOptions.map(option => {
+				_dataState[key][option] =
+					_dataState[key][option] === undefined
+						? allOptionsWithData[option].default
+						: _dataState[key][option];
+			});
 		});
+		console.log(dataState);
+		setDataState(_dataState);
+
 	}, [Object.keys(viewdata)[0]]);
 
 	const saveData = async (attr) => {
@@ -52,7 +60,7 @@ const ViewTable = ({data, mode}) => {
 			}
 		}
 	};
-
+	console.log(allOptions);
 	return (
 		<div className="container">
 			<table>
@@ -83,13 +91,27 @@ const ViewTable = ({data, mode}) => {
 									<td key={j+1}>
 										{mode === "edit" ?
 											<>
-												<input
-													className={"optionInput"}
-													value={dataState[attribute] && dataState[attribute][option] ? dataState[attribute][option] : ""}
-													placeholder={dataState[attribute] && dataState[attribute][option] ? null : "-"  }
-													onChange={(event) => setDataState({...dataState, [attribute]: {...dataState[attribute], [option]: event.target.value}})}
-													onBlur={() => saveData(attribute)}
-												/>
+												{typeof allOptionsWithData[option].input === "string" ?
+													<input
+														type={allOptionsWithData[option].input}
+														className={"optionInput"}
+														value={dataState[attribute] && dataState[attribute][option] ? dataState[attribute][option] : ""}
+														placeholder={dataState[attribute] && dataState[attribute][option] === null ? "-" : null  }
+														onChange={(event) => setDataState({...dataState, [attribute]: {...dataState[attribute], [option]: event.target.value}})}
+														onBlur={() => saveData(attribute)}
+													/>
+													:
+													<select
+														className={"optionInput"}
+														value={dataState[attribute] && dataState[attribute][option] ? dataState[attribute][option] : ""}
+														onChange={(event) => setDataState({...dataState, [attribute]: {...dataState[attribute], [option]: event.target.value}})}
+														onBlur={() => saveData(attribute)}
+													>
+														{allOptionsWithData[option].input.map((optionvalue, k) =>
+															<option value={optionvalue} key={k}>{optionvalue}</option>
+														)}
+													</select>
+												}
 											</>
 											:
 											<>

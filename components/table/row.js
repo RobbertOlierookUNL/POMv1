@@ -16,7 +16,7 @@ const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}
 		<tr className={state.active === id && "active"} ref={forwardedRef}>
 			<>
 				{keys.map((key, i) =>
-					<Cell data={data === false ? data : data[key]} width={meta[key].widthweight} key={i} rowId={id}/>
+					<Cell data={data === false ? data : data[key]} width={meta[key].widthweight || 12} key={i} rowId={id}/>
 				)}
 				<Expand keys={additionalKeys} meta={meta} data={data} active={state.active === id}/>
 			</>
