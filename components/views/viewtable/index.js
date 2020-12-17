@@ -71,9 +71,10 @@ const ViewTable = ({data, mode}) => {
 				<thead>
 					<tr>
 						<th className="crossdivider" onClick={() => requestSort(null)}>{sortConfig && sortConfig.key && <FontAwesomeIcon icon={faTimes} />}</th>
-						{allOptions.map((h, i) => <th key={i} onClick={() => requestSort(h)}>{h}
+						{allOptions.map((option, i) => <th key={i} onClick={() => requestSort(option,
+							typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" )}>{option}
 							{
-								sortConfig && sortConfig.key === h &&
+								sortConfig && sortConfig.key === option &&
 							(
 								sortConfig.direction === "ascending" && <FontAwesomeIcon icon={faArrowDown} />
 							||
@@ -201,7 +202,7 @@ const ViewTable = ({data, mode}) => {
 					text-align: left;
 				}
 				.optionInput{
-					width: inherit;
+					width: 100%;
 					/* border: 2px solid ${c.primary.color}; */
 
 				}

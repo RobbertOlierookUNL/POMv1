@@ -73,7 +73,7 @@ const Table = () => {
 	const [expanded, setExpanded] = useState([]);
 	const [totalWidthCount, setTotalWidthCount] = useState(0);
 	const [data, setData] = useState({});
-	const { keys: sortedKeys, requestSort } = useSortableData(data);
+	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
 
 
 
@@ -112,7 +112,7 @@ const Table = () => {
 				<table className="table">
 					{//<TableColGroup meta={meta} keys={keys.compact}/>
 					}
-					<TableHeaders requestSort={requestSort} meta={meta} keys={compact} totalWidth={totalWidthCount}/>
+					<TableHeaders requestSort={requestSort} sortConfig={sortConfig}  meta={meta} keys={compact} totalWidth={totalWidthCount}/>
 					<TableBody meta={meta} data={data} keys={compact} additionalKeys={expanded} sortedKeys={sortedKeys} totalWidth={totalWidthCount}>
 					</TableBody>
 				</table>

@@ -6,18 +6,18 @@ import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
 
 
-const Cell = ({data, width, rowId}) => {
+const Cell = ({data, width, rowId, colName, inViewport}) => {
 	const [state, dispatch] = useContext(Context);
-	const handleClick = () => {
-		state.active === rowId ?
-			dispatch({type: "SET_ACTIVE", payload: false})
-			: dispatch({type: "SET_ACTIVE", payload: rowId});
-	};
+	// const handleClick = () => {
+	// 	state.active === rowId ?
+	// 		dispatch({type: "SET_ACTIVE", payload: false})
+	// 		: dispatch({type: "SET_ACTIVE", payload: rowId});
+	// };
 
 
 	return (
-		<td
-			onClick={handleClick}
+		<td className={colName}
+			// onClick={inViewport ? handleClick : undefined}
 		>{data === false ?
 				<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
 					<Skeleton />
@@ -29,7 +29,7 @@ const Cell = ({data, width, rowId}) => {
         td {
           border: 1px solid ${c.gray_light.color};
           border-width: 0 1px 1px 0;
-					grid-column-end: span ${width};
+					/* grid-column-end: span ${width}; */
 					cursor: pointer;
 					padding: 2px;
 			 	${state.active === rowId || (`
