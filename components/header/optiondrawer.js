@@ -1,6 +1,8 @@
 import React, {useContext, useRef, useEffect} from "react";
 
 import { Context } from "../globalstate/store";
+import Shadow from "../shadow";
+
 
 
 
@@ -30,7 +32,7 @@ const OptionDrawer = ({children}) => {
 
 		<>
 			<div className="drawer" ref={ref}>{children}</div>
-			<div className="shadow" ></div>
+			<Shadow zIndex={8} trigger={state.options}/>
 			<style jsx>{`
         .drawer {
           z-index: 10;
@@ -43,16 +45,6 @@ const OptionDrawer = ({children}) => {
           transition: transform 0.3s ease-in-out;
           transform: translateX(${state.options ? "calc(140px + 30vw)": "0"});
 
-        }
-        .shadow {
-          z-index: 1;
-          position: absolute;
-          pointer-events: none;
-          top: 0;
-          width: 100vw;
-          height: 100vh;
-          transition: background-color 0.3s ease-in-out;
-          background-color: rgba(0, 0, 0, ${state.options ? 0.05 : 0});
         }
       `}
 			</style>

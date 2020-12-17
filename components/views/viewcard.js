@@ -1,9 +1,12 @@
+import {mutate} from "swr";
 import Link from "next/link";
 import React, {useState, useEffect} from "react";
 import moment from "moment";
 
 import { c } from "../../config/colors";
 import Button from "../button";
+import Modal from "../modal";
+
 
 
 
@@ -16,7 +19,8 @@ const ViewCard = ({view}) => {
 	const [hidden, setHidden] = useState(0);
 	const [expanded, setExpanded] = useState(0);
 	const [undef, setUndef] = useState(0);
-
+	const [deleting, setDeleting] = useState(false);
+	const [verify, setVerify] = useState(false);
 
 	useEffect(() => {
 		let compact_counter = 0;
@@ -51,6 +55,15 @@ const ViewCard = ({view}) => {
 		setUndef(undef_counter);
 	});
 
+	async function deleteEntry() {
+		setDeleting(true);
+		let res = await fetch(`/api/delete-view?view_name=${view_name}`, { method: "DELETE" });
+		let json = await res.json();
+		if (!res.ok) throw Error(json.message);
+		mutate("/api/get-views");
+		setDeleting(false);
+	}
+
 	return (
 		<div className="card">
 			<div className="head">
@@ -77,17 +90,21 @@ const ViewCard = ({view}) => {
 							<Button style={{fontSize: "0.9em"}}>Aanpassen</Button>
 						</div>
 					</Link>
-					{view_name !== "template" ?
-						<Link href={`/view-manager/${view_name}?v=delete`}>
-							<div>
-								<Button style={{fontSize: "0.9em"}}>Verwijderen</Button>
-							</div>
-						</Link>
-						:
-						<Button disabled style={{fontSize: "0.9em", visibility: "hidden"}}>Verwijderen</Button>
-					}
+
+					<Button onClick={() => setVerify(true)} disabled={deleting} style={{fontSize: "0.9em"}}>Verwijderen</Button>
+
+
 				</div>
 			</div>
+			{verify &&
+				<Modal header={"Weet je het zeker?"}>
+					Weet je zeker dat je {view_name} wilt verwijderen?
+					<br/>
+					<div className={"modal-button-container"}>
+						<Button onClick={() => setVerify(false)} style={{fontSize: "0.9em", marginRight: "7px"}}>Annuleren</Button>
+						<Button onClick={deleteEntry} style={{fontSize: "0.9em"}}>Verwijderen</Button>
+					</div>
+				</Modal>}
 			<style jsx>{`
         .card{
           width: 300px;
@@ -119,6 +136,10 @@ const ViewCard = ({view}) => {
           display: flex;
           justify-content: space-between;
         }
+				.modal-button-container{
+					margin-top: 14px;
+					text-align: right;
+				}
 
       `}</style>
 		</div>

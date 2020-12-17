@@ -41,8 +41,7 @@ const NewViewName = () => {
 			<div className="body">
 				<input className="inputField" value={viewName} onChange={(e) => setViewName(e.target.value)}/>
 				<div className="button-container">
-					<Button disabled style={{visibility: "hidden"}}>Opslaanslssss</Button>
-					<Link href="/viewmanager"><div><Button style={{visibility: submitting ? "hidden" : "visible"}}>Annuleren</Button></div></Link>
+					<Link href="/view-manager"><div><Button style={{visibility: submitting ? "hidden" : "visible", marginRight: "7px"}}>Annuleren</Button></div></Link>
 					<Button onClick={save}>{submitting ? "Verwerken.." : "Opslaan"}</Button>
 				</div>
 
@@ -68,8 +67,8 @@ const NewViewName = () => {
           margin-bottom: 15px;
         }
         .button-container{
-          display: flex;
-          justify-content:space-between;
+					display: flex;
+					justify-content: flex-end;
         }
       `}</style>
 		</div>
