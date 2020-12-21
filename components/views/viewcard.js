@@ -82,16 +82,20 @@ const ViewCard = ({view}) => {
 				<div className="button-container">
 					<Link href={`/view-manager/${view_name}`}>
 						<div>
-							<Button style={{fontSize: "0.9em"}}>Bekijken</Button>
+							<Button width="109px">Bekijken</Button>
 						</div>
 					</Link>
 					<Link href={`/view-manager/${view_name}?v=edit`}>
 						<div>
-							<Button style={{fontSize: "0.9em"}}>Aanpassen</Button>
+							<Button width="109px">Aanpassen</Button>
 						</div>
 					</Link>
-
-					<Button onClick={() => setVerify(true)} disabled={deleting} style={{fontSize: "0.9em"}}>Verwijderen</Button>
+					<Link href={`/view-manager/new?duplicate=${view_name}`}>
+						<div>
+							<Button width="109px">Dupliceren</Button>
+						</div>
+					</Link>
+					<Button onClick={() => setVerify(true)} disabled={deleting} width="109px">Verwijderen</Button>
 
 
 				</div>
@@ -133,8 +137,11 @@ const ViewCard = ({view}) => {
           float: left;
         }
         .button-container{
+					height: 80.67px;
           display: flex;
           justify-content: space-between;
+					align-content: space-between;
+					flex-wrap: wrap;
         }
 				.modal-button-container{
 					margin-top: 14px;

@@ -3,15 +3,13 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import React from "react";
+import React, {useState, useEffect} from "react";
 
 import { c } from "../../config/colors";
-import { useView } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import Header from "../../components/header/index";
 import NewViewName from "../../components/views/newviewname";
 import Store from "../../components/globalstate/store";
-import ViewTable from "../../components/views/viewtable";
 
 
 
@@ -23,7 +21,16 @@ import ViewTable from "../../components/views/viewtable";
 
 
 const View = () => {
-	const { data } = useView("template");
+	const router = useRouter();
+	const {duplicate} = router.query;
+	const [title, setTitle] = useState("Nieuwe view");
+	useEffect(() => {
+		if (duplicate) {
+			setTitle(`${duplicate} dupliceren`);
+		}
+	}, []);
+
+
 	// const [mounted, setMounted] = useState(false);
 	// const { data } = useView(mounted ? view : null);
 	// useEffect(() => {
@@ -35,7 +42,7 @@ const View = () => {
 	return (
 		<Store>
 			<Head>
-				<title>Nieuwe view</title>
+				<title>{title}</title>
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
 			<Header>
@@ -46,10 +53,10 @@ const View = () => {
 						</Button>
 					</div>
 				</Link>
-				Nieuwe view
+				{title}
 			</Header>
 			<div className="viewname-container">
-				<NewViewName/>
+				<NewViewName duplicate={duplicate}/>
 			</div>
 			<style jsx>{`
 				.viewname-container {

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import {useRouter} from "next/router";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
@@ -13,17 +14,18 @@ import { useSortableData } from "../../../lib/custom-hooks";
 
 
 
-const ViewTable = ({data, mode}) => {
+const ViewTable = ({data}) => {
 	const {view_name, created_at, updated_at, config, ...viewdata} = data || {};
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
+	const [myTimeout, setMyTimeout] = useState(0);
 	const { keys, requestSort, sortConfig } = useSortableData(dataState);
+	const Router = useRouter();
+	const {pathname, query: {view, v: mode,}} = Router;
 	const fakedata = new Array(50).fill(".");
-	
 	useEffect(() => {
 		let _dataState = {};
 		Object.keys(viewdata).map(key => {
-			console.log(viewdata[key]);
 			_dataState[key] = JSON.parse(viewdata[key]) || {};
 			allOptions.map(option => {
 				_dataState[key][option] =
@@ -32,20 +34,33 @@ const ViewTable = ({data, mode}) => {
 						: _dataState[key][option];
 			});
 		});
-		console.log(dataState);
 		setDataState(_dataState);
-
 	}, [Object.keys(viewdata)[0]]);
+
+	useEffect(() => {
+		if (mode === "duplicated" && Object.keys(dataState)[0]) {
+			saveAllData();
+		}
+	}, [Object.keys(dataState)[0]]);
+
+	const saveAllData = async() => {
+		await Object.keys(dataState).forEach(async item => {
+			await saveData(item);
+		});
+		Router.push({pathname, query: {v: "edit", view}});
+
+
+	};
 
 	const saveData = async (attr) => {
 		const value = JSON.stringify(dataState[attr]);
-		if (value !== viewdata[attr]) {
+		if ((value !== viewdata[attr]) || mode === "duplicated") {
 			try {
 				const res = await fetch("/api/edit-view", {
 					method: "PATCH",
 					body: JSON.stringify({
 						attr,
-						view_name,
+						view_name: mode === "duplicated" ? view : view_name,
 						value
 					}),
 					headers: {
@@ -59,7 +74,14 @@ const ViewTable = ({data, mode}) => {
 			}
 		}
 	};
-	console.log(allOptions);
+
+	const timeoutToSave = (attr) => {
+		if(myTimeout) clearTimeout(myTimeout);
+		setMyTimeout(setTimeout(() => {
+			console.log("hoi");
+		}, 1000));
+	};
+
 	return (
 		<div className="container">
 			<table>

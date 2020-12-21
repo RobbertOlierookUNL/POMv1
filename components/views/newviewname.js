@@ -8,15 +8,13 @@ import Router from "next/router";
 
 
 
-const NewViewName = () => {
+const NewViewName = ({duplicate}) => {
 	const [viewName, setViewName] = useState("");
 	const [submitting, setSubmitting] = useState(false);
+	console.log(duplicate);
 
 	const save = async () => {
 		setSubmitting(true);
-		console.log(JSON.stringify({
-			viewName
-		}));
 		try {
 			const res = await fetch("/api/create-view", {
 				method: "PUT",
@@ -30,7 +28,7 @@ const NewViewName = () => {
 			console.log(2);
 			const json = await res.json();
 			if (!res.ok) throw Error(json.message);
-			Router.push(`/view-manager/${viewName}?v=edit`);
+			Router.push(`/view-manager/${viewName}?v=${duplicate ? `duplicated&from=${duplicate}` : "edit"}`);
 		} catch (e) {
 			throw Error(e.message);
 		}

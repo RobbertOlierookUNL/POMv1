@@ -3,7 +3,7 @@ import React from "react";
 import { c } from "../config/colors";
 
 
-const Button = ({appearance, children, ...transport}) => {
+const Button = ({appearance, width = "auto", children, ...transport}) => {
 	return (
 		<button {...transport}>{children}
 			<style jsx>{`
@@ -14,6 +14,8 @@ const Button = ({appearance, children, ...transport}) => {
           color: ${c.primary.text};
           transition: background-color 200ms ease-in;
           cursor: pointer;
+					text-align: center;
+					width: ${width};
         }
         button:hover {
           background-color: ${c.primary_dark.color};

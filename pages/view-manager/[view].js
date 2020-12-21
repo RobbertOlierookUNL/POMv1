@@ -22,8 +22,10 @@ import ViewTable from "../../components/views/viewtable";
 
 const View = () => {
 	const router = useRouter();
-	const {view, v } = router.query;
-	const { data } = useView(view);
+	const {view, v, from } = router.query;
+
+	console.log(v === "duplicated" ? from : view);
+	const { data } = useView(v === "duplicated" ? from : view);
 	// const [mounted, setMounted] = useState(false);
 	// const { data } = useView(mounted ? view : null);
 	// useEffect(() => {
@@ -48,7 +50,7 @@ const View = () => {
 				</Link>
 				{view}
 			</Header>
-			<ViewTable data={data} mode={v}/>
+			<ViewTable data={data}/>
 			<style jsx global>{`
         body, html{
           background-color: ${c.secondary.color};
