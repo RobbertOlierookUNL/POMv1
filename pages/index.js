@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React from "react";
+import React, {useState} from "react";
 
 import { c } from "../config/colors";
 import Header from "../components/header";
@@ -10,6 +10,25 @@ import Table from "../components/table";
 import UserMenu from "../components/usermenu";
 
 export default function Home() {
+	const [view_name, setView_name] = useState("test");
+	const testfuction = async () => {
+		try {
+			const res = await fetch("/api/duplicate-view", {
+				method: "PATCH",
+				body: JSON.stringify({
+					view_name
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8"
+				}
+			});
+			const json = await res.json();
+			if (!res.ok) throw Error(json.message);
+		} catch (e) {
+			throw Error(e.message);
+		}
+
+	};
 
 	return (
 		<Store>
@@ -21,7 +40,11 @@ export default function Home() {
 				<MenuButton/>
 				POM
 			</Header>
-			<OptionDrawer/>
+			<OptionDrawer>
+				<button onClick={testfuction}>test</button>
+			</OptionDrawer>
+
+
 			<UserMenu/>
 			<Table/>
 			<style jsx global>{`

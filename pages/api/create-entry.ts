@@ -15,7 +15,7 @@ const handler: NextApiHandler = async (req, res) => {
       INSERT INTO entries (title, content)
       VALUES (?, ?)
       `,
-      [filter.clean(title), filter.clean(content)]
+      [title, content]
     )
 
     return res.json(results)

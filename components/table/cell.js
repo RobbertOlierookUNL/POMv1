@@ -7,17 +7,11 @@ import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
 
 const Cell = ({data, width, rowId, colName, inViewport}) => {
-	const [state, dispatch] = useContext(Context);
-	// const handleClick = () => {
-	// 	state.active === rowId ?
-	// 		dispatch({type: "SET_ACTIVE", payload: false})
-	// 		: dispatch({type: "SET_ACTIVE", payload: rowId});
-	// };
+	const [{active}] = useContext(Context);
 
 
 	return (
 		<td className={colName}
-			// onClick={inViewport ? handleClick : undefined}
 		>{data === false ?
 				<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
 					<Skeleton />
@@ -32,7 +26,7 @@ const Cell = ({data, width, rowId, colName, inViewport}) => {
 					/* grid-column-end: span ${width}; */
 					cursor: pointer;
 					padding: 2px;
-			 	${state.active === rowId || (`
+			 	${active === rowId || (`
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;`)

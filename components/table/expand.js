@@ -1,27 +1,16 @@
 import React, {useRef, useEffect, useState, forwardRef} from "react";
 
 import { c } from "../../config/colors";
+import { useToolkit } from "../../lib/custom-hooks";
 
-const mergeRefs = (...refs) => {
-	const filteredRefs = refs.filter(Boolean);
-	if (!filteredRefs.length) return null;
-	if (filteredRefs.length === 0) return filteredRefs[0];
-	return inst => {
-		for (const ref of filteredRefs) {
-			if (typeof ref === "function") {
-				ref(inst);
-			} else if (ref) {
-				ref.current = inst;
-			}
-		}
-	};
-};
+
 
 
 
 const Expand = ({keys, data, meta, active, rowId}, ref) => {
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
+	const {mergeRefs} = useToolkit();
 	// const [once, setOnce] = useState(false);
 	// useEffect(() => {
 	// 	if (once) {
@@ -39,10 +28,10 @@ const Expand = ({keys, data, meta, active, rowId}, ref) => {
 			<div className={`container ${active && "active"}`}>
 				{keys && <div className="active-visibility"><dl className={"expandList"}>
 					{keys.map((key, i) =>(
-						<>
+						<div key={i}>
 							<dt key={"dt" + i}>{meta[key].title || key}</dt>
 							<dd key={"dd" + i}>{data[key]}</dd>
-						</>
+						</div>
 					))
 					}
 

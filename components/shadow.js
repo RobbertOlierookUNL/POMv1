@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 
-const Shadow = ({zIndex = 1, thickness =0.05, trigger = true, clickthrough = true, selfAnimate = false}) => {
+const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, clickthrough = true, selfAnimate = false}) => {
 	const [triggerState, setTriggerState] = useState(trigger);
 	useEffect(() => {
 		if (selfAnimate) {
@@ -8,9 +8,13 @@ const Shadow = ({zIndex = 1, thickness =0.05, trigger = true, clickthrough = tru
 			setTimeout(() => {setTriggerState(true);}, 10);
 		}
 	}, []);
+	useEffect(() => {
+		setTriggerState(trigger);
+	}, [trigger]);
 
 	return (
 		<div className="shadow">
+			{console.log("rerender")}
 			<style jsx>{`
         .shadow {
           z-index: ${zIndex};

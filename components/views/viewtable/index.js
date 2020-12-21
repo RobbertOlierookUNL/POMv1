@@ -18,9 +18,8 @@ const ViewTable = ({data, mode}) => {
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
 	const { keys, requestSort, sortConfig } = useSortableData(dataState);
-
-
 	const fakedata = new Array(50).fill(".");
+	
 	useEffect(() => {
 		let _dataState = {};
 		Object.keys(viewdata).map(key => {

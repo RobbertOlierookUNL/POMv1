@@ -1,14 +1,17 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
+import handleViewport from "react-in-viewport";
 
-import { useSortableData } from "../../lib/custom-hooks";
+import { useToolkit } from "../../lib/custom-hooks";
 import Row from "./row.js";
 
 
-const numberInView = 150;
+
+const numberInView = 100;
+
+
 
 
 const TableBody = ({meta, data, keys, sortedKeys, additionalKeys}) => {
-	// const rows = Object.keys(data);
 	const fakedata = new Array(26).fill(".");
 	const [minLoad, setMinLoad] = useState(0);
 	const [maxLoad, setMaxLoad] = useState(numberInView);
@@ -24,22 +27,25 @@ const TableBody = ({meta, data, keys, sortedKeys, additionalKeys}) => {
 		}
 	};
 
-	return (
-		<tbody>
-			{data && Object.keys(data)[0] ?
-				<>
-					{sortedKeys.map((row, i) => (
-						minLoad < i && i < maxLoad &&
-							<Row onEnterViewport={() => updateParameters(i)} id={i} data={data[row]} meta={meta} keys={keys} additionalKeys={additionalKeys} key={i}/>
-					))}
-				</> : <>
-					{fakedata.map((row, i) => (
-						<Row id={i} data={false} meta={meta} keys={keys} additionalKeys={additionalKeys} key={i}/>
-					))}
-				</>
-			}
 
-		</tbody>
+
+	return (
+		<>
+			<tbody>
+				{data && Object.keys(data)[0] ?
+					<>
+						{sortedKeys.map((row, i) => (
+							minLoad < i && i < maxLoad &&
+							<Row onEnterViewport={() => updateParameters(i)} id={i} data={data[row]} meta={meta} keys={keys} additionalKeys={additionalKeys} key={i}/>
+						))}
+					</> : <>
+						{fakedata.map((row, i) => (
+							<Row id={i} data={false} meta={meta} keys={keys} additionalKeys={additionalKeys} key={i}/>
+						))}
+					</>
+				}
+			</tbody>
+		</>
 	);
 };
 

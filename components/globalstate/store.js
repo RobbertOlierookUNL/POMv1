@@ -8,7 +8,11 @@ const initialState = {
 	menubutton: {current: null},
 	userbutton: {current: null},
 	active: false,
+	topInView: true,
 };
+// const {options, usermenu, menubutton, userbutton, active, topInView } = initialState;
+// const headerSubset = {options, usermenu, menubutton, userbutton};
+// const rowSubset = {active, topInView};
 
 const Store = ({children}) => {
 	const [state, dispatch] = useReducer(Reducer, initialState);
@@ -20,4 +24,6 @@ const Store = ({children}) => {
 };
 
 export const Context = createContext(initialState);
+// export const HeaderContext = createContext(headerSubset);
+// export const RowContext = createContext(rowSubset);
 export default Store;

@@ -10,10 +10,10 @@ import { c } from "../../config/colors";
 
 
 const MenuButton = () => {
-	const [state, dispatch] = useContext(Context);
+	const [{options}, dispatch] = useContext(Context);
 	const ref = useRef(null);
 	const handleClick = () => {
-		dispatch({type: "EXPAND_OPTIONS", payload: !state.options
+		dispatch({type: "EXPAND_OPTIONS", payload: !options
 		});
 	};
 	useEffect(() => {

@@ -10,19 +10,19 @@ import Gravatar from "../gravatar";
 
 
 
-// const fName="Rohn";
-// const lName="Doe";
+const fName="John";
+const lName="Doe";
 
-const fName=null;
-const lName=null;
+// const fName=null;
+// const lName=null;
 
 const Header = ({children}) => {
-	const [state, dispatch] = useContext(Context);
+	const [{usermenu}, dispatch] = useContext(Context);
 	const ref = useRef(null);
 	useEffect(() => {dispatch({type: "SET_USERBUTTON", payload: ref});},[]);
 
 	const handleClick = () => {
-		dispatch({type: "EXPAND_USERMENU", payload: !state.usermenu});
+		dispatch({type: "EXPAND_USERMENU", payload: !usermenu});
 	};
 
 	return (

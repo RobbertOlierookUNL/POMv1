@@ -32,6 +32,7 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
 						grid-column-start: ${colName};
 						cursor: pointer;
 						position: relative;
+						padding: 2px 0;
           }
 					th:last-child {
 						border-width: 0;
@@ -47,6 +48,7 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
 						min-width: 100%;
 						width: fit-content;
 						transition: width 1s linear;
+						padding: 1px 3px;
 					}
 					th:hover::after {
 						content: "${data.hovername || data.title || colName}";
