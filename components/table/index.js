@@ -1,8 +1,9 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useMemo, useEffect, useRef} from "react";
 
 import { c } from "../../config/colors";
 import { useEntries, useView } from "../../lib/swr-hooks";
 import { useSortableData } from "../../lib/custom-hooks";
+import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
@@ -80,7 +81,7 @@ const Table = () => {
 	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
 	const tableRef = useRef(null);
 
-
+	const fakedata = new Array(50).fill(".");
 	const horPadding = 15;
 	const verPadding = 15;
 
@@ -88,7 +89,7 @@ const Table = () => {
 		tableRef.current.scrollTo(0, 0);
 	};
 
-	useEffect(() => {
+	useMemo(() => {
 		const cols = Object.keys(metaString);
 		const keys = {
 			compact: [],
@@ -127,13 +128,46 @@ const Table = () => {
 				left={`calc(100vw - ${50 + 2*verPadding}px)`
 				}/>}
 			<div className="tableContainer" ref={tableRef}>
-				<table className="table">
+				{data && Object.keys(data)[0] ? <table className="table">
 					{//<TableColGroup meta={meta} keys={keys.compact}/>
 					}
 					<TableHeaders requestSort={requestSort} sortConfig={sortConfig}  meta={meta} keys={compact} totalWidth={totalWidthCount}/>
 					<TableBody meta={meta} data={data} keys={compact} additionalKeys={expanded} sortedKeys={sortedKeys}>
 					</TableBody>
 				</table>
+					:
+					<table className="table">
+						{fakedata.map((_, row) => (
+							<tr key={row}>
+								<td>
+									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+										<Skeleton />
+									</SkeletonTheme>
+								</td>
+								<td>
+									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+										<Skeleton />
+									</SkeletonTheme>
+								</td>
+								<td>
+									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+										<Skeleton />
+									</SkeletonTheme>
+								</td>
+								<td>
+									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+										<Skeleton />
+									</SkeletonTheme>
+								</td>
+								<td>
+									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+										<Skeleton />
+									</SkeletonTheme>
+								</td>
+							</tr>
+						))}
+					</table>
+				}
 			</div>
 			<style jsx>{`
 				.tableContainer {
@@ -143,13 +177,14 @@ const Table = () => {
 					position: relative;
 					top: ${horPadding}px;
 					left: ${verPadding}px;
+					box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
+
 
 				}
 				.table {
 					border-collapse: collapse;
 					background-color: white;
 					width: 100%;
-					box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 					font-size: 0.7em
 				}
 				.toTopButton {
