@@ -3,9 +3,10 @@ import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Head from "next/head";
 import Link from "next/link";
-import React from "react";
+import React, {useContext} from "react";
 
-import { c } from "../../config/colors";
+import { SchemaContext } from "../_app";
+import { colorschematic } from "../../config/colors";
 import { useViews } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import GetViews from "../../components/views/getviews";
@@ -16,8 +17,10 @@ import Store from "../../components/globalstate/store";
 
 
 
+
 const Views = () => {
 	const {views, isLoading, isError} = useViews();
+	const schema = useContext(SchemaContext);
 	if (isError) {
 		return <p>error</p>;
 	}
@@ -50,7 +53,7 @@ const Views = () => {
 					<GetViews views={views}/>}
 				<style jsx global>{`
 				body, html{
-					background-color: ${c.secondary.color};
+					background-color: ${colorschematic(schema).secondary.color};
 				}
 				.circle-container {
 					width: 100%;

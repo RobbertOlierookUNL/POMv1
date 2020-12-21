@@ -1,8 +1,11 @@
 import React, {useContext, useEffect, useRef} from "react";
 
 import { Context } from "../globalstate/store";
-import { c } from "../../config/colors";
+import { SchemaContext } from "../../pages/_app";
+import { colorschematic } from "../../config/colors";
 import Gravatar from "../gravatar";
+
+
 
 
 
@@ -18,6 +21,7 @@ const lName="Doe";
 
 const Header = ({children}) => {
 	const [{usermenu}, dispatch] = useContext(Context);
+	const schema = useContext(SchemaContext);
 	const ref = useRef(null);
 	useEffect(() => {dispatch({type: "SET_USERBUTTON", payload: ref});},[]);
 
@@ -51,8 +55,8 @@ const Header = ({children}) => {
 					flex-direction: row;
 					justify-content: space-between;
 					align-items: center;
-          background: ${c.primary.color};
-          color: ${c.primary.text};
+          background: ${colorschematic(schema).primary.color};
+          color: ${colorschematic(schema).primary.text};
 					padding: 0 10px 0 15px;
 					box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
         }

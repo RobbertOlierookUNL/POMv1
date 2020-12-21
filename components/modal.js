@@ -1,10 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 
-import { c } from "../config/colors";
+import { SchemaContext } from "../pages/_app";
+import { colorschematic } from "../config/colors";
 import Shadow from "./shadow";
 
 
+
 const Modal = ({header, children}) => {
+	const schema = useContext(SchemaContext);
+
 	return (
 		<>
 			<div className={"modal"}>
@@ -26,8 +30,8 @@ const Modal = ({header, children}) => {
           box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
         }
         .header{
-          background-color: ${c.primary.color};
-          color: ${c.primary.text};
+          background-color: ${colorschematic(schema).primary.color};
+          color: ${colorschematic(schema).primary.text};
           padding: 7px 0 7px 14px;
         }
         .body {

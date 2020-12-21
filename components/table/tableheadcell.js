@@ -1,8 +1,10 @@
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import React, {useContext} from "react";
 
-import { c } from "../../config/colors";
+import { SchemaContext } from "../../pages/_app";
+import { colorschematic } from "../../config/colors";
+
 
 
 
@@ -11,6 +13,8 @@ import { c } from "../../config/colors";
 
 
 const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
+	const schema = useContext(SchemaContext);
+
 	return (
 		<th onClick={() => requestSort(colName, data.valuetype)}>
 			{
@@ -22,9 +26,9 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
 			)}
 			<style jsx>{`
           th{
-						background-color: ${c.primary.color};
-						color: ${c.primary.text};
-            border: 1px solid ${c.gray_light.color};
+						background-color: ${colorschematic(schema).primary.color};
+						color: ${colorschematic(schema).primary.text};
+            border: 1px solid ${colorschematic(schema).gray_light.color};
             border-width: 0 1px 0 0;
 						text-overflow: clip;
 				    white-space: nowrap;

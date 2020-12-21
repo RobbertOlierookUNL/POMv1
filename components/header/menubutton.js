@@ -3,7 +3,10 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import React, {useContext, useEffect, useRef} from "react";
 
 import { Context } from "../globalstate/store";
-import { c } from "../../config/colors";
+import { SchemaContext } from "../../pages/_app";
+import { colorschematic } from "../../config/colors";
+
+
 
 
 
@@ -11,6 +14,7 @@ import { c } from "../../config/colors";
 
 const MenuButton = () => {
 	const [{options}, dispatch] = useContext(Context);
+	const schema = useContext(SchemaContext);
 	const ref = useRef(null);
 	const handleClick = () => {
 		dispatch({type: "EXPAND_OPTIONS", payload: !options
@@ -34,7 +38,7 @@ const MenuButton = () => {
     }
 
     .container:hover {
-      filter: drop-shadow(0px 0px 5px ${c.secondary.color});
+      /* filter: drop-shadow(0px 0px 5px ${colorschematic(schema).secondary.color}); */
       cursor: pointer;
       transform: scale(1.2, 1.2);
 

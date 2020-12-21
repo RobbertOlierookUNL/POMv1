@@ -1,8 +1,14 @@
 import "../styles/globals.css";
-import React from "react";
+import React, {createContext} from "react";
+
+export const SchemaContext = createContext(10);
 
 function MyApp({ Component, pageProps }) {
-	return <Component {...pageProps} />;
+	return (
+		<SchemaContext.Provider value={10}>
+			<Component {...pageProps} />
+		</SchemaContext.Provider>
+	);
 }
 
 export default MyApp;

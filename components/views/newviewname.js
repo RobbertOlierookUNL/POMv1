@@ -1,9 +1,11 @@
-import React, {useState} from "react";
-
-import { c } from "../../config/colors";
-import Button from "../button";
 import Link from "next/link";
-import Router from "next/router";
+import React, {useState, useContext} from "react";
+import {useRouter} from "next/router";
+
+import { SchemaContext } from "../../pages/_app";
+import { colorschematic } from "../../config/colors";
+import Button from "../button";
+
 
 
 
@@ -11,6 +13,8 @@ import Router from "next/router";
 const NewViewName = ({duplicate}) => {
 	const [viewName, setViewName] = useState("");
 	const [submitting, setSubmitting] = useState(false);
+	const schema = useContext(SchemaContext);
+	const Router = useRouter();
 	console.log(duplicate);
 
 	const save = async () => {
@@ -49,8 +53,8 @@ const NewViewName = ({duplicate}) => {
           width: 300px;
         }
         .head {
-          background-color: ${c.primary.color};
-          color: ${c.primary.text};
+          background-color: ${colorschematic(schema).primary.color};
+          color: ${colorschematic(schema).primary.text};
           padding: 7px;
         }
         .body {
@@ -58,7 +62,7 @@ const NewViewName = ({duplicate}) => {
           padding: 15px;
         }
         .inputField {
-          border: 2px solid ${c.primary.color};
+          border: 2px solid ${colorschematic(schema).primary.color};
           border-radius: 2px;
           padding: 2px;
           width: 270px;

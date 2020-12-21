@@ -3,9 +3,10 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 
-import { c } from "../../config/colors";
+import { SchemaContext } from "../_app";
+import { colorschematic } from "../../config/colors";
 import Button from "../../components/button";
 import Header from "../../components/header/index";
 import NewViewName from "../../components/views/newviewname";
@@ -20,10 +21,12 @@ import Store from "../../components/globalstate/store";
 
 
 
+
 const View = () => {
 	const router = useRouter();
 	const {duplicate} = router.query;
 	const [title, setTitle] = useState("Nieuwe view");
+	const schema = useContext(SchemaContext);
 	useEffect(() => {
 		if (duplicate) {
 			setTitle(`${duplicate} dupliceren`);
@@ -73,7 +76,7 @@ const View = () => {
 			`}</style>
 			<style jsx global>{`
         body, html{
-          background-color: ${c.secondary.color};
+          background-color: ${colorschematic(schema).secondary.color};
         }
       `}</style>
 		</Store>

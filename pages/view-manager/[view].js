@@ -3,9 +3,10 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import React from "react";
+import React, {useContext} from "react";
 
-import { c } from "../../config/colors";
+import { SchemaContext } from "../_app";
+import { colorschematic } from "../../config/colors";
 import { useView } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import Header from "../../components/header/index";
@@ -20,8 +21,10 @@ import ViewTable from "../../components/views/viewtable";
 
 
 
+
 const View = () => {
 	const router = useRouter();
+	const schema = useContext(SchemaContext);
 	const {view, v, from } = router.query;
 
 	console.log(v === "duplicated" ? from : view);
@@ -53,7 +56,7 @@ const View = () => {
 			<ViewTable data={data}/>
 			<style jsx global>{`
         body, html{
-          background-color: ${c.secondary.color};
+          background-color: ${colorschematic(schema).secondary.color};
         }
       `}</style>
 		</Store>

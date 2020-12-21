@@ -1,10 +1,13 @@
-import React from "react";
+import React, {useContext} from "react";
 
-import { c } from "../../config/colors";
+import { SchemaContext } from "../../pages/_app";
 import TableHeadCell from "./tableheadcell";
 
 
+
 const TableHeaders = ({meta, keys, totalWidth, requestSort, sortConfig}) => {
+	const schema = useContext(SchemaContext);
+
 	let colString = "";
 	keys.map(col => {
 		if (meta[col].widthkind === "[px]min,[fr]max") {

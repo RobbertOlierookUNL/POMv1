@@ -1,11 +1,13 @@
 import {mutate} from "swr";
 import Link from "next/link";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import moment from "moment";
 
-import { c } from "../../config/colors";
+import { SchemaContext } from "../../pages/_app";
+import { colorschematic } from "../../config/colors";
 import Button from "../button";
 import Modal from "../modal";
+
 
 
 
@@ -21,6 +23,8 @@ const ViewCard = ({view}) => {
 	const [undef, setUndef] = useState(0);
 	const [deleting, setDeleting] = useState(false);
 	const [verify, setVerify] = useState(false);
+	const schema = useContext(SchemaContext);
+
 
 	useEffect(() => {
 		let compact_counter = 0;
@@ -66,41 +70,42 @@ const ViewCard = ({view}) => {
 
 	return (
 		<div className="card">
-			<div className="head">
-				<h4>{view_name}</h4>
-			</div>
-			<div className="body">
-				<p><b>Initiële kolommen: </b>{compact}</p>
-				<p><b>Uitklapbare kolommen: </b>{expanded}</p>
-				<p><b>Verborgen kolommen: </b>{hidden}</p>
-				<p><b>Ongedefinieerde kolommen: </b>{undef}</p>
-				<br/>
-				<p><i>View aangemaakt: </i>{moment(created_at).locale("nl").format("LLL")}</p>
-				<p><i>View laatst aangepast: </i>{moment(updated_at).locale("nl").format("LLL")}</p>
-				<br/>
-				<br/>
-				<div className="button-container">
-					<Link href={`/view-manager/${view_name}`}>
-						<div>
-							<Button width="109px">Bekijken</Button>
-						</div>
-					</Link>
-					<Link href={`/view-manager/${view_name}?v=edit`}>
-						<div>
-							<Button width="109px">Aanpassen</Button>
-						</div>
-					</Link>
-					<Link href={`/view-manager/new?duplicate=${view_name}`}>
-						<div>
-							<Button width="109px">Dupliceren</Button>
-						</div>
-					</Link>
-					<Button onClick={() => setVerify(true)} disabled={deleting} width="109px">Verwijderen</Button>
-
-
+			<div className="shadow">
+				<div className="head">
+					<h4>{view_name}</h4>
 				</div>
-			</div>
-			{verify &&
+				<div className="body">
+					<p><b>Initiële kolommen: </b>{compact}</p>
+					<p><b>Uitklapbare kolommen: </b>{expanded}</p>
+					<p><b>Verborgen kolommen: </b>{hidden}</p>
+					<p><b>Ongedefinieerde kolommen: </b>{undef}</p>
+					<br/>
+					<p><i>View aangemaakt: </i>{moment(created_at).locale("nl").format("LLL")}</p>
+					<p><i>View laatst aangepast: </i>{moment(updated_at).locale("nl").format("LLL")}</p>
+					<br/>
+					<br/>
+					<div className="button-container">
+						<Link href={`/view-manager/${view_name}`}>
+							<div>
+								<Button width="109px">Bekijken</Button>
+							</div>
+						</Link>
+						<Link href={`/view-manager/${view_name}?v=edit`}>
+							<div>
+								<Button width="109px">Aanpassen</Button>
+							</div>
+						</Link>
+						<Link href={`/view-manager/new?duplicate=${view_name}`}>
+							<div>
+								<Button width="109px">Dupliceren</Button>
+							</div>
+						</Link>
+						<Button onClick={() => setVerify(true)} disabled={deleting} width="109px">Verwijderen</Button>
+
+
+					</div>
+				</div>
+				{verify &&
 				<Modal header={"Weet je het zeker?"}>
 					Weet je zeker dat je {view_name} wilt verwijderen?
 					<br/>
@@ -109,14 +114,19 @@ const ViewCard = ({view}) => {
 						<Button onClick={deleteEntry} style={{fontSize: "0.9em"}}>Verwijderen</Button>
 					</div>
 				</Modal>}
+			</div>
 			<style jsx>{`
         .card{
           width: 300px;
           padding: 20px;
         }
+				.shadow{
+					width: 100%;
+					box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
+				}
         .head{
-          background-color: ${c.primary.color};
-          color: ${c.primary.text};
+          background-color: ${colorschematic(schema).primary.color};
+          color: ${colorschematic(schema).primary.text};
           text-align: left;
         }
         .head>h4{

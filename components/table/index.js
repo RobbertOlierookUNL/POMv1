@@ -1,12 +1,14 @@
-import React, {useState, useMemo, useEffect, useRef} from "react";
+import React, {useState, useMemo, useEffect, useContext, useRef} from "react";
+import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
-import { c } from "../../config/colors";
+import { SchemaContext } from "../../pages/_app";
+import { colorschematic } from "../../config/colors";
 import { useEntries, useView } from "../../lib/swr-hooks";
 import { useSortableData } from "../../lib/custom-hooks";
-import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
+
 
 
 
@@ -80,7 +82,7 @@ const Table = () => {
 	const [data, setData] = useState({});
 	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
 	const tableRef = useRef(null);
-
+	const schema = useContext(SchemaContext);
 	const fakedata = new Array(50).fill(".");
 	const horPadding = 15;
 	const verPadding = 15;
@@ -121,52 +123,46 @@ const Table = () => {
 
 
 	return (
-		<>
+		<SkeletonTheme color={colorschematic(schema).primary_very_light.color} highlightColor={"white"}>
+
 			{data && Object.keys(data)[0] && <ToTopButton
 				handleClick={handleClick}
 				top={`${38.67 + (verPadding * 3)}px`}
 				left={`calc(100vw - ${50 + 2*verPadding}px)`
 				}/>}
 			<div className="tableContainer" ref={tableRef}>
-				{data && Object.keys(data)[0] ? <table className="table">
+				{meta && Object.keys(meta)[0] ? <table className="table">
 					{//<TableColGroup meta={meta} keys={keys.compact}/>
 					}
-					<TableHeaders requestSort={requestSort} sortConfig={sortConfig}  meta={meta} keys={compact} totalWidth={totalWidthCount}/>
+					<TableHeaders requestSort={requestSort} sortConfig={sortConfig} meta={meta} keys={compact} totalWidth={totalWidthCount}/>
 					<TableBody meta={meta} data={data} keys={compact} additionalKeys={expanded} sortedKeys={sortedKeys}>
 					</TableBody>
 				</table>
 					:
 					<table className="table">
-						{fakedata.map((_, row) => (
-							<tr key={row}>
-								<td>
-									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+						<tbody>
+							{fakedata.map((_, row) => (
+								<tr key={row}>
+									<td>
 										<Skeleton />
-									</SkeletonTheme>
-								</td>
-								<td>
-									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+									</td>
+									<td>
 										<Skeleton />
-									</SkeletonTheme>
-								</td>
-								<td>
-									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+									</td>
+									<td>
 										<Skeleton />
-									</SkeletonTheme>
-								</td>
-								<td>
-									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+									</td>
+									<td>
 										<Skeleton />
-									</SkeletonTheme>
-								</td>
-								<td>
-									<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+									</td>
+									<td>
 										<Skeleton />
-									</SkeletonTheme>
-								</td>
-							</tr>
-						))}
+									</td>
+								</tr>
+							))}
+						</tbody>
 					</table>
+
 				}
 			</div>
 			<style jsx>{`
@@ -187,27 +183,9 @@ const Table = () => {
 					width: 100%;
 					font-size: 0.7em
 				}
-				.toTopButton {
-					z-index: 4;
-					position: absolute;
-					height: 50px;
-					width: 50px;
-					border-radius: 50%;
-					background-color: red;
-					top: ${38.67 + (verPadding * 3)}px;
-					left: calc(100vw - ${50 + 2*verPadding}px);
-					box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-					opacity: 0.7;
-					background-color: ${c.primary_dark.color};
-					color: ${c.primary_dark.text};
-					text-align: center;
-					padding: calc(10px - 0.18em) 10px 10px 10px;
-					font-size: 30px;
-					cursor: pointer;
-				}
 			`}
 			</style>
-		</>
+		</SkeletonTheme>
 	);
 
 };

@@ -1,16 +1,16 @@
-import React, {useRef, useEffect, useState, forwardRef} from "react";
+import React, {useRef, useEffect, useState, useContext, forwardRef} from "react";
 
-import { c } from "../../config/colors";
+import { SchemaContext } from "../../pages/_app";
+import { colorschematic } from "../../config/colors";
 import { useToolkit } from "../../lib/custom-hooks";
-
-
-
 
 
 const Expand = ({keys, data, meta, active, rowId}, ref) => {
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
 	const {mergeRefs} = useToolkit();
+	const schema = useContext(SchemaContext);
+
 	// const [once, setOnce] = useState(false);
 	// useEffect(() => {
 	// 	if (once) {
@@ -54,7 +54,7 @@ const Expand = ({keys, data, meta, active, rowId}, ref) => {
           max-height: 300px;
           grid-column: 1/-1;
           color: black;
-          border: 1px solid ${c.gray_light.color};
+          border: 1px solid ${colorschematic(schema).gray_light.color};
           border-width: 0 0 1px 0;
           height: ${height};
           visibility: visible;

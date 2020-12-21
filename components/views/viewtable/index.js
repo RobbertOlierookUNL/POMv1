@@ -1,12 +1,14 @@
-import React, {useState, useEffect} from "react";
-import {useRouter} from "next/router";
-import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import {useRouter} from "next/router";
+import React, {useState, useEffect, useContext} from "react";
+import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
+import { SchemaContext } from "../../../pages/_app";
 import { allOptions, allOptionsWithData } from "../../../config/viewOptions";
-import { c } from "../../../config/colors";
+import { colorschematic } from "../../../config/colors";
 import { useSortableData } from "../../../lib/custom-hooks";
+
 
 
 
@@ -19,6 +21,8 @@ const ViewTable = ({data}) => {
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
 	const [myTimeout, setMyTimeout] = useState(0);
+	const schema = useContext(SchemaContext);
+
 	const { keys, requestSort, sortConfig } = useSortableData(dataState);
 	const Router = useRouter();
 	const {pathname, query: {view, v: mode,}} = Router;
@@ -93,7 +97,7 @@ const ViewTable = ({data}) => {
 					<tr>
 						<th className="crossdivider" onClick={() => requestSort(null)}>{sortConfig && sortConfig.key && <FontAwesomeIcon icon={faTimes} />}</th>
 						{allOptions.map((option, i) => <th key={i} onClick={() => requestSort(option,
-							typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" )}>{option}
+							typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" )}>
 							{
 								sortConfig && sortConfig.key === option &&
 							(
@@ -101,6 +105,7 @@ const ViewTable = ({data}) => {
 							||
 								sortConfig.direction === "descending" && <FontAwesomeIcon icon={faArrowUp} />
 							)}
+							{option}
 						</th>)}
 					</tr>
 				</thead>
@@ -150,14 +155,14 @@ const ViewTable = ({data}) => {
 							{fakedata.map((dot, row) => (
 								<tr key={row}>
 									<td key={0}>
-										<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
+										<SkeletonTheme color={colorschematic(schema).primary_very_light.color} highlightColor={"white"}>
 											<Skeleton />
 										</SkeletonTheme>
 									</td>
 									{allOptions.map((option, i) =>
 										<td key={i+1}>
-											<SkeletonTheme color={c.primary_very_light.color} highlightColor={"white"}>
-												<Skeleton color={c.primary.color} highlightColor={c.primary_very_light}/>
+											<SkeletonTheme color={colorschematic(schema).primary_very_light.color} highlightColor={"white"}>
+												<Skeleton color={colorschematic(schema).primary.color} highlightColor={colorschematic(schema).primary_very_light}/>
 											</SkeletonTheme>
 										</td>
 									)}
@@ -175,11 +180,15 @@ const ViewTable = ({data}) => {
 					position: relative;
 					top: 15px;
 					left: 15px;
+					box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
 					/* right: -15px;
 					bottom: -15px; */
 				}
 				.evencols{
 					width: ${(1/(allOptions.length+1)) * 100}%;
+					text-overflow: clip;
+					white-space: nowrap;
+					overflow: hidden;
 				}
 				table{
 					background-color: white;
@@ -188,32 +197,41 @@ const ViewTable = ({data}) => {
 				}
 
 				tr:nth-child(even){
-					background-color: ${c.gray_very_light.color};
+					background-color: ${colorschematic(schema).gray_very_light.color};
 				}
 				colgroup {
 					width: 100%;
 				}
 				.crossdivider {
-					background-color: ${c.primary_very_light.color};
-					color: ${c.primary_very_light.text};
+					background-color: ${colorschematic(schema).primary_very_light.color};
+					color: ${colorschematic(schema).primary_very_light.text};
 				}
 				td {
 					text-align: right;
-					border: 1px solid ${c.gray_light.color};
+					border: 1px solid ${colorschematic(schema).gray_light.color};
 					border-width: 0 1px 1px 0;
 					padding: 1px 7px;
+					text-overflow: clip;
+					white-space: nowrap;
+					overflow: hidden;
 				}
 				td:nth-last-child(1) {
 					border-width: 0 0 1px 0;
 				}
+				td:hover{
+					text-overflow: none;
+				}
 				th{
-					background-color: ${c.primary.color};
-					color: ${c.primary.text};
-					border: 1px solid ${c.gray_light.color};
+					background-color: ${colorschematic(schema).primary.color};
+					color: ${colorschematic(schema).primary.text};
+					border: 1px solid ${colorschematic(schema).gray_light.color};
 					border-width: 0 1px 0 0;
 					position: sticky;
 					top: 0;
 					cursor: pointer;
+					text-overflow: clip;
+					white-space: nowrap;
+					overflow: hidden;
 				}
 				th:last-child {
 					border-width: 0;
@@ -224,7 +242,7 @@ const ViewTable = ({data}) => {
 				}
 				.optionInput{
 					width: 100%;
-					/* border: 2px solid ${c.primary.color}; */
+					/* border: 2px solid ${colorschematic(schema).primary.color}; */
 
 				}
 
