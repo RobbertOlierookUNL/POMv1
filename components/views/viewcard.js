@@ -3,8 +3,7 @@ import Link from "next/link";
 import React, {useState, useEffect, useContext} from "react";
 import moment from "moment";
 
-import { SchemaContext } from "../../pages/_app";
-import { colorschematic } from "../../config/colors";
+import useGlobal from "../store";
 import Button from "../button";
 import Modal from "../modal";
 
@@ -23,7 +22,10 @@ const ViewCard = ({view}) => {
 	const [undef, setUndef] = useState(0);
 	const [deleting, setDeleting] = useState(false);
 	const [verify, setVerify] = useState(false);
-	const schema = useContext(SchemaContext);
+	const [primary] = useGlobal(
+		state => state.primary,
+		() => null
+	);
 
 
 	useEffect(() => {
@@ -125,8 +127,8 @@ const ViewCard = ({view}) => {
 					box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
 				}
         .head{
-          background-color: ${colorschematic(schema).primary.color};
-          color: ${colorschematic(schema).primary.text};
+          background-color: ${primary.color};
+          color: ${primary.text};
           text-align: left;
         }
         .head>h4{

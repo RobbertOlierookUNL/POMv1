@@ -2,9 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import React, {useContext} from "react";
 
-import { SchemaContext } from "../../pages/_app";
-import { colorschematic } from "../../config/colors";
-
+import useGlobal from "../store";
 
 
 
@@ -13,8 +11,18 @@ import { colorschematic } from "../../config/colors";
 
 
 const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
-	const schema = useContext(SchemaContext);
-
+	const [primary] = useGlobal(
+		state => state.primary,
+		() => null
+	);
+	const [gray_light] = useGlobal(
+		state => state.gray_light,
+		() => null
+	);
+	const [tertiary] = useGlobal(
+		state => state.tertiary,
+		() => null
+	);
 	return (
 		<th onClick={() => requestSort(colName, data.valuetype)}>
 			{
@@ -26,9 +34,9 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
 			)}
 			<style jsx>{`
           th{
-						background-color: ${colorschematic(schema).primary.color};
-						color: ${colorschematic(schema).primary.text};
-            border: 1px solid ${colorschematic(schema).gray_light.color};
+						background-color: ${primary.color};
+						color: ${primary.text};
+            border: 1px solid ${gray_light.color};
             border-width: 0 1px 0 0;
 						text-overflow: clip;
 				    white-space: nowrap;
@@ -48,11 +56,14 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
 					  content: "${data.title || colName}";
 					}
 					th:hover {
+						position: relative;
 						z-index: 5;
 						min-width: 100%;
 						width: fit-content;
-						transition: width 1s linear;
+						transition: all 200ms linear;
 						padding: 1px 3px;
+						background-color: ${tertiary.color};
+						color: ${tertiary.text};
 					}
 					th:hover::after {
 						content: "${data.hovername || data.title || colName}";

@@ -2,21 +2,16 @@ import React, { useContext } from "react";
 import Skeleton from "react-loading-skeleton";
 
 import useGlobal from "../store";
-import { SchemaContext } from "../../pages/_app";
-import { colorschematic } from "../../config/colors";
-
-
-
-
-
 
 const Cell = ({data, width, rowId, colName, inViewport}) => {
 	const [active] = useGlobal(
 		state => state.active,
 		() => null
 	);
-	const schema = useContext(SchemaContext);
-
+	const [gray_light] = useGlobal(
+		state => state.gray_light,
+		() => null
+	);
 	return (
 		<td className={colName}
 		>{data === false ?
@@ -26,7 +21,7 @@ const Cell = ({data, width, rowId, colName, inViewport}) => {
 			}
 			<style jsx>{`
         td {
-          border: 1px solid ${colorschematic(schema).gray_light.color};
+          border: 1px solid ${gray_light.color};
           border-width: 0 1px 1px 0;
 					/* grid-column-end: span ${width}; */
 					cursor: pointer;

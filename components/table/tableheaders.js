@@ -1,12 +1,10 @@
-import React, {useContext} from "react";
+import React from "react";
 
-import { SchemaContext } from "../../pages/_app";
 import TableHeadCell from "./tableheadcell";
 
 
 
 const TableHeaders = ({meta, keys, totalWidth, requestSort, sortConfig}) => {
-	const schema = useContext(SchemaContext);
 
 	let colString = "";
 	keys.map(col => {

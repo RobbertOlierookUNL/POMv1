@@ -2,8 +2,7 @@ import React, { useContext, useRef, useMemo, useEffect, useCallback } from "reac
 import handleViewport from "react-in-viewport";
 
 import useGlobal from "../store";
-import { SchemaContext } from "../../pages/_app";
-import { colorschematic } from "../../config/colors";
+
 import Cell from "./cell";
 import Expand from "./expand";
 
@@ -16,10 +15,19 @@ const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}
 		() => null,
 		actions => actions.setTopInView
 	);
+	const [gray_very_light] = useGlobal(
+		state => state.gray_very_light,
+		() => null
+	);
+	const [gray_light] = useGlobal(
+		state => state.gray_light,
+		() => null
+	);
+	const [tertiary] = useGlobal(
+		state => state.tertiary,
+		() => null
+	);
 	const expandRef = useRef(null);
-	const schema = useContext(SchemaContext);
-	const {gray_very_light, gray_light, tertiary} = useMemo(() => colorschematic(schema), []);
-
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
 			active === id ?

@@ -1,8 +1,7 @@
 import React, {useState, useMemo, useEffect, useContext, useRef} from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
-import { SchemaContext } from "../../pages/_app";
-import { colorschematic } from "../../config/colors";
+import useGlobal from "../store";
 import { useEntries, useView } from "../../lib/swr-hooks";
 import { useSortableData } from "../../lib/custom-hooks";
 import TableBody from "./tablebody";
@@ -82,10 +81,13 @@ const Table = () => {
 	const [data, setData] = useState({});
 	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
 	const tableRef = useRef(null);
-	const schema = useContext(SchemaContext);
 	const fakedata = new Array(50).fill(".");
 	const horPadding = 15;
 	const verPadding = 15;
+	const [primary_very_light] = useGlobal(
+		state => state.primary_very_light,
+		() => null
+	);
 
 	const handleClick = () => {
 		tableRef.current.scrollTo(0, 0);
@@ -123,7 +125,7 @@ const Table = () => {
 
 
 	return (
-		<SkeletonTheme color={colorschematic(schema).primary_very_light.color} highlightColor={"white"}>
+		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
 
 			{data && Object.keys(data)[0] && <ToTopButton
 				handleClick={handleClick}

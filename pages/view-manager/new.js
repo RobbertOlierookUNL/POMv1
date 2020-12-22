@@ -5,8 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, {useState, useEffect, useContext} from "react";
 
-import { SchemaContext } from "../_app";
-import { colorschematic } from "../../config/colors";
+import useGlobal from "../../components/store";
 import Button from "../../components/button";
 import Header from "../../components/header/index";
 import NewViewName from "../../components/views/newviewname";
@@ -25,7 +24,11 @@ const View = () => {
 	const router = useRouter();
 	const {duplicate} = router.query;
 	const [title, setTitle] = useState("Nieuwe view");
-	const schema = useContext(SchemaContext);
+	const [secondary] = useGlobal(
+		state => state.secondary,
+		() => null
+	);
+
 	useEffect(() => {
 		if (duplicate) {
 			setTitle(`${duplicate} dupliceren`);
@@ -75,7 +78,7 @@ const View = () => {
 			`}</style>
 			<style jsx global>{`
         body, html{
-          background-color: ${colorschematic(schema).secondary.color};
+          background-color: ${secondary.color};
         }
       `}</style>
 		</>

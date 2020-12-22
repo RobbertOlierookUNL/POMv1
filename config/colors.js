@@ -65,18 +65,21 @@ const schematics = [
 	},
 
 ];
-export const colorschematic = (schema) => ({
+export const colorSchematic = (schema) => ({
+	...schematics[schema],
+});
+
+export const staticColors =
+{
 	primary: {color: "#1F36C7",text: "white"},
 	primary_very_light: {color: "rgb(209,213,236)", text: "black"},
 	primary_light: {color: "#005eef", text: "white"},
 	primary_dark: {color: "#001f82", text: "white"},
-	...schematics[schema],
 	gray: {color: "#9e9e9e", text: "black"},
 	gray_light: {color: "#cfcfcf", text: "black"},
 	gray_very_light: {color: "#f2f2f2", text: "black"},
 	gray_dark: {color: "#707070", text: "white"},
-});
-
+};
 // const unilever_blue = {
 // 	base: {color: "#1F36C7",text: "white"},
 // 	base_very_light: {color: "rgb(209,213,236)", text: "black"},

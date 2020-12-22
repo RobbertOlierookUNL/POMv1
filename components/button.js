@@ -1,28 +1,33 @@
 import React, {useContext} from "react";
 
-import { SchemaContext } from "../pages/_app";
-import { colorschematic } from "../config/colors";
+import useGlobal from "./store";
 
 
 
 const Button = ({appearance, width = "auto", children, ...transport}) => {
-	const schema = useContext(SchemaContext);
-
+	const [primary] = useGlobal(
+		state => state.primary,
+		() => null
+	);
+	const [primary_dark] = useGlobal(
+		state => state.primary_dark,
+		() => null
+	);
 	return (
 		<button {...transport}>{children}
 			<style jsx>{`
         button {
           padding: 9px;
           border: none;
-          background-color: ${colorschematic(schema).primary.color};
-          color: ${colorschematic(schema).primary.text};
+          background-color: ${primary.color};
+          color: ${primary.text};
           transition: background-color 200ms ease-in;
           cursor: pointer;
 					text-align: center;
 					width: ${width};
         }
         button:hover {
-          background-color: ${colorschematic(schema).primary_dark.color};
+          background-color: ${primary_dark.color};
         }
     `}</style></button>
 	);

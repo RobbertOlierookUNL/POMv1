@@ -4,10 +4,9 @@ import {useRouter} from "next/router";
 import React, {useState, useEffect, useContext} from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
-import { SchemaContext } from "../../../pages/_app";
 import { allOptions, allOptionsWithData } from "../../../config/viewOptions";
-import { colorschematic } from "../../../config/colors";
 import { useSortableData } from "../../../lib/custom-hooks";
+import useGlobal from "../../store";
 
 
 
@@ -21,8 +20,22 @@ const ViewTable = ({data}) => {
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
 	const [myTimeout, setMyTimeout] = useState(0);
-	const schema = useContext(SchemaContext);
-
+	const [primary] = useGlobal(
+		state => state.primary,
+		() => null
+	);
+	const [primary_very_light] = useGlobal(
+		state => state.primary_very_light,
+		() => null
+	);
+	const [gray_light] = useGlobal(
+		state => state.gray_light,
+		() => null
+	);
+	const [gray_very_light] = useGlobal(
+		state => state.gray_very_light,
+		() => null
+	);
 	const { keys, requestSort, sortConfig } = useSortableData(dataState);
 	const Router = useRouter();
 	const {pathname, query: {view, v: mode,}} = Router;
@@ -155,14 +168,14 @@ const ViewTable = ({data}) => {
 							{fakedata.map((dot, row) => (
 								<tr key={row}>
 									<td key={0}>
-										<SkeletonTheme color={colorschematic(schema).primary_very_light.color} highlightColor={"white"}>
+										<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
 											<Skeleton />
 										</SkeletonTheme>
 									</td>
 									{allOptions.map((option, i) =>
 										<td key={i+1}>
-											<SkeletonTheme color={colorschematic(schema).primary_very_light.color} highlightColor={"white"}>
-												<Skeleton color={colorschematic(schema).primary.color} highlightColor={colorschematic(schema).primary_very_light}/>
+											<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
+												<Skeleton color={primary.color} highlightColor={primary_very_light}/>
 											</SkeletonTheme>
 										</td>
 									)}
@@ -197,18 +210,18 @@ const ViewTable = ({data}) => {
 				}
 
 				tr:nth-child(even){
-					background-color: ${colorschematic(schema).gray_very_light.color};
+					background-color: ${gray_very_light.color};
 				}
 				colgroup {
 					width: 100%;
 				}
 				.crossdivider {
-					background-color: ${colorschematic(schema).primary_very_light.color};
-					color: ${colorschematic(schema).primary_very_light.text};
+					background-color: ${primary_very_light.color};
+					color: ${primary_very_light.text};
 				}
 				td {
 					text-align: right;
-					border: 1px solid ${colorschematic(schema).gray_light.color};
+					border: 1px solid ${gray_light.color};
 					border-width: 0 1px 1px 0;
 					padding: 1px 7px;
 					text-overflow: clip;
@@ -222,9 +235,9 @@ const ViewTable = ({data}) => {
 					text-overflow: none;
 				}
 				th{
-					background-color: ${colorschematic(schema).primary.color};
-					color: ${colorschematic(schema).primary.text};
-					border: 1px solid ${colorschematic(schema).gray_light.color};
+					background-color: ${primary.color};
+					color: ${primary.text};
+					border: 1px solid ${gray_light.color};
 					border-width: 0 1px 0 0;
 					position: sticky;
 					top: 0;
@@ -242,7 +255,7 @@ const ViewTable = ({data}) => {
 				}
 				.optionInput{
 					width: 100%;
-					/* border: 2px solid ${colorschematic(schema).primary.color}; */
+					/* border: 2px solid ${primary.color}; */
 
 				}
 

@@ -1,14 +1,15 @@
 import React, {useContext} from "react";
 
-import { SchemaContext } from "../pages/_app";
-import { colorschematic } from "../config/colors";
+import useGlobal from "./store";
 import Shadow from "./shadow";
 
 
 
 const Modal = ({header, children}) => {
-	const schema = useContext(SchemaContext);
-
+	const [primary] = useGlobal(
+		state => state.primary,
+		() => null
+	);
 	return (
 		<>
 			<div className={"modal"}>
@@ -30,8 +31,8 @@ const Modal = ({header, children}) => {
           box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
         }
         .header{
-          background-color: ${colorschematic(schema).primary.color};
-          color: ${colorschematic(schema).primary.text};
+          background-color: ${primary.color};
+          color: ${primary.text};
           padding: 7px 0 7px 14px;
         }
         .body {

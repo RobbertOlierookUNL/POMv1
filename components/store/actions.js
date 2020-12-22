@@ -8,6 +8,8 @@
 // 	store.setState({ counterB });
 // };
 
+import { colorSchematic } from "../../config/colors";
+
 export const expandOptions = (store, amount) => {
 	store.setState({options: amount});
 };
@@ -25,4 +27,8 @@ export const setTopInView = (store, amount) => {
 };
 export const setActive = (store, amount) => {
 	store.setState({active: amount});
+};
+export const setSchema = (store, amount) => {
+	const schema = amount;
+	store.setState({...colorSchematic(schema)});
 };

@@ -1,7 +1,6 @@
 import React, {useRef, useEffect, useState, useContext, forwardRef} from "react";
 
-import { SchemaContext } from "../../pages/_app";
-import { colorschematic } from "../../config/colors";
+import useGlobal from "../store";
 import { useToolkit } from "../../lib/custom-hooks";
 
 
@@ -9,9 +8,12 @@ const Expand = ({keys, data, meta, active, rowId}, ref) => {
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
 	const {mergeRefs} = useToolkit();
-	const schema = useContext(SchemaContext);
+	const [gray_light] = useGlobal(
+		state => state.gray_light,
+		() => null
+	);
 
-	// const [once, setOnce] = useState(false);
+	// const [once, segray_lightOnce] = useState(false);
 	// useEffect(() => {
 	// 	if (once) {
 	// 		setHeight(expandCell.current.scrollHeight + 11.33 + "px");
@@ -54,7 +56,7 @@ const Expand = ({keys, data, meta, active, rowId}, ref) => {
           max-height: 300px;
           grid-column: 1/-1;
           color: black;
-          border: 1px solid ${colorschematic(schema).gray_light.color};
+          border: 1px solid ${gray_light.color};
           border-width: 0 0 1px 0;
           height: ${height};
           visibility: visible;

@@ -3,8 +3,7 @@ import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import React, {useContext} from "react";
 
 import useGlobal from "./store";
-import { SchemaContext } from "../pages/_app";
-import { colorschematic } from "../config/colors";
+
 
 
 
@@ -13,8 +12,11 @@ const ToTopButton = ({handleClick, top, left}) => {
 	const [topInView] = useGlobal(
 		state => state.topInView,
 		() => null
-	);	const schema = useContext(SchemaContext);
-
+	);
+	const [tertiary] = useGlobal(
+		state => state.tertiary,
+		() => null
+	);
 	return (
 		<div onClick={handleClick} className="toTopButton">
 			<FontAwesomeIcon icon={faArrowUp} />
@@ -29,8 +31,8 @@ const ToTopButton = ({handleClick, top, left}) => {
           left: ${left};
           box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
           opacity: ${topInView ? 0 : 0.8};
-          background-color: ${colorschematic(schema).tertiary.color};
-          color: ${colorschematic(schema).tertiary.text};
+          background-color: ${tertiary.color};
+          color: ${tertiary.text};
           text-align: center;
           padding: calc(10px - 0.18em) 10px 10px 10px;
           font-size: 30px;

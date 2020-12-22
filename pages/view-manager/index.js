@@ -5,8 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, {useContext} from "react";
 
-import { SchemaContext } from "../_app";
-import { colorschematic } from "../../config/colors";
+import useGlobal from "../../components/store";
 import { useViews } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import GetViews from "../../components/views/getviews";
@@ -14,7 +13,11 @@ import Header from "../../components/header";
 
 const Views = () => {
 	const {views, isLoading, isError} = useViews();
-	const schema = useContext(SchemaContext);
+	const [secondary] = useGlobal(
+		state => state.secondary,
+		() => null
+	);
+
 	if (isError) {
 		return <p>error</p>;
 	}
@@ -47,7 +50,7 @@ const Views = () => {
 					<GetViews views={views}/>}
 				<style jsx global>{`
 				body, html{
-					background-color: ${colorschematic(schema).secondary.color};
+					background-color: ${secondary.color};
 				}
 				.circle-container {
 					width: 100%;

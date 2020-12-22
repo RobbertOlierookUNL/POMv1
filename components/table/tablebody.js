@@ -6,15 +6,14 @@ import Row from "./row.js";
 
 
 
-const numberInView = 100;
 
 
 
 
 const TableBody = ({meta, data, keys, sortedKeys, additionalKeys}) => {
+	const numberInView = 100;
 	const fakedata = new Array(26).fill(".");
-	const [minLoad, setMinLoad] = useState(0);
-	const [maxLoad, setMaxLoad] = useState(numberInView);
+	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: numberInView});
 
 	const updateParameters = (i) => {
 		if (i%(numberInView/2-10) === 0) {
@@ -22,8 +21,7 @@ const TableBody = ({meta, data, keys, sortedKeys, additionalKeys}) => {
 			if (min < 0) {
 				min = 0;
 			}
-			setMinLoad(min);
-			setMaxLoad(min+numberInView);
+			setParameters({minLoad: min, maxLoad: min+numberInView});
 		}
 	};
 

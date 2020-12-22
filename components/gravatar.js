@@ -1,12 +1,18 @@
 import React, {useContext} from "react";
 
-import { SchemaContext } from "../pages/_app";
-import { colorschematic } from "../config/colors";
+import useGlobal from "./store";
 
 
 
 const Gravatar = ({first_name, last_name, width}) => {
-	const schema = useContext(SchemaContext);
+	const [secondary] = useGlobal(
+		state => state.secondary,
+		() => null
+	);
+	const [tertiary] = useGlobal(
+		state => state.tertiary,
+		() => null
+	);
 	let initials;
 	if (first_name && last_name) {
 		initials = first_name.charAt(0) + last_name.charAt(0);
@@ -24,11 +30,11 @@ const Gravatar = ({first_name, last_name, width}) => {
 	        display: inline-block;
 	        vertical-align: middle;
 	        position: relative;
-	        background-color: ${colorschematic(schema).tertiary.color};
-	        color: ${colorschematic(schema).tertiary.text};
+	        background-color: ${tertiary.color};
+	        color: ${tertiary.text};
 					font-size: 0.7em;
 	        border-radius: 50%;
-					border: 1.5px solid ${colorschematic(schema).tertiary.color};
+					border: 1.5px solid ${tertiary.color};
 	        height: ${width || "48px"};
 	        width: ${first_name && last_name ? (width || "48px") : 0};
 					transition: all 0.2s ease-in-out;
@@ -36,7 +42,7 @@ const Gravatar = ({first_name, last_name, width}) => {
 				}
 
 				.container:hover {
-					filter: drop-shadow(0px 0px 5px ${colorschematic(schema).secondary.color});
+					filter: drop-shadow(0px 0px 5px ${secondary.color});
 					cursor: pointer;
 					transform: scale(1.2, 1.2);
 

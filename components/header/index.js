@@ -1,8 +1,6 @@
 import React, {useContext, useEffect, useRef} from "react";
 
 import useGlobal from "../store";
-import { SchemaContext } from "../../pages/_app";
-import { colorschematic } from "../../config/colors";
 import Gravatar from "../gravatar";
 
 
@@ -29,8 +27,10 @@ const Header = ({children}) => {
 		() => null,
 		actions => actions.setUserButton
 	);
-
-	const schema = useContext(SchemaContext);
+	const [primary] = useGlobal(
+		state => state.primary,
+		() => null
+	);
 	const ref = useRef(null);
 	useEffect(() => {setUserButton(ref);},[]);
 
@@ -64,8 +64,8 @@ const Header = ({children}) => {
 					flex-direction: row;
 					justify-content: space-between;
 					align-items: center;
-          background: ${colorschematic(schema).primary.color};
-          color: ${colorschematic(schema).primary.text};
+          background: ${primary.color};
+          color: ${primary.text};
 					padding: 0 10px 0 15px;
 					box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
         }

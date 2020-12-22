@@ -1,19 +1,21 @@
 import Head from "next/head";
-import React, {useContext} from "react";
+import React from "react";
 
-import { SchemaContext } from "./_app";
-import { colorschematic } from "../config/colors";
 import Header from "../components/header";
 import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
+import SchemaDropdown from "../components/schemadropdown";
 import Table from "../components/table";
 import UserMenu from "../components/usermenu";
+import useGlobal from "../components/store";
+
 
 
 export default function Home() {
-	const schema = useContext(SchemaContext);
-
-
+	const [secondary] = useGlobal(
+		state => state.secondary,
+		() => null
+	);
 	return (
 		<>
 			<Head>
@@ -25,6 +27,7 @@ export default function Home() {
 				POM
 			</Header>
 			<OptionDrawer>
+				<SchemaDropdown/>
 			</OptionDrawer>
 
 
@@ -34,7 +37,7 @@ export default function Home() {
 			<Table/>
 			<style jsx global>{`
 				body, html{
-					background-color: ${colorschematic(schema).secondary.color};
+					background-color: ${secondary.color};
 				}
 			`}</style>
 		</>

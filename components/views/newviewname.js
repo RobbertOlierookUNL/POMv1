@@ -2,8 +2,7 @@ import Link from "next/link";
 import React, {useState, useContext} from "react";
 import {useRouter} from "next/router";
 
-import { SchemaContext } from "../../pages/_app";
-import { colorschematic } from "../../config/colors";
+import useGlobal from "../store";
 import Button from "../button";
 
 
@@ -13,7 +12,10 @@ import Button from "../button";
 const NewViewName = ({duplicate}) => {
 	const [viewName, setViewName] = useState("");
 	const [submitting, setSubmitting] = useState(false);
-	const schema = useContext(SchemaContext);
+	const [primary] = useGlobal(
+		state => state.primary,
+		() => null
+	);
 	const Router = useRouter();
 	console.log(duplicate);
 
@@ -53,8 +55,8 @@ const NewViewName = ({duplicate}) => {
           width: 300px;
         }
         .head {
-          background-color: ${colorschematic(schema).primary.color};
-          color: ${colorschematic(schema).primary.text};
+          background-color: ${primary.color};
+          color: ${primary.text};
           padding: 7px;
         }
         .body {
@@ -62,7 +64,7 @@ const NewViewName = ({duplicate}) => {
           padding: 15px;
         }
         .inputField {
-          border: 2px solid ${colorschematic(schema).primary.color};
+          border: 2px solid ${primary.color};
           border-radius: 2px;
           padding: 2px;
           width: 270px;
