@@ -10,7 +10,6 @@ import { colorschematic } from "../../config/colors";
 import Button from "../../components/button";
 import Header from "../../components/header/index";
 import NewViewName from "../../components/views/newviewname";
-import Store from "../../components/globalstate/store";
 
 
 
@@ -43,7 +42,7 @@ const View = () => {
 	// }, [view]);
 
 	return (
-		<Store>
+		<>
 			<Head>
 				<title>{title}</title>
 				<link rel="icon" href="/unilever.ico" />
@@ -79,7 +78,7 @@ const View = () => {
           background-color: ${colorschematic(schema).secondary.color};
         }
       `}</style>
-		</Store>
+		</>
 	);
 };
 

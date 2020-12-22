@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import React, {useContext} from "react";
 
-import { Context } from "./globalstate/store";
+import useGlobal from "./store";
 import { SchemaContext } from "../pages/_app";
 import { colorschematic } from "../config/colors";
 
@@ -10,12 +10,13 @@ import { colorschematic } from "../config/colors";
 
 
 const ToTopButton = ({handleClick, top, left}) => {
-	const [{topInView}] = useContext(Context);
-	const schema = useContext(SchemaContext);
+	const [topInView] = useGlobal(
+		state => state.topInView,
+		() => null
+	);	const schema = useContext(SchemaContext);
 
 	return (
 		<div onClick={handleClick} className="toTopButton">
-			{console.log("rr")}
 			<FontAwesomeIcon icon={faArrowUp} />
 			<style jsx>{`
         .toTopButton {

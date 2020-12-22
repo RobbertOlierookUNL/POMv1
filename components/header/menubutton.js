@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import React, {useContext, useEffect, useRef} from "react";
 
-import { Context } from "../globalstate/store";
+import useGlobal from "../store";
 import { SchemaContext } from "../../pages/_app";
 import { colorschematic } from "../../config/colors";
 
@@ -13,15 +13,22 @@ import { colorschematic } from "../../config/colors";
 
 
 const MenuButton = () => {
-	const [{options}, dispatch] = useContext(Context);
+	// const [{options}, dispatch] = useContext(Context);
+	const [options, expandOptions] = useGlobal(
+		state => state.options,
+		actions => actions.expandOptions
+	);
+	const [, setMenuButton] = useGlobal(
+		() => null,
+		actions => actions.setMenuButton
+	);
 	const schema = useContext(SchemaContext);
 	const ref = useRef(null);
 	const handleClick = () => {
-		dispatch({type: "EXPAND_OPTIONS", payload: !options
-		});
+		expandOptions(!options);
 	};
 	useEffect(() => {
-		dispatch({type: "SET_MENUBUTTON", payload: ref});
+		setMenuButton(ref);
 	}, []);
 	return(
 		<>

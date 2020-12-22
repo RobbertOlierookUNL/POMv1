@@ -1,33 +1,39 @@
-import React, { useContext, useRef, useMemo, useEffect } from "react";
+import React, { useContext, useRef, useMemo, useEffect, useCallback } from "react";
 import handleViewport from "react-in-viewport";
 
-import {Context} from "../globalstate/store";
+import useGlobal from "../store";
 import { SchemaContext } from "../../pages/_app";
 import { colorschematic } from "../../config/colors";
 import Cell from "./cell";
 import Expand from "./expand";
 
-
-
-
-
-
 const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}) => {
-	const [{active}, dispatch] = useContext(Context);
+	const [active, setActive] = useGlobal(
+		state => state.active,
+		actions => actions.setActive
+	);
+	const [, setTopInView] = useGlobal(
+		() => null,
+		actions => actions.setTopInView
+	);
 	const expandRef = useRef(null);
 	const schema = useContext(SchemaContext);
-	const {gray_very_light, gray_light, primary_very_light} = useMemo(() => colorschematic(schema), []);
+	const {gray_very_light, gray_light, tertiary} = useMemo(() => colorschematic(schema), []);
 
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
 			active === id ?
-				dispatch({type: "SET_ACTIVE", payload: false})
-				: dispatch({type: "SET_ACTIVE", payload: id});
+				setActive(false)
+				: setActive(id);
 		}
 	};
+
+	// useCallback(() => {
+	//   () => {handleClick(event);};
+	// }, []);
 	useEffect(() => {
 		if (id === 10) {
-			dispatch({type: "SET_TOP_IN_VIEW", payload: inViewport});
+			setTopInView(inViewport);
 		}
 	}, [inViewport]);
 
@@ -46,9 +52,12 @@ const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}
         tr:nth-child(even){background-color: ${gray_very_light.color};}
         tr:hover {background-color: ${gray_light.color};}
 				.active, .active:hover {
-					background-color: ${primary_very_light.color} !important;
-					color: ${primary_very_light.text};
+					background-color: ${tertiary.color} !important;
+					color: ${tertiary.text};
+					font-weight: bold;
+					font-size: 0.97em;
 					border: none;
+
 				}
       `}</style>
 		</tr>

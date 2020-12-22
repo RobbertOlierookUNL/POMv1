@@ -14,7 +14,6 @@ const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, clickthrough = true
 
 	return (
 		<div className="shadow">
-			{console.log("rerender")}
 			<style jsx>{`
         .shadow {
           z-index: ${zIndex};

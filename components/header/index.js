@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef} from "react";
 
-import { Context } from "../globalstate/store";
+import useGlobal from "../store";
 import { SchemaContext } from "../../pages/_app";
 import { colorschematic } from "../../config/colors";
 import Gravatar from "../gravatar";
@@ -20,13 +20,22 @@ const lName="Doe";
 // const lName=null;
 
 const Header = ({children}) => {
-	const [{usermenu}, dispatch] = useContext(Context);
+	// const [{usermenu}, dispatch] = useContext(Context);
+	const [userMenu, expandUserMenu] = useGlobal(
+		state => state.userMenu,
+		actions => actions.expandUserMenu
+	);
+	const [, setUserButton] = useGlobal(
+		() => null,
+		actions => actions.setUserButton
+	);
+
 	const schema = useContext(SchemaContext);
 	const ref = useRef(null);
-	useEffect(() => {dispatch({type: "SET_USERBUTTON", payload: ref});},[]);
+	useEffect(() => {setUserButton(ref);},[]);
 
 	const handleClick = () => {
-		dispatch({type: "EXPAND_USERMENU", payload: !usermenu});
+		expandUserMenu(!userMenu);
 	};
 
 	return (

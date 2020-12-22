@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Skeleton from "react-loading-skeleton";
 
-import {Context} from "../globalstate/store";
+import useGlobal from "../store";
 import { SchemaContext } from "../../pages/_app";
 import { colorschematic } from "../../config/colors";
 
@@ -11,7 +11,10 @@ import { colorschematic } from "../../config/colors";
 
 
 const Cell = ({data, width, rowId, colName, inViewport}) => {
-	const [{active}] = useContext(Context);
+	const [active] = useGlobal(
+		state => state.active,
+		() => null
+	);
 	const schema = useContext(SchemaContext);
 
 	return (

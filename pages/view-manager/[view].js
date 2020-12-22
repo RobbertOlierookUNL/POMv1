@@ -10,7 +10,6 @@ import { colorschematic } from "../../config/colors";
 import { useView } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import Header from "../../components/header/index";
-import Store from "../../components/globalstate/store";
 import ViewTable from "../../components/views/viewtable";
 
 
@@ -38,7 +37,7 @@ const View = () => {
 	// }, [view]);
 
 	return (
-		<Store>
+		<>
 			<Head>
 				<title>{view}</title>
 				<link rel="icon" href="/unilever.ico" />
@@ -59,7 +58,7 @@ const View = () => {
           background-color: ${colorschematic(schema).secondary.color};
         }
       `}</style>
-		</Store>
+		</>
 	);
 };
 

@@ -1,20 +1,28 @@
 import React, {useContext, useRef, useEffect} from "react";
 
-import { Context } from "../globalstate/store";
+import useGlobal from "../store";
 import Shadow from "../shadow";
 
 
 
 
 const OptionDrawer = ({children}) => {
-	const [{menubutton, options}, dispatch] = useContext(Context);
+	// const [{menubutton, options}, dispatch] = useContext(Context);
+	const [options, expandOptions] = useGlobal(
+		state => state.options,
+		actions => actions.expandOptions
+	);
+	const [menuButton] = useGlobal(
+		state => state.menuButton,
+		() => null
+	);
 	const ref = useRef(null);
 	useEffect(() => {
 
 		function handleClickOutside(event) {
 			if (ref.current && !ref.current.contains(event.target) &&
-       menubutton.current && !menubutton.current.contains(event.target)) {
-				dispatch({type: "EXPAND_OPTIONS", payload: false});
+       menuButton.current && !menuButton.current.contains(event.target)) {
+				expandOptions(false);
 			}
 		}
 

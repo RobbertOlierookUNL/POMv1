@@ -11,12 +11,6 @@ import { useViews } from "../../lib/swr-hooks";
 import Button from "../../components/button";
 import GetViews from "../../components/views/getviews";
 import Header from "../../components/header";
-import Store from "../../components/globalstate/store";
-
-
-
-
-
 
 const Views = () => {
 	const {views, isLoading, isError} = useViews();
@@ -28,7 +22,7 @@ const Views = () => {
 		return <p>not connected</p>;
 	}  else {
 		return (
-			<Store>
+			<>
 				<Head>
 					<title>View Manager</title>
 					<link rel="icon" href="/unilever.ico" />
@@ -66,7 +60,7 @@ const Views = () => {
 					display: flex;
 				}
 			`}</style>
-			</Store>
+			</>
 		);
 	}
 };
