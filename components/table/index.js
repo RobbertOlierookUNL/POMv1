@@ -1,70 +1,15 @@
-import React, {useState, useMemo, useEffect, useContext, useRef} from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
-import useGlobal from "../store";
 import { useEntries, useView } from "../../lib/swr-hooks";
 import { useSortableData } from "../../lib/custom-hooks";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
+import Toolbar from "./toolbar";
+import useGlobal from "../store";
 
 
-
-
-
-
-
-//
-// const colmeta = {
-// 	defaultview: {
-// 		description: {
-// 			title: "description",
-// 			display: "compact",
-// 			widthweight: 3,
-// 		},
-// 		quantity: {
-// 			title: "qty",
-// 			display: "expanded",
-// 			widthweight: 2,
-// 		},
-// 	},
-// 	meetingview: {
-// 		description: {
-// 			title: "description",
-// 			display: "compact",
-// 			widthweight: 1,
-// 		},
-// 		quantity: {
-// 			title: "qty",
-// 			display: "compact",
-// 			widthweight: 2,
-// 		},
-// 	}
-//
-//
-//
-//
-// };
-//
-// const data = {
-// 	product1: {
-// 		description: "test",
-// 		quantity: 8000,
-// 	},
-// 	product2: {
-// 		quantity: 8200,
-// 		description: "test2",
-// 	},
-// 	product3: {
-// 		description: "test",
-// 		quantity: 8000,
-// 	},
-// 	product4: {
-// 		quantity: 8200,
-// 		description: "test2",
-// 	},
-//
-// };
 
 const view = "salesview";
 
@@ -129,13 +74,12 @@ const Table = () => {
 
 			{data && Object.keys(data)[0] && <ToTopButton
 				handleClick={handleClick}
-				top={`${38.67 + (verPadding * 3)}px`}
+				top={`${38.67 + 25 + (verPadding * 3)}px`}
 				left={`calc(100vw - ${50 + 2*verPadding}px)`
 				}/>}
 			<div className="tableContainer" ref={tableRef}>
+				<Toolbar/>
 				{meta && Object.keys(meta)[0] ? <table className="table">
-					{//<TableColGroup meta={meta} keys={keys.compact}/>
-					}
 					<TableHeaders requestSort={requestSort} sortConfig={sortConfig} meta={meta} keys={compact} totalWidth={totalWidthCount}/>
 					<TableBody meta={meta} data={data} keys={compact} additionalKeys={expanded} sortedKeys={sortedKeys}>
 					</TableBody>

@@ -72,13 +72,13 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
         `}</style>
 			<style jsx global>{`
 					td.${colName} {
-					${data.textdisplay === "mono-right" &&
-							`
+					${data.textdisplay === "mono-right" ?
+			`
 							font-family: monospace;
 							font-size: 1.25em;
 							text-align: right;
 
-							`}
+							` : ""}
 					}
 				`}</style>
 		</th>

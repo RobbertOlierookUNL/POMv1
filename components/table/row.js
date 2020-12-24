@@ -27,6 +27,10 @@ const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}
 		state => state.tertiary,
 		() => null
 	);
+	const [selectMode] = useGlobal(
+		state => state.selectMode,
+		() => null
+	);
 	const expandRef = useRef(null);
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
@@ -51,6 +55,7 @@ const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}
 	return (
 		<tr className={active === id && "active"} onClick={inViewport ? handleClick : undefined} ref={forwardedRef}>
 			<>
+				{selectMode && <td></td>}
 				{keys.map((key, i) =>
 					<Cell data={data === false ? data : data[key]} inViewport={inViewport} colName={key} width={meta[key].widthweight || 12} key={i} rowId={id}/>
 				)}

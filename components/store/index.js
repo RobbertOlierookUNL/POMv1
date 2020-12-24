@@ -12,6 +12,7 @@ const initialState = {
 	userButton: {current: null},
 	active: false,
 	topInView: true,
+	selectMode: false,
 	...staticColors,
 	...colorSchematic(10)
 };

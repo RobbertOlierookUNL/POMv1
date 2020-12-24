@@ -26,7 +26,7 @@ const Cell = ({data, width, rowId, colName, inViewport}) => {
 					/* grid-column-end: span ${width}; */
 					cursor: pointer;
 					padding: 2px;
-			 	${active === rowId || (`
+			 	${active === rowId ? "" : (`
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;`)

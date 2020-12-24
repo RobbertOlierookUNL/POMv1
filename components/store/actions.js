@@ -32,3 +32,6 @@ export const setSchema = (store, amount) => {
 	const schema = amount;
 	store.setState({...colorSchematic(schema)});
 };
+export const setSelectMode = (store, amount) => {
+	store.setState({selectMode: amount});
+};

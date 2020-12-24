@@ -1,12 +1,21 @@
 import React from "react";
 
 import TableHeadCell from "./tableheadcell";
+import useGlobal from "../store";
 
 
 
 const TableHeaders = ({meta, keys, totalWidth, requestSort, sortConfig}) => {
+	const [selectMode] = useGlobal(
+		state => state.selectMode,
+		() => null
+	);
+	const [primary] = useGlobal(
+		state => state.primary,
+		() => null
+	);
 
-	let colString = "";
+	let colString = selectMode ? "[selectboxes] 20px " : "";
 	keys.map(col => {
 		if (meta[col].widthkind === "[px]min,[fr]max") {
 			const [min, max] = meta[col].widthweight.split(".");
@@ -31,6 +40,7 @@ const TableHeaders = ({meta, keys, totalWidth, requestSort, sortConfig}) => {
 			colString += `[${col}] ${value}${unit} `;
 		}
 	});
+	colString += "[end]";
 	return (
 		<thead>
 			<tr>
@@ -39,12 +49,12 @@ const TableHeaders = ({meta, keys, totalWidth, requestSort, sortConfig}) => {
 						<TableHeadCell requestSort={requestSort} sortConfig={sortConfig} data={meta[col]} colName={col} key={i}/>
 					))
 				}
-
 			</tr>
 			<style jsx>{`
         tr {
 			    position: sticky;
-					top: 0;
+					top: 25px;
+					background-color: ${primary.color};
         }
 
       `}</style>
