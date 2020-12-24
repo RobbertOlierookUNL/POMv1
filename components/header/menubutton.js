@@ -1,27 +1,33 @@
-import React, {useContext, useEffect, useRef} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import React, {useContext, useEffect, useRef} from "react";
 
-import c from "./colors";
-import {Context} from "./globalstate/store";
+import useGlobal from "../store";
+
 
 const MenuButton = () => {
-	const [state, dispatch] = useContext(Context);
+	// const [{options}, dispatch] = useContext(Context);
+	const [options, expandOptions] = useGlobal(
+		state => state.options,
+		actions => actions.expandOptions
+	);
+	const [, setMenuButton] = useGlobal(
+		() => null,
+		actions => actions.setMenuButton
+	);
 	const ref = useRef(null);
 	const handleClick = () => {
-		dispatch({type: "EXPAND_OPTIONS", payload: !state.options
-		});
+		expandOptions(!options);
 	};
 	useEffect(() => {
-		dispatch({type: "SET_MENUBUTTON", payload: ref});
+		setMenuButton(ref);
 	}, []);
 	return(
 		<>
 			<div className="container" onClick={handleClick} ref={ref}>
 				<FontAwesomeIcon icon={faBars} />
 			</div>
-			<style jsx>
-				{`
+			<style jsx>{`
     .container {
       position: relative;
       display: inline-block;
@@ -31,7 +37,6 @@ const MenuButton = () => {
     }
 
     .container:hover {
-      filter: drop-shadow(0px 0px 5px ${c.secondary.color});
       cursor: pointer;
       transform: scale(1.2, 1.2);
 

@@ -1,28 +1,37 @@
-import React, {useContext, useRef, useEffect} from "react";
-import {Context} from "./globalstate/store";
+import React, {useRef, useEffect} from "react";
+
+import useGlobal from "./store";
 
 
-const UserMenu = () => {
-	const [state, dispatch] = useContext(Context);
+
+const UserMenu = ({children}) => {
+	const [userMenu, expandUserMenu] = useGlobal(
+		state => state.userMenu,
+		actions => actions.expandUserMenu
+	);
+	const [userButton] = useGlobal(
+		state => state.userButton,
+		() => null
+	);
 	const ref = useRef(null);
 	useEffect(() => {
 		function handleClickOutside(event) {
 			if (ref.current && !ref.current.contains(event.target) &&
-       state.userbutton.current && !state.userbutton.current.contains(event.target)) {
-				dispatch({type: "EXPAND_USERMENU", payload: false});
+       userButton.current && !userButton.current.contains(event.target)) {
+				expandUserMenu(false);
 			}
 		}
-		if (state.usermenu) {
+		if (userMenu) {
 			document.addEventListener("mouseup", handleClickOutside);
 		} else {
 			document.removeEventListener("mouseup", handleClickOutside);
 		}
-	}, [ref, state.usermenu]);
+	}, [ref, userMenu]);
 
 	return (
 		<>
 			<div className="usermenu_container" ref={ref}>
-      yolo
+				{children}
 			</div>
 			<style jsx>{`
         .usermenu_container {
@@ -30,7 +39,7 @@ const UserMenu = () => {
           position: absolute;
           right: 0;
           width: 300px;
-          transform: translateX(${state.usermenu ? "0" : "320px"});
+          transform: translateX(${userMenu ? "0" : "320px"});
           transition: transform 0.2s ease-in-out;
           background: white;
           box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
