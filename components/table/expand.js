@@ -23,8 +23,7 @@ const Expand = ({keys, rowData, meta, active, mergedFrom, keysForMergedRows}, re
 
 	useEffect(() => {
 		rowData && setHeight(expandCell.current.scrollHeight + 1.33 + "px");
-		active && console.log(expandCell.current.scrollHeight);
-	}, [rowData, mergedFrom, active]);
+	}, [rowData]);
 
 
 
@@ -50,6 +49,7 @@ const Expand = ({keys, rowData, meta, active, mergedFrom, keysForMergedRows}, re
 					</tbody>
 				</table>
 			)}
+			{active && console.log(rowData)}
 			<div className={"container"}>
 				{keys &&
 					<div>
@@ -74,7 +74,6 @@ const Expand = ({keys, rowData, meta, active, mergedFrom, keysForMergedRows}, re
           background-color: white;
 					overflow: hidden;
 					display: grid;
-					grid-column: 1/-1;
         }
         td.active{
           height: ${height};

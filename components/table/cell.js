@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import Skeleton from "react-loading-skeleton";
+import moment from "moment";
 
 import useGlobal from "../store";
+
 
 const Cell = ({cellData, width, rowId, colName, noExpand}) => {
 	const [active] = useGlobal(
@@ -16,8 +18,8 @@ const Cell = ({cellData, width, rowId, colName, noExpand}) => {
 		<td className={colName}
 		>{cellData === false ?
 				<Skeleton />
-				:
-				(!cellData || cellData === "0") ? "" : cellData
+				: (moment.isMoment(cellData)) ? cellData.format("YYYY-MM-DD") :
+					(!cellData || cellData === "0") ? "" : cellData
 			}
 			<style jsx>{`
         td {

@@ -130,6 +130,12 @@ const ViewTable = ({data}) => {
 
 	}, [dataState, lastSavedDataState]);
 
+	useEffect(() => {
+		const option = allOptions[0];
+		requestSort(option,
+			typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" );
+	}, []);
+
 	return (
 		<>
 			<div className="container">
@@ -141,17 +147,18 @@ const ViewTable = ({data}) => {
 					<thead>
 						<tr>
 							<th className="crossdivider" onClick={() => requestSort(null)}>{sortConfig && sortConfig.key && <FontAwesomeIcon icon={faTimes} />}</th>
-							{allOptions.map((option, i) => <th key={i} onClick={() => requestSort(option,
-								typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" )}>
-								{
-									sortConfig && sortConfig.key === option &&
+							{allOptions.map((option, i) =>
+								<th key={i} onClick={() => requestSort(option,
+									typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" )}>
+									{
+										sortConfig && sortConfig.key === option &&
 							(
 								sortConfig.direction === "ascending" && <FontAwesomeIcon icon={faArrowDown} />
 							||
 								sortConfig.direction === "descending" && <FontAwesomeIcon icon={faArrowUp} />
 							)}
-								{option}
-							</th>)}
+									{option}
+								</th>)}
 						</tr>
 					</thead>
 					<tbody>
