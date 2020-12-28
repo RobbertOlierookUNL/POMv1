@@ -8,7 +8,7 @@ import useGlobal from "../store";
 
 
 
-const Expand = ({keys, rowData, meta, active, mergedFrom, keysForMergedRows}, ref) => {
+const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMergedRows}, ref) => {
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
 	const {mergeRefs} = useToolkit();
@@ -24,9 +24,6 @@ const Expand = ({keys, rowData, meta, active, mergedFrom, keysForMergedRows}, re
 	useEffect(() => {
 		rowData && setHeight(expandCell.current.scrollHeight + 1.33 + "px");
 	}, [rowData]);
-
-
-
 
 	return (
 		<td ref={mergeRefs(expandCell, ref)} className={`expandCell ${active && "active"}`}>
@@ -51,10 +48,10 @@ const Expand = ({keys, rowData, meta, active, mergedFrom, keysForMergedRows}, re
 			)}
 			{active && console.log(rowData)}
 			<div className={"container"}>
-				{keys &&
+				{additionalColKeys &&
 					<div>
 						<dl className={"expandList"}>
-							{keys.map((key, i) =>(
+							{additionalColKeys.map((key, i) =>(
 								<div key={i}>
 									<dt key={"dt" + i}>{meta[key].title || key}</dt>
 									<dd key={"dd" + i}>{rowData[key]}</dd>

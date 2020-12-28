@@ -1,8 +1,5 @@
-import React, {useState, useRef, useMemo} from "react";
-import handleViewport from "react-in-viewport";
+import React, {useState} from "react";
 
-import { allOptionsWithData } from "../../config/viewOptions";
-import { useToolkit } from "../../lib/custom-hooks";
 import Row from "./row.js";
 
 
@@ -11,7 +8,7 @@ import Row from "./row.js";
 
 
 
-const TableBody = ({meta, data, keys, sortedKeys, additionalKeys}) => {
+const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKeys}) => {
 	const numberInView = 100;
 	const fakedata = new Array(26).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: numberInView});
@@ -32,14 +29,26 @@ const TableBody = ({meta, data, keys, sortedKeys, additionalKeys}) => {
 			<tbody>
 				{data && Object.keys(data)[0] ?
 					<>
-						{console.log("rerender")}
-						{sortedKeys.map((row, i) => (
+						{sortedRowKeys.map((row, i) => (
 							minLoad <= i && i <= maxLoad &&
-							<Row onEnterViewport={() => updateParameters(i)} id={i} rowData={data[row]} meta={meta} keys={keys} additionalKeys={additionalKeys} key={i}/>
+							<Row
+								onEnterViewport={() => updateParameters(i)}
+								id={i}
+								rowData={data[row]}
+								meta={meta}
+								keysForTableCols={keysForTableCols}
+								additionalColKeys={additionalColKeys}
+								key={i}/>
 						))}
 					</> : <>
 						{fakedata.map((row, i) => (
-							<Row id={i} rowData={false} meta={meta} keys={keys} additionalKeys={additionalKeys} key={i}/>
+							<Row
+								id={i}
+								rowData={false}
+								meta={meta}
+								keysForTableCols={keysForTableCols}
+								additionalColKeys={additionalColKeys}
+								key={i}/>
 						))}
 					</>
 				}

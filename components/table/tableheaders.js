@@ -1,11 +1,13 @@
 import React from "react";
 
+import { allOptionsWithData } from "../../config/viewOptions";
 import TableHeadCell from "./tableheadcell";
 import useGlobal from "../store";
 
 
 
-const TableHeaders = ({meta, keys, requestSort, sortConfig}) => {
+
+const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig}) => {
 	const [selectMode] = useGlobal(
 		state => state.selectMode,
 		() => null
@@ -16,24 +18,28 @@ const TableHeaders = ({meta, keys, requestSort, sortConfig}) => {
 	);
 
 	let colString = selectMode ? "[selectboxes] 20px " : "";
-	keys.map(col => {
+	keysForTableCols.map(col => {
 		if (meta[col].widthkind === "[px]min,[fr]max") {
-			const [min, max] = meta[col].widthweight.split(".");
+			const widthWeight = meta[col].widthweight && meta[col].widthweight.includes(".") ?
+				meta[col].widthweight :
+				`${allOptionsWithData.widthweight.default}.${allOptionsWithData.widthweight.default}`;
+			const [min, max] = widthWeight.split(".");
 			colString += `[${col}] minmax(${min}px, ${max}fr) `;
 		} else {
 			let value;
 			let unit;
+			const widthWeight = meta[col].widthweight || allOptionsWithData.widthweight.default;
 			switch (meta[col].widthkind) {
 			case "absolute":
-				value = meta[col].widthweight;
+				value = widthWeight;
 				unit = "px";
 				break;
 			case "characters":
-				value = meta[col].widthweight * 6.3 + 5;
+				value = widthWeight * 6.3 + 5;
 				unit = "px";
 				break;
-			default:
-				value = meta[col].widthweight;
+			default: //relative
+				value = widthWeight;
 				unit = "fr";
 
 			}
@@ -45,8 +51,8 @@ const TableHeaders = ({meta, keys, requestSort, sortConfig}) => {
 		<thead>
 			<tr>
 				{
-					keys.map((col, i) => (
-						<TableHeadCell requestSort={requestSort} sortConfig={sortConfig} data={meta[col]} colName={col} first={i===0} key={i}/>
+					keysForTableCols.map((col, i) => (
+						<TableHeadCell requestSort={requestSort} sortConfig={sortConfig} colMetaData={meta[col]} colName={col} first={i===0} key={i}/>
 					))
 				}
 			</tr>

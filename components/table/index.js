@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
 import { allOptionsWithData } from "../../config/viewOptions";
@@ -21,6 +21,8 @@ const Table = () => {
 	const {data: _metaString} = useView(view);
 	const {data: preData} = useEntries();
 	const {view_name, created_at, updated_at, config, ...metaString} = _metaString || {};
+	const notUsed = {};
+	notUsed.variables = {view_name, created_at, updated_at, config};
 	const [..._data] = preData || [];
 	const [meta, setMeta] = useState({});
 	const [keys, setKeys] = useState({});
@@ -66,7 +68,6 @@ const Table = () => {
 	}, [ Object.keys(metaString)[0]]);
 
 	useMemo(() => {
-		console.log(0);
 		if (
 			Object.keys(_data)[0]
 			&& Object.keys(meta)[0])
@@ -78,18 +79,27 @@ const Table = () => {
 
 	return (
 		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
-			{console.log("rer ind")}
-			{data && Object.keys(data)[0] && <ToTopButton
-				handleClick={handleClick}
-				top={`${38.67 + 25 + (verPadding * 3)}px`}
-				left={`calc(100vw - ${50 + 2*verPadding}px)`
-				}/>}
+			{data && Object.keys(data)[0] &&
+				<ToTopButton
+					handleClick={handleClick}
+					top={`${38.67 + 25 + (verPadding * 3)}px`}
+					left={`calc(100vw - ${50 + 2*verPadding}px)`}
+				/>}
 			<div className="tableContainer" ref={tableRef}>
 				<Toolbar/>
 				{meta && Object.keys(meta)[0] ?
 					<table className="table">
-						<TableHeaders requestSort={requestSort} sortConfig={sortConfig} meta={meta} keys={keys.compact}/>
-						<TableBody meta={meta} data={data} keys={keys.compact} additionalKeys={keys.expanded} sortedKeys={sortedKeys}>
+						<TableHeaders
+							requestSort={requestSort}
+							sortConfig={sortConfig}
+							meta={meta}
+							keysForTableCols={keys.compact}/>
+						<TableBody
+							meta={meta}
+							data={data}
+							keysForTableCols={keys.compact}
+							additionalColKeys={keys.expanded}
+							sortedRowKeys={sortedKeys}>
 						</TableBody>
 					</table>
 					:

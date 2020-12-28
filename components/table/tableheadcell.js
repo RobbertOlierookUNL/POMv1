@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import React, {useEffect} from "react";
 
+import { allOptionsWithData } from "../../config/viewOptions";
 import useGlobal from "../store";
 
 
@@ -10,7 +11,8 @@ import useGlobal from "../store";
 
 
 
-const TableHeadCell = ({data, colName, requestSort, sortConfig, first}) => {
+
+const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig, first}) => {
 	const [primary] = useGlobal(
 		state => state.primary,
 		() => null
@@ -25,11 +27,11 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig, first}) => {
 	);
 	useEffect(() => {
 		if (first) {
-			requestSort(colName, data.valuetype);
+			requestSort(colName, colMetaData.valuetype || allOptionsWithData.valuetype.default);
 		}
 	}, []);
 	return (
-		<th onClick={() => requestSort(colName, data.valuetype)}>
+		<th onClick={() => requestSort(colName, colMetaData.valuetype || allOptionsWithData.valuetype.default)}>
 			{
 				sortConfig && sortConfig.key === colName &&
 			(
@@ -58,7 +60,7 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig, first}) => {
 
 					}
 					th::after {
-					  content: "${data.title || colName}";
+					  content: "${colMetaData.title || colName}";
 					}
 					th:hover {
 						position: relative;
@@ -71,13 +73,13 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig, first}) => {
 						color: ${tertiary.text};
 					}
 					th:hover::after {
-						content: "${data.hovername || data.title || colName}";
+						content: "${colMetaData.hovername || colMetaData.title || colName}";
 
 					}
         `}</style>
 			<style jsx global>{`
 					td.${colName} {
-					${data.textdisplay === "mono-right" ?
+					${colMetaData.textdisplay === "mono-right" ?
 			`
 							font-family: monospace;
 							font-size: 1.25em;

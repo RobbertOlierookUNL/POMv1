@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useMemo, useEffect, useCallback } from "react";
+import React, {useRef, useEffect} from "react";
 import handleViewport from "react-in-viewport";
 
 import { allOptionsWithData } from "../../config/viewOptions";
@@ -7,7 +7,7 @@ import Expand from "./expand";
 import useGlobal from "../store";
 
 
-const PreRow = ({id, meta, rowData, keys, additionalKeys, inViewport, forwardedRef}) => {
+const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewport, forwardedRef}) => {
 	const [active, setActive] = useGlobal(
 		state => state.active,
 		actions => actions.setActive
@@ -41,9 +41,6 @@ const PreRow = ({id, meta, rowData, keys, additionalKeys, inViewport, forwardedR
 		}
 	};
 
-	// useCallback(() => {
-	//   () => {handleClick(event);};
-	// }, []);
 	useEffect(() => {
 		if (id === 4) {
 			setTopInView(inViewport);
@@ -60,7 +57,7 @@ const PreRow = ({id, meta, rowData, keys, additionalKeys, inViewport, forwardedR
 			ref={forwardedRef}>
 			<>
 				{selectMode && <td></td>}
-				{keys.map((key, i) =>
+				{keysForTableCols.map((key, i) =>
 					<Cell
 						cellData={rowData === false ? false : rowData[key]}
 						colName={key}
@@ -69,7 +66,7 @@ const PreRow = ({id, meta, rowData, keys, additionalKeys, inViewport, forwardedR
 						rowId={id}/>
 				)}
 				<Expand
-					keys={additionalKeys}
+					additionalColKeys={additionalColKeys}
 					ref={expandRef}
 					meta={meta}
 					rowData={rowData}
@@ -78,7 +75,7 @@ const PreRow = ({id, meta, rowData, keys, additionalKeys, inViewport, forwardedR
 						&& rowData.addedProps
 						&& rowData.addedProps.merged
 						&& rowData.addedProps.mergedFrom}
-					keysForMergedRows={keys}
+					keysForMergedRows={keysForTableCols}
 				/>
 			</>
 			<style jsx>{`
