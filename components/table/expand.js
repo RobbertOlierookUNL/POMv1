@@ -1,10 +1,14 @@
-import React, {useRef, useEffect, useState, useContext, forwardRef} from "react";
+import React, {useRef, useEffect, useState, forwardRef} from "react";
 
-import useGlobal from "../store";
+import { allOptionsWithData } from "../../config/viewOptions";
 import { useToolkit } from "../../lib/custom-hooks";
+import Cell from "./cell";
+import useGlobal from "../store";
 
 
-const Expand = ({keys, data, meta, active, rowId}, ref) => {
+
+
+const Expand = ({keys, rowData, meta, active, mergedFrom, keysForMergedRows}, ref) => {
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
 	const {mergeRefs} = useToolkit();
@@ -12,66 +16,87 @@ const Expand = ({keys, data, meta, active, rowId}, ref) => {
 		state => state.gray_light,
 		() => null
 	);
+	const [quadiary] = useGlobal(
+		state => state.quadiary,
+		() => null
+	);
 
-	// const [once, segray_lightOnce] = useState(false);
-	// useEffect(() => {
-	// 	if (once) {
-	// 		setHeight(expandCell.current.scrollHeight + 11.33 + "px");
-	// 	}
-	// }, [once]);
 	useEffect(() => {
-		data && setHeight(expandCell.current.scrollHeight + 1.33 + "px");
-	}, [data]);
+		rowData && setHeight(expandCell.current.scrollHeight + 1.33 + "px");
+		active && console.log(expandCell.current.scrollHeight);
+	}, [rowData, mergedFrom, active]);
+
 
 
 
 	return (
 		<td ref={mergeRefs(expandCell, ref)} className={`expandCell ${active && "active"}`}>
-			<div className={`container ${active && "active"}`}>
-				{keys && <div className="active-visibility"><dl className={"expandList"}>
-					{keys.map((key, i) =>(
-						<div key={i}>
-							<dt key={"dt" + i}>{meta[key].title || key}</dt>
-							<dd key={"dd" + i}>{data[key]}</dd>
-						</div>
-					))
-					}
+			{mergedFrom && (
+				<table className={"sub-table"}>
+					<tbody>
+						{mergedFrom.map((row, idx) =>
+							<tr key={idx}>
+								{keysForMergedRows.map((key, i) =>
+									<Cell
+										cellData={rowData === false ? false : row[key]}
+										colName={key}
+										width={meta[key].widthweight || allOptionsWithData.widthweight.default}
+										key={i}
+										noExpand
+									/>
+								)}
+							</tr>
+						)}
+					</tbody>
+				</table>
+			)}
+			<div className={"container"}>
+				{keys &&
+					<div>
+						<dl className={"expandList"}>
+							{keys.map((key, i) =>(
+								<div key={i}>
+									<dt key={"dt" + i}>{meta[key].title || key}</dt>
+									<dd key={"dd" + i}>{rowData[key]}</dd>
+								</div>
+							))
+							}
 
-				</dl></div>}
+						</dl></div>}
 			</div>
 
 			<style jsx>{`
         td {
-          transform: scaleY(0);
-          transition: transform 10ms linear, height 30ms linear;
+          transition: height 100ms linear;
           height: 0;
 					padding: 0;
           grid-column: 1/-1;
           background-color: white;
-
+					overflow: hidden;
+					display: grid;
+					grid-column: 1/-1;
         }
         td.active{
-          display: grid;
-          transform: scaleY(1);
-          max-height: 300px;
-          grid-column: 1/-1;
-          color: black;
-          border: 1px solid ${gray_light.color};
-          border-width: 0 0 1px 0;
           height: ${height};
-          visibility: visible;
         }
-				.active-visibility {
-				}
 				.container {
-					visibility: hidden;
 					background-color: white;
 					padding: 8px;
+					color: black;
+					border: 1px solid ${gray_light.color};
+					border-width: 0 0 1px 0;
+					font-weight: normal;
 				}
-				.container.active {
-					visibility: visible;
+				.sub-table {
+					width: 100%;
+					background-color: ${quadiary.color};
+					color: ${quadiary.text};
+					border-collapse: collapse;
+					font-weight: bold;
 				}
-
+				.expandCell:not(.active) {
+					font-size: 0.97em;
+				}
 
 
 

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import React, {useContext} from "react";
+import React, {useEffect} from "react";
 
 import useGlobal from "../store";
 
@@ -10,7 +10,7 @@ import useGlobal from "../store";
 
 
 
-const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
+const TableHeadCell = ({data, colName, requestSort, sortConfig, first}) => {
 	const [primary] = useGlobal(
 		state => state.primary,
 		() => null
@@ -23,6 +23,11 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
 		state => state.tertiary,
 		() => null
 	);
+	useEffect(() => {
+		if (first) {
+			requestSort(colName, data.valuetype);
+		}
+	}, []);
 	return (
 		<th onClick={() => requestSort(colName, data.valuetype)}>
 			{
@@ -77,6 +82,7 @@ const TableHeadCell = ({data, colName, requestSort, sortConfig}) => {
 							font-family: monospace;
 							font-size: 1.25em;
 							text-align: right;
+							line-height: 15px;
 
 							` : ""}
 					}

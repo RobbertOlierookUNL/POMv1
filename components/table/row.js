@@ -1,12 +1,13 @@
 import React, { useContext, useRef, useMemo, useEffect, useCallback } from "react";
 import handleViewport from "react-in-viewport";
 
-import useGlobal from "../store";
-
+import { allOptionsWithData } from "../../config/viewOptions";
 import Cell from "./cell";
 import Expand from "./expand";
+import useGlobal from "../store";
 
-const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}) => {
+
+const PreRow = ({id, meta, rowData, keys, additionalKeys, inViewport, forwardedRef}) => {
 	const [active, setActive] = useGlobal(
 		state => state.active,
 		actions => actions.setActive
@@ -44,7 +45,7 @@ const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}
 	//   () => {handleClick(event);};
 	// }, []);
 	useEffect(() => {
-		if (id === 10) {
+		if (id === 4) {
 			setTopInView(inViewport);
 		}
 	}, [inViewport]);
@@ -53,13 +54,32 @@ const PreRow = ({id, meta, data, keys, additionalKeys, inViewport, forwardedRef}
 
 
 	return (
-		<tr className={active === id && "active"} onClick={inViewport ? handleClick : undefined} ref={forwardedRef}>
+		<tr
+			className={active === id && "active"}
+			onClick={inViewport ? handleClick : undefined}
+			ref={forwardedRef}>
 			<>
 				{selectMode && <td></td>}
 				{keys.map((key, i) =>
-					<Cell data={data === false ? data : data[key]} inViewport={inViewport} colName={key} width={meta[key].widthweight || 12} key={i} rowId={id}/>
+					<Cell
+						cellData={rowData === false ? false : rowData[key]}
+						colName={key}
+						width={meta[key].widthweight || allOptionsWithData.widthweight.default}
+						key={i}
+						rowId={id}/>
 				)}
-				<Expand keys={additionalKeys} ref={expandRef} meta={meta} data={data} rowId={id} active={active === id}/>
+				<Expand
+					keys={additionalKeys}
+					ref={expandRef}
+					meta={meta}
+					rowData={rowData}
+					active={active === id}
+					mergedFrom={rowData
+						&& rowData.addedProps
+						&& rowData.addedProps.merged
+						&& rowData.addedProps.mergedFrom}
+					keysForMergedRows={keys}
+				/>
 			</>
 			<style jsx>{`
         tr:nth-child(even){background-color: ${gray_very_light.color};}

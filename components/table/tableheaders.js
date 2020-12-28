@@ -5,7 +5,7 @@ import useGlobal from "../store";
 
 
 
-const TableHeaders = ({meta, keys, totalWidth, requestSort, sortConfig}) => {
+const TableHeaders = ({meta, keys, requestSort, sortConfig}) => {
 	const [selectMode] = useGlobal(
 		state => state.selectMode,
 		() => null
@@ -46,7 +46,7 @@ const TableHeaders = ({meta, keys, totalWidth, requestSort, sortConfig}) => {
 			<tr>
 				{
 					keys.map((col, i) => (
-						<TableHeadCell requestSort={requestSort} sortConfig={sortConfig} data={meta[col]} colName={col} key={i}/>
+						<TableHeadCell requestSort={requestSort} sortConfig={sortConfig} data={meta[col]} colName={col} first={i===0} key={i}/>
 					))
 				}
 			</tr>

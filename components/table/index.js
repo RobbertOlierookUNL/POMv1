@@ -1,13 +1,16 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
+import { allOptionsWithData } from "../../config/viewOptions";
 import { useEntries, useView } from "../../lib/swr-hooks";
-import { useSortableData } from "../../lib/custom-hooks";
+import { useSortableData, useToolkit } from "../../lib/custom-hooks";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
 import Toolbar from "./toolbar";
 import useGlobal from "../store";
+
+
 
 
 
@@ -20,10 +23,9 @@ const Table = () => {
 	const {view_name, created_at, updated_at, config, ...metaString} = _metaString || {};
 	const [..._data] = preData || [];
 	const [meta, setMeta] = useState({});
-	const [compact, setCompact] = useState([]);
-	const [expanded, setExpanded] = useState([]);
-	const [totalWidthCount, setTotalWidthCount] = useState(0);
+	const [keys, setKeys] = useState({});
 	const [data, setData] = useState({});
+	const {mergeBy} = useToolkit();
 	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
@@ -39,39 +41,44 @@ const Table = () => {
 	};
 
 	useMemo(() => {
+		console.log(2);
 		const cols = Object.keys(metaString);
 		const keys = {
 			compact: [],
 			expanded: [],
 		};
 		let _meta = {};
-		let _totalWidthCount = 0;
 		cols.map((col, i) => {
 			_meta[col] = metaString[col] ? JSON.parse(metaString[col]) : {};
 			if (_meta[col].display === "compact") {
 				keys.compact.push(cols[i]);
-				_totalWidthCount += _meta[col].widthweight ? parseInt(_meta[col].widthweight) : 12;
 			} else if (_meta[col].display === "expanded") {
 				keys.expanded.push(cols[i]);
 			}
 		});
 		const onIndex = (a, b) => (
-			(_meta[a].indexweight || 10) - (_meta[b].indexweight || 10)
+			(_meta[a].indexweight || allOptionsWithData.widthweight.default) - (_meta[b].indexweight || allOptionsWithData.widthweight.default)
 		);
-		setCompact(keys.compact.sort(onIndex));
-		setExpanded(keys.expanded.sort(onIndex));
-		setTotalWidthCount(_totalWidthCount);
+		keys.compact.sort(onIndex);
+		keys.expanded.sort(onIndex);
+		setKeys(keys);
 		setMeta(_meta);
 	}, [ Object.keys(metaString)[0]]);
 
-	useEffect(() => {
-		setData(_data);
-	}, [Object.keys(_data)[0]]);
+	useMemo(() => {
+		console.log(0);
+		if (
+			Object.keys(_data)[0]
+			&& Object.keys(meta)[0])
+		{
+			setData(mergeBy(_data, meta, keys.compact, keys.expanded));
+		}
+	}, [Object.keys(_data)[0], Object.keys(meta)[0], Object.keys(keys)[0]]);
 
 
 	return (
 		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
-
+			{console.log("rer ind")}
 			{data && Object.keys(data)[0] && <ToTopButton
 				handleClick={handleClick}
 				top={`${38.67 + 25 + (verPadding * 3)}px`}
@@ -79,11 +86,12 @@ const Table = () => {
 				}/>}
 			<div className="tableContainer" ref={tableRef}>
 				<Toolbar/>
-				{meta && Object.keys(meta)[0] ? <table className="table">
-					<TableHeaders requestSort={requestSort} sortConfig={sortConfig} meta={meta} keys={compact} totalWidth={totalWidthCount}/>
-					<TableBody meta={meta} data={data} keys={compact} additionalKeys={expanded} sortedKeys={sortedKeys}>
-					</TableBody>
-				</table>
+				{meta && Object.keys(meta)[0] ?
+					<table className="table">
+						<TableHeaders requestSort={requestSort} sortConfig={sortConfig} meta={meta} keys={keys.compact}/>
+						<TableBody meta={meta} data={data} keys={keys.compact} additionalKeys={keys.expanded} sortedKeys={sortedKeys}>
+						</TableBody>
+					</table>
 					:
 					<table className="table">
 						<tbody>
