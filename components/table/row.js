@@ -56,7 +56,10 @@ const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewp
 			onClick={inViewport ? handleClick : undefined}
 			ref={forwardedRef}>
 			<>
-				{selectMode && <td></td>}
+				{selectMode &&
+				<td>
+					<input type="checkbox" id={id} name={id}/>	
+				</td>}
 				{keysForTableCols.map((key, i) =>
 					<Cell
 						cellData={rowData === false ? false : rowData[key]}

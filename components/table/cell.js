@@ -25,7 +25,7 @@ const Cell = ({cellData, width, rowId, colName, noExpand}) => {
         td {
           border: 1px solid ${gray_light.color};
           border-width: 0 1px 1px 0;
-					/* grid-column-end: span ${width}; */
+					grid-column-start: ${colName};
 					cursor: pointer;
 					padding: 2px;
 			 	${(active === rowId) || noExpand ? "" : (`

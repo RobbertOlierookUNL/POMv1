@@ -99,8 +99,7 @@ const Table = () => {
 							data={data}
 							keysForTableCols={keys.compact}
 							additionalColKeys={keys.expanded}
-							sortedRowKeys={sortedKeys}>
-						</TableBody>
+							sortedRowKeys={sortedKeys}/>
 					</table>
 					:
 					<table className="table">

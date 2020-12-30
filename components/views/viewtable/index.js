@@ -128,7 +128,7 @@ const ViewTable = ({data}) => {
 			}
 		}, 5000));
 
-	}, [dataState, lastSavedDataState]);
+	}, [dataState]);
 
 	useEffect(() => {
 		const option = allOptions[0];

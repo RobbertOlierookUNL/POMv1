@@ -33,7 +33,7 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 							minLoad <= i && i <= maxLoad &&
 							<Row
 								onEnterViewport={() => updateParameters(i)}
-								id={i}
+								id={row}
 								rowData={data[row]}
 								meta={meta}
 								keysForTableCols={keysForTableCols}
