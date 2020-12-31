@@ -4,20 +4,7 @@ import useGlobal from "../store";
 import Gravatar from "../gravatar";
 
 
-
-
-
-
-
-
-
-const fName="John";
-const lName="Doe";
-
-// const fName=null;
-// const lName=null;
-
-const Header = ({children}) => {
+const Header = ({children, fName, lName}) => {
 	// const [{usermenu}, dispatch] = useContext(Context);
 	const [userMenu, expandUserMenu] = useGlobal(
 		state => state.userMenu,
@@ -93,11 +80,11 @@ const Header = ({children}) => {
 					position: relative;
 					top: 50%;
 					display: inline-block;
-					margin-right: 10px;
+					margin-right: ${fName && lName ? "10px" : "2px"};
 				}
 				.gravatar_container {
 					display: inline-block;
-					padding: 6px;
+					padding: ${fName && lName ? "6px" : "6px 0px"};
 				}
            `}
 			</style>

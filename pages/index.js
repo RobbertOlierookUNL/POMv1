@@ -7,9 +7,20 @@ import OptionDrawer from "../components/header/optiondrawer";
 import SchemaDropdown from "../components/schemadropdown";
 import Table from "../components/table";
 import UserMenu from "../components/usermenu";
+import UserOptions from "../components/useroptions";
 import useGlobal from "../components/store";
 
 
+
+
+// const firstName="John";
+// const lastName="Doe";
+// const userId=true;
+
+
+const firstName=null;
+const lastName=null;
+const userId=false;
 
 export default function Home() {
 	const [secondary] = useGlobal(
@@ -22,7 +33,7 @@ export default function Home() {
 				<title>POM</title>
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
-			<Header>
+			<Header fName={firstName} lName={lastName}>
 				<MenuButton/>
 				POM
 			</Header>
@@ -32,7 +43,7 @@ export default function Home() {
 
 
 			<UserMenu>
-
+				<UserOptions loggedIn={!!userId}/>
 			</UserMenu>
 			<Table/>
 			<style jsx global>{`

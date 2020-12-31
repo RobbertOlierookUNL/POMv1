@@ -28,6 +28,9 @@ export const setTopInView = (store, amount) => {
 export const setActive = (store, amount) => {
 	store.setState({active: amount});
 };
+export const setFormRefs = (store, amount) => {
+	store.setState({formRefs: amount});
+};
 export const setSchema = (store, amount) => {
 	const schema = amount;
 	store.setState({...colorSchematic(schema)});
