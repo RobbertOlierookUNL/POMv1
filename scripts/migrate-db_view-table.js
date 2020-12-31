@@ -25,19 +25,19 @@ async function query(q) {
 		throw Error(e.message);
 	}
 }
-
-async function drop() {
-	try {
-		await query(/* sql */`
-		DROP TABLE IF EXISTS view_metadata_table_v3test
-		`);
-		console.log("migration ran successfully");
-	} catch (e) {
-		console.log(e);
-		console.error("could not run migration, double check your credentials.");
-		process.exit(1);
-	}
-}
+//
+// async function drop() {
+// 	try {
+// 		await query(/* sql */`
+// 		DROP TABLE IF EXISTS view_metadata_table_v3test
+// 		`);
+// 		console.log("migration ran successfully");
+// 	} catch (e) {
+// 		console.log(e);
+// 		console.error("could not run migration, double check your credentials.");
+// 		process.exit(1);
+// 	}
+// }
 
 // Create "entries" table if doesn't exist
 async function migrate() {
@@ -136,4 +136,6 @@ async function migrate() {
 	}
 }
 
-drop().then(() => migrate().then(() => process.exit()));
+// drop().then(() => 
+migrate().then(() => process.exit());
+// );

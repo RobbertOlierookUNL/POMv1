@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "migrate": "node scripts/migrate-db.js",
+    "migrate-view": "node scripts/migrate-db_view-table.js",
+    "migrate-user": "node scripts/migrate-db_user-table.js",
+    "migrate-roll": "node scripts/migrate-db_roll-table.js",
+    "migrate-category": "node scripts/migrate-db_category-table.js",
+    "migrate-chain": "node scripts/migrate-db_chain-table.js",
     "seed": "node scripts/create-template-view.js"
   },
   "dependencies": {
