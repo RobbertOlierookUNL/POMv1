@@ -81,7 +81,7 @@ const ViewTable = ({data}) => {
 		if ((value !== viewdata[attr]) || mode === "duplicated") {
 			try {
 				console.log("trying..");
-				const res = await fetch("/api/edit-view", {
+				const res = await fetch("/api/view/edit-view", {
 					method: "PATCH",
 					body: JSON.stringify({
 						attr,

@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 
 import useGlobal from "../store";
 import Shadow from "../shadow";
@@ -12,35 +12,47 @@ const OptionDrawer = ({children}) => {
 		state => state.options,
 		actions => actions.expandOptions
 	);
-	const [menuButton] = useGlobal(
-		state => state.menuButton,
+	const [userMenu] = useGlobal(
+		state => state.userMenu,
 		() => null
 	);
-	const ref = useRef(null);
+	const [shadowRef] = useGlobal(
+		state => state.shadowRef,
+		() => null
+	);
+	const [handleClickOutside, setHandleClickOutside] = useState(false);
 	useEffect(() => {
+		if (handleClickOutside) {
+			document.removeEventListener("click", handleClickOutside, true);
+			setHandleClickOutside(false);
+		}
 
-		function handleClickOutside(event) {
-			if (ref.current && !ref.current.contains(event.target) &&
-       menuButton.current && !menuButton.current.contains(event.target)) {
-				expandOptions(false);
+		if(options) {
+			setHandleClickOutside(() => function (event) {
+				if (event.target === shadowRef.current
+				){
+					expandOptions(false);
+				}
+			});
+		}
+
+		return () => {
+			if(handleClickOutside) {
+				document.removeEventListener("click", handleClickOutside, true);
 			}
-		}
+		};
+	}, [shadowRef, userMenu]);
 
-		if (options) {
-			document.addEventListener("mouseup", handleClickOutside);
-		} else {
-			document.removeEventListener("mouseup", handleClickOutside);
+	useEffect(() => {
+		if (handleClickOutside) {
+			document.addEventListener("click", handleClickOutside, true);
 		}
-
-	}, [ref, options]);
-	// const handleClick = () => {
-	// 	state.options && dispatch({type: "EXPAND_OPTIONS", payload: false});
-	// };
+	}, [handleClickOutside]);
 	return (
 
 		<>
-			<div className="drawer" ref={ref}>{children}</div>
-			<Shadow zIndex={8} trigger={options}/>
+			<div className="drawer">{children}</div>
+			<Shadow zIndex={8} trigger={options || userMenu} clickthrough={false}/>
 			<style jsx>{`
         .drawer {
           z-index: 10;

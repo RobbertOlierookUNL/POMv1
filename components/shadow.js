@@ -1,24 +1,31 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
+import useGlobal from "./store";
 
 const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, clickthrough = true, selfAnimate = false}) => {
 	const [triggerState, setTriggerState] = useState(trigger);
+	const shadowRef = useRef(null);
+	const [, setShadowRef] = useGlobal(
+		() => null,
+		actions => actions.setShadowRef
+	);
 	useEffect(() => {
 		if (selfAnimate) {
 			setTriggerState(false);
 			setTimeout(() => {setTriggerState(true);}, 10);
 		}
+		setShadowRef(shadowRef);
 	}, []);
 	useEffect(() => {
 		setTriggerState(trigger);
 	}, [trigger]);
 
 	return (
-		<div className="shadow">
+		<div ref={shadowRef} className="shadow">
 			<style jsx>{`
         .shadow {
           z-index: ${zIndex};
           position: absolute;
-          pointer-events: ${clickthrough ? "none" : "auto"};
+          pointer-events: ${!clickthrough && trigger ? "auto" : "none"};
           top: 0;
           left: 0;
           width: 100vw;

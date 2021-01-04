@@ -1,21 +1,22 @@
 import { NextApiHandler } from 'next'
-import { query } from '../../lib/db'
+import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-  const { title, content } = req.body
+  const { attr, view_name, value } = req.body
   try {
-    if (!title || !content) {
+    if (!attr || !view_name || !value) {
       return res
         .status(400)
-        .json({ message: '`title` and `content` are both required' })
+        .json({ message: '`id`,`title`, and `content` are all required' })
     }
 
     const results = await query(
       `
-      INSERT INTO entries (title, content)
-      VALUES (?, ?)
+      UPDATE view_metadata_table_v3test
+      SET ${attr} = ?
+      WHERE view_name = ?
       `,
-      [title, content]
+      [value, view_name]
     )
 
     return res.json(results)

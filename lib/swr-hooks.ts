@@ -5,7 +5,7 @@ function fetcher(url: string) {
 }
 
 export function useEntries() {
-  const { data, error } = useSWR(`/api/get-entries`, fetcher)
+  const { data, error } = useSWR(`/api/data/get-entries`, fetcher)
 
   return {
     data,
@@ -15,7 +15,7 @@ export function useEntries() {
 }
 
 export function useViews() {
-  const { data, error } = useSWR(`/api/get-views`, fetcher)
+  const { data, error } = useSWR(`/api/view/get-views`, fetcher)
 
   return {
     views: data,
@@ -25,9 +25,9 @@ export function useViews() {
 }
 
 export function useEntry(id: string) {
-  return useSWR(`/api/get-entry?id=${id}`, fetcher)
+  return useSWR(`/api/data/get-entry?id=${id}`, fetcher)
 }
 
-export function useView(view) {
-  return useSWR(`/api/get-view?view=${view}`, fetcher)
+export function useView(view: string) {
+  return useSWR(`/api/view/get-view?view=${view}`, fetcher)
 }
