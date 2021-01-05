@@ -1,18 +1,16 @@
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { InputAdornment } from "@material-ui/core";
-// import { faEnvelope, faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
-import { useForm, Controller } from "react-hook-form";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import React, { useRef, useEffect } from "react";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
-import { useToolkit } from "../../lib/custom-hooks";
 import Button from "../button";
-import useGlobal from "../store";
+import { useForm, Controller } from "react-hook-form";
+import {useRouter} from "next/router";
+
 
 
 
@@ -37,35 +35,43 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
+function titleCase(str) {
+	var splitStr = str.toLowerCase().split(" ");
+	for (var i = 0; i < splitStr.length; i++) {
+		splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+	}
+	return splitStr.join(" ");
+}
 
 const RegisterScreen = ({active}) => {
 	const { register, handleSubmit, watch, errors, control } = useForm();
-	// const [, setFormRefs] = useGlobal(
-	// 	() => null,
-	// 	actions => actions.setFormRefs
-	// );
-	// const rollRef = useRef(null);
-	// const categoryRef = useRef(null);
-	// const chainRef = useRef(null);
-	// useEffect(() => {setFormRefs({rollRef: {current: rollRef.current.childNodes[1]}, categoryRef, chainRef});},[]);
+	const [submitting, setSubmitting] = useState(false);
+
 	const classes = useStyles();
-	function titleCase(str) {
-		var splitStr = str.toLowerCase().split(" ");
-		for (var i = 0; i < splitStr.length; i++) {
-			// You do not need to check if i is larger than splitStr length, as your for does that for you
-			// Assign it back to the array
-			splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-		}
-		// Directly return the joined string
-		return splitStr.join(" ");
-	}
-	const onSubmit = (data) => {
+	const Router = useRouter();
+
+
+	const onSubmit = async (data) => {
+		setSubmitting(true);
 		data.email = data.email.toLowerCase();
 		const [fName, lName] = data.email.replace("@unilever.com", "").replace("-", " ").split(".");
 		const firstName = titleCase(fName);
 		const lastName = titleCase(lName);
-		console.log({...data, firstName, lastName});
+		try {
+			const res = await fetch("/api/user/create-user", {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({...data, firstName, lastName}),
+			});
+			console.log(2);
+			const json = await res.json();
+			if (!res.ok) throw Error(json.message);
+			Router.push("/user/");
+		} catch (e) {
+			throw Error(e.message);
+		}
 	};
 	const watchRoll = watch("roll");
 
@@ -100,16 +106,6 @@ const RegisterScreen = ({active}) => {
 						defaultValue=""
 						error={!!errors.email}
 						margin="dense"
-						// InputProps={{
-						// 	startAdornment:
-						// 		<InputAdornment position="start">
-						// 			<FontAwesomeIcon icon={faEnvelope}/>
-						// 		</InputAdornment>,
-						// 	endAdornment:
-						// 		<InputAdornment position="end">
-						// 			@
-						// 		</InputAdornment>,
-						// }}
 					/>
 				</div>
 				{errors.email && <div className="error-message">Voer een geldig Unilever emailadres in</div>}
@@ -139,7 +135,6 @@ const RegisterScreen = ({active}) => {
 					control={control}
 					defaultValue=""
 					rules={{ required: true }}
-						// refs={rollRef}
 					/>
 					{errors.roll && <div className="error-message">Kies een rol</div>}
 
@@ -205,8 +200,9 @@ const RegisterScreen = ({active}) => {
 					style={{marginTop: "15px"}}
 					type={"submit"}
 					tabIndex={active ? 0 : -1}
+					disabled={submitting}
 				>
-						Registreren
+					{submitting ? "Verwerken..." : "Registreren"}
 				</Button>
 			</form>
 			<style jsx>{`
