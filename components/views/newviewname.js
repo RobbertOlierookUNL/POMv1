@@ -22,6 +22,7 @@ const NewViewName = ({duplicate}) => {
 	const save = async () => {
 		setSubmitting(true);
 		try {
+			if(viewName === "new") throw Error("ER_NO_NEW");
 			const res = await fetch("/api/view/create-view", {
 				method: "PUT",
 				headers: {
@@ -37,6 +38,8 @@ const NewViewName = ({duplicate}) => {
 		} catch (e) {
 			if (e.message && e.message.includes("ER_DUP_ENTRY")) {
 				setError(`${viewName} bestaat al; geen dubbele entries`);
+			} else if (e.message && e.message.includes("ER_NO_NEW")) {
+				setError("\"new\" is niet toegestaan als view-naam");
 			} else {
 				setError("Er is iets fout gegaan, probeer het opnieuw");
 			}

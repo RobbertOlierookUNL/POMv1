@@ -125,9 +125,9 @@ const RegisterScreen = ({active}) => {
 							tabIndex={active ? 0 : -1}
 							{...props}
 						>
-							<MenuItem value={10}>Ten</MenuItem>
-							<MenuItem value={20}>Twenty</MenuItem>
-							<MenuItem value={30}>Thirty</MenuItem>
+							<MenuItem value={"test"}>Ten</MenuItem>
+							<MenuItem value={"test2"}>Twenty</MenuItem>
+							<MenuItem value={"test3"}>Thirty</MenuItem>
 						</Select>
 					)
 					}
@@ -153,9 +153,9 @@ const RegisterScreen = ({active}) => {
 							className="disable-on-inactive"
 							tabIndex={active ? 0 : -1}
 						>
-							<MenuItem value={10}>Ten</MenuItem>
-							<MenuItem value={20}>Twenty</MenuItem>
-							<MenuItem value={30}>Thirty</MenuItem>
+							<MenuItem value={"test"}>Ten</MenuItem>
+							<MenuItem value={"test2"}>Twenty</MenuItem>
+							<MenuItem value={"test3"}>Thirty</MenuItem>
 						</Select>
 					}
 					name="category"
@@ -180,9 +180,9 @@ const RegisterScreen = ({active}) => {
 								className="disable-on-inactive"
 								tabIndex={active ? 0 : -1}
 							>
-								<MenuItem value={10}>Ten</MenuItem>
-								<MenuItem value={20}>Twenty</MenuItem>
-								<MenuItem value={30}>Thirty</MenuItem>
+								<MenuItem value={"test"}>Ten</MenuItem>
+								<MenuItem value={"test2"}>Twenty</MenuItem>
+								<MenuItem value={"test3"}>Thirty</MenuItem>
 							</Select>
 						}
 						name="chain"
