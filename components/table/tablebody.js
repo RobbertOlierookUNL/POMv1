@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
 import Row from "./row.js";
 
@@ -11,7 +11,7 @@ import Row from "./row.js";
 const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKeys}) => {
 	const numberInView = 100;
 	const fakedata = new Array(26).fill(".");
-	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: numberInView});
+	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
 	const updateParameters = (i) => {
 		if (i%(numberInView/2-10) === 0) {
 			let min = i - numberInView/2;
@@ -21,6 +21,9 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 			setParameters({minLoad: min, maxLoad: min+numberInView});
 		}
 	};
+	useEffect(() => {
+		updateParameters(0);
+	}, []);
 
 
 

@@ -22,8 +22,11 @@ const UserOptions = ({loggedIn}) => {
 
 
 	const logout = () => {
-		Router.push("/");
+		console.log(0);
+		Router.push("/", undefined, {shallow: true});
+		console.log(1);
 		expandUserMenu(false);
+		console.log(2);
 
 	};
 	const login = () => {

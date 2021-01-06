@@ -68,23 +68,26 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 	useEffect(async () => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
-		data.email = data.email.toLowerCase();
-		const [fName, lName] = data.email.replace("@unilever.com", "").replace("-", " ").split(".");
-		const firstName = titleCase(fName);
-		const lastName = titleCase(lName);
-		try {
-			const res = await fetch("/api/user/create-user", {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({...data, firstName, lastName}),
-			});
-			console.log(2);
-			const json = await res.json();
-			if (!res.ok) throw Error(json.message);
-			await Router.push(`/${json.insertId}`);
-			expandUserMenu(false);
+
+		if (submitting && data) {
+			data.email = data.email.toLowerCase();
+			const [fName, lName] = data.email.replace("@unilever.com", "").replace("-", " ").split(".");
+			const firstName = titleCase(fName);
+			const lastName = titleCase(lName);
+			
+			try {
+				const res = await fetch("/api/user/create-user", {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({...data, firstName, lastName}),
+				});
+				console.log(2);
+				const json = await res.json();
+				if (!res.ok) throw Error(json.message);
+				await Router.push(`/${json.insertId}`);
+				expandUserMenu(false);
 
 			// const res2 = await fetch(`/api/user/get-user-id?email=${data.email}`, {
 			// 	method: "GET",
@@ -97,11 +100,12 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 			// if (!res2.ok) throw Error(json2.message);
 			// console.log(json2);
 			// Router.push("/user/");
-		} catch (e) {
-			setSubmitting(false);
-			if (e.message && e.message.includes("ER_DUP_ENTRY")) {
-				setDuplicateError("Deze gebruiker bestaat al, log in of probeer een ander emailadres");
-			} else {throw Error(e);}
+			} catch (e) {
+				setSubmitting(false);
+				if (e.message && e.message.includes("ER_DUP_ENTRY")) {
+					setDuplicateError("Deze gebruiker bestaat al, log in of probeer een ander emailadres");
+				} else {throw Error(e);}
+			}
 		}
 		return function cleanup() {
 			abortController.abort();

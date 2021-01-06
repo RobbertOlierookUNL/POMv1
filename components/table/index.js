@@ -11,23 +11,10 @@ import Toolbar from "./toolbar";
 import useGlobal from "../store";
 
 
-
-
-
-// const view = "salesview";
-function IsJsonString(str) {
-	try {
-		JSON.parse(str);
-	} catch (e) {
-		return false;
-	}
-	return true;
-}
-
 const Table = ({initialData, view, initialViewMeta}) => {
+	console.log("tablererender");
 	const {data: _meta} = useView(view, initialViewMeta);
 	const {data: _data} = useEntries(initialData);
-	console.log("tablererender");
 	const {view_name, created_at, updated_at, config, ...meta} = _meta;
 	const notUsed = {};
 	notUsed.variables = {view_name, created_at, updated_at, config};
