@@ -1,5 +1,7 @@
 import React, {useContext, useEffect, useRef} from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import useGlobal from "../store";
 import Gravatar from "../gravatar";
 
@@ -35,7 +37,7 @@ const Header = ({children, fName, lName}) => {
 					{children[1]}
 				</div>
 				<div className={"right_side"} onClick={handleClick} ref={ref}>
-					<div className="welcome_container">{fName && lName ? fName + " " + lName : "Inloggen" }</div>
+					<div className="welcome_container">{fName && lName ? fName + " " + lName : userMenu ? <FontAwesomeIcon icon={faTimes}/> : "Inloggen" }</div>
 					<div className={"gravatar_container"}>
 						<Gravatar first_name={fName} last_name={lName} width={"25px"}/>
 					</div>
@@ -81,6 +83,8 @@ const Header = ({children, fName, lName}) => {
 					top: 50%;
 					display: inline-block;
 					margin-right: ${fName && lName ? "10px" : "2px"};
+					/* opacity: ${!fName && !lName && userMenu ? 0 : 1}; */
+					transition: opacity 100ms ease-in;
 				}
 				.gravatar_container {
 					display: inline-block;

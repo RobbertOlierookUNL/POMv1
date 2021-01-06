@@ -39,6 +39,19 @@ async function query(q) {
 // 	}
 // }
 
+async function setAutoIncrement() {
+	try {
+		await query(/* sql */`
+		ALTER TABLE user_table_v3test AUTO_INCREMENT=1001
+		`);
+		console.log("migration ran successfully");
+	} catch (e) {
+		console.log(e);
+		console.error("could not run migration, double check your credentials.");
+		process.exit(1);
+	}
+}
+
 // Create "entries" table if doesn't exist
 async function migrate() {
 	try {
@@ -74,5 +87,6 @@ async function migrate() {
 }
 
 // drop().then(() =>
-migrate().then(() => process.exit());
+// migrate().then(() => process.exit());
 // );
+setAutoIncrement().then(() => process.exit());

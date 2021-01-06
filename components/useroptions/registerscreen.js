@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
@@ -10,6 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "../button";
 import { useForm, Controller } from "react-hook-form";
 import {useRouter} from "next/router";
+import useGlobal from "../store";
 
 
 
@@ -43,16 +44,30 @@ function titleCase(str) {
 	return splitStr.join(" ");
 }
 
-const RegisterScreen = ({active}) => {
-	const { register, handleSubmit, watch, errors, control } = useForm();
+const RegisterScreen = ({active, initialData, transportData}) => {
+	const { register, handleSubmit, watch, errors, control, getValues } = useForm();
 	const [submitting, setSubmitting] = useState(false);
-
+	const [duplicateError, setDuplicateError] = useState(false);
+	const [data, setData] = useState(false);
 	const classes = useStyles();
 	const Router = useRouter();
+	const watchRoll = watch("roll");
+	const [, expandUserMenu] = useGlobal(
+		() => null,
+		actions => actions.expandUserMenu
+	);
+
+	// useEffect(() => () => {transportData({...initialData, ...getValues()});}, []);
+	useEffect(() => () => {transportData(getValues());}, []);
 
 
 	const onSubmit = async (data) => {
 		setSubmitting(true);
+		setData(data);
+	};
+	useEffect(async () => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
 		data.email = data.email.toLowerCase();
 		const [fName, lName] = data.email.replace("@unilever.com", "").replace("-", " ").split(".");
 		const firstName = titleCase(fName);
@@ -68,12 +83,30 @@ const RegisterScreen = ({active}) => {
 			console.log(2);
 			const json = await res.json();
 			if (!res.ok) throw Error(json.message);
-			Router.push("/user/");
+			await Router.push(`/${json.insertId}`);
+			expandUserMenu(false);
+
+			// const res2 = await fetch(`/api/user/get-user-id?email=${data.email}`, {
+			// 	method: "GET",
+			// 	headers: {
+			// 		"Content-Type": "application/json",
+			// 	},
+			// });
+			// console.log(2);
+			// const json2 = await res2.json();
+			// if (!res2.ok) throw Error(json2.message);
+			// console.log(json2);
+			// Router.push("/user/");
 		} catch (e) {
-			throw Error(e.message);
+			setSubmitting(false);
+			if (e.message && e.message.includes("ER_DUP_ENTRY")) {
+				setDuplicateError("Deze gebruiker bestaat al, log in of probeer een ander emailadres");
+			} else {throw Error(e);}
 		}
-	};
-	const watchRoll = watch("roll");
+		return function cleanup() {
+			abortController.abort();
+		};
+	}, [submitting, data]);
 
 	return (
 		<div>
@@ -103,12 +136,16 @@ const RegisterScreen = ({active}) => {
 						}
 						className="disable-on-inactive"
 						tabIndex={active ? 0 : -1}
-						defaultValue=""
+						defaultValue={initialData.email || ""}
 						error={!!errors.email}
 						margin="dense"
 					/>
 				</div>
-				{errors.email && <div className="error-message">Voer een geldig Unilever emailadres in</div>}
+				{errors.email || duplicateError &&
+					<div className="error-message">
+						{duplicateError || "Voer een geldig Unilever emailadres in"}
+					</div>
+				}
 
 				<FormControl
 					className={classes.formControl}
@@ -133,7 +170,7 @@ const RegisterScreen = ({active}) => {
 					}
 					name="roll"
 					control={control}
-					defaultValue=""
+					defaultValue={initialData.roll || ""}
 					rules={{ required: true }}
 					/>
 					{errors.roll && <div className="error-message">Kies een rol</div>}
@@ -160,7 +197,7 @@ const RegisterScreen = ({active}) => {
 					}
 					name="category"
 					control={control}
-					defaultValue=""
+					defaultValue={initialData.category || ""}
 					rules={{ required: true }}
 					/>
 					{errors.category && <div className="error-message">Kies een categorie</div>}
@@ -187,7 +224,7 @@ const RegisterScreen = ({active}) => {
 						}
 						name="chain"
 						control={control}
-						defaultValue=""
+						defaultValue={initialData.chain || ""}
 						rules={{ required: true }}
 						/>
 						{errors.chain && <div className="error-message">Kies een chain</div>}

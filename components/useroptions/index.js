@@ -4,6 +4,7 @@ import LoginScreen from "./loginscreen";
 import RegisterScreen from "./registerscreen";
 import UserScreen from "./userscreen";
 import useGlobal from "../store";
+import {useRouter} from "next/router";
 
 
 const UserOptions = ({loggedIn}) => {
@@ -12,12 +13,18 @@ const UserOptions = ({loggedIn}) => {
 		state => state.primary,
 		() => null
 	);
-	const [userMenu] = useGlobal(
+	const [userMenu, expandUserMenu] = useGlobal(
 		state => state.userMenu,
-		() => null
+		actions => actions.expandUserMenu
 	);
+	const [transportedData, setTransportedData] = useState({});
+	const Router = useRouter();
+
+
 	const logout = () => {
-		console.log(0);
+		Router.push("/");
+		expandUserMenu(false);
+
 	};
 	const login = () => {
 		setRegisterMode(false);
@@ -39,9 +46,16 @@ const UserOptions = ({loggedIn}) => {
 			{loggedIn ?
 				<UserScreen active={userMenu}/>
 				: registerMode ?
-					<RegisterScreen active={userMenu}/>
+					<RegisterScreen
+						active={userMenu}
+						initialData={transportedData}
+						transportData={setTransportedData}/>
 					:
-					<LoginScreen active={userMenu}/>
+					<LoginScreen
+						active={userMenu}
+						initialData={transportedData}
+						transportData={setTransportedData}
+					/>
 			}
 			<style jsx>{`
 				.top-right-button {

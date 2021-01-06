@@ -24,10 +24,28 @@ export function useViews() {
   }
 }
 
+export function useUsers() {
+  const { data, error } = useSWR(`/api/view/get-users`, fetcher)
+
+  return {
+    views: data,
+    isLoading: !error && !data,
+    isError: error,
+  }
+}
+
 export function useEntry(id: string) {
   return useSWR(`/api/data/get-entry?id=${id}`, fetcher)
 }
 
 export function useView(view: string) {
   return useSWR(`/api/view/get-view?view=${view}`, fetcher)
+}
+
+export function useUser(userId: number) {
+  return useSWR(`/api/view/get-user?userId=${userId}`, fetcher)
+}
+
+export function useUserId(email: string) {
+  return useSWR(`/api/view/get-user-id?email=${email}`, fetcher)
 }
