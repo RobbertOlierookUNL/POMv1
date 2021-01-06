@@ -41,7 +41,7 @@ const OptionDrawer = ({children}) => {
 				document.removeEventListener("click", handleClickOutside, true);
 			}
 		};
-	}, [shadowRef, userMenu]);
+	}, [shadowRef, options]);
 
 	useEffect(() => {
 		if (handleClickOutside) {

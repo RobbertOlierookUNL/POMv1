@@ -20,12 +20,12 @@ import useGlobal from "../components/store";
 // const userId=true;
 
 
-export default function Home({user}) {
+export default function Home({user, initialData, view, initialViewMeta}) {
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
 	);
-	console.log(user);
+	console.log({user, initialData, view, initialViewMeta});
 	return (
 		<>
 			<Head>
@@ -44,7 +44,10 @@ export default function Home({user}) {
 			<UserMenu>
 				<UserOptions loggedIn={!!user.userId}/>
 			</UserMenu>
-			<Table/>
+			<Table
+				initialData={initialData}
+				view={view}
+				initialViewMeta={initialViewMeta} />
 			<style jsx global>{`
 				body, html{
 					background-color: ${secondary.color};
@@ -65,11 +68,30 @@ export async function getStaticProps(context) {
 		);
 		user = JSON.parse(JSON.stringify(getUser[0]));
 	}
+	const getData = await query(/* sql */`
+		SELECT * FROM website_output_table_v3test
+		ORDER BY tkey DESC
+		`);
+	const initialData = JSON.parse(JSON.stringify(getData));
+
+	const view = "salesview";
+	const getView = await query(/* sql */`
+		SELECT *
+		FROM view_metadata_table_v3test
+		WHERE view_name = ?
+		`,
+	view
+	);
+	const initialViewMeta = JSON.parse(JSON.stringify(getView[0]));
+
 
 
 	return {
 		props: {
-			user
+			user,
+			initialData,
+			view,
+			initialViewMeta
 		},
 	};
 }

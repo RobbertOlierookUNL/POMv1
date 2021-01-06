@@ -4,8 +4,8 @@ function fetcher(url: string) {
   return window.fetch(url).then((res) => res.json())
 }
 
-export function useEntries() {
-  const { data, error } = useSWR(`/api/data/get-entries`, fetcher)
+export function useEntries(initialData: object) {
+  const { data, error } = useSWR(`/api/data/get-entries`, fetcher, {initialData})
 
   return {
     data,
@@ -38,8 +38,8 @@ export function useEntry(id: string) {
   return useSWR(`/api/data/get-entry?id=${id}`, fetcher)
 }
 
-export function useView(view: string) {
-  return useSWR(`/api/view/get-view?view=${view}`, fetcher)
+export function useView(view: string, initialData: object) {
+  return useSWR(`/api/view/get-view?view=${view}`, fetcher, {initialData})
 }
 
 export function useUser(userId: number) {

@@ -14,21 +14,27 @@ import useGlobal from "../store";
 
 
 
-const view = "salesview";
+// const view = "salesview";
+function IsJsonString(str) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
 
-
-const Table = () => {
-	const {data: _metaString} = useView(view);
-	const {data: preData} = useEntries();
-	const {view_name, created_at, updated_at, config, ...metaString} = _metaString || {};
+const Table = ({initialData, view, initialViewMeta}) => {
+	const {data: _meta} = useView(view, initialViewMeta);
+	const {data: _data} = useEntries(initialData);
+	console.log("tablererender");
+	const {view_name, created_at, updated_at, config, ...meta} = _meta;
 	const notUsed = {};
 	notUsed.variables = {view_name, created_at, updated_at, config};
-	const [..._data] = preData || [];
-	const [meta, setMeta] = useState({});
-	const [keys, setKeys] = useState({});
-	const [data, setData] = useState({});
+	// const [meta, setMeta] = useState({});
+	// const [keys, setKeys] = useState({});
+	// const [data, setData] = useState({});
 	const {mergeBy} = useToolkit();
-	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
 	const horPadding = 15;
@@ -42,40 +48,63 @@ const Table = () => {
 		tableRef.current.scrollTo(0, 0);
 	};
 
-	useMemo(() => {
-		console.log(2);
-		const cols = Object.keys(metaString);
-		const keys = {
-			compact: [],
-			expanded: [],
-		};
-		let _meta = {};
-		cols.map((col, i) => {
-			_meta[col] = metaString[col] ? JSON.parse(metaString[col]) : {};
-			if (_meta[col].display === "compact") {
-				keys.compact.push(cols[i]);
-			} else if (_meta[col].display === "expanded") {
-				keys.expanded.push(cols[i]);
-			}
-		});
-		const onIndex = (a, b) => (
-			(_meta[a].indexweight || allOptionsWithData.widthweight.default) - (_meta[b].indexweight || allOptionsWithData.widthweight.default)
-		);
-		keys.compact.sort(onIndex);
-		keys.expanded.sort(onIndex);
-		setKeys(keys);
-		setMeta(_meta);
-	}, [ Object.keys(metaString)[0]]);
-
-	useMemo(() => {
-		if (
-			Object.keys(_data)[0]
-			&& Object.keys(meta)[0])
-		{
-			setData(mergeBy(_data, meta, keys.compact, keys.expanded));
+	const cols = Object.keys(meta);
+	const keys = {
+		compact: [],
+		expanded: [],
+	};
+	cols.map((col, i) => {
+		meta[col] = meta[col] ? JSON.parse(meta[col]) : {};
+		if (meta[col].display === "compact") {
+			keys.compact.push(cols[i]);
+		} else if (meta[col].display === "expanded") {
+			keys.expanded.push(cols[i]);
 		}
-	}, [Object.keys(_data)[0], Object.keys(meta)[0], Object.keys(keys)[0]]);
+	});
+	const onIndex = (a, b) => (
+		(meta[a].indexweight || allOptionsWithData.widthweight.default) - (meta[b].indexweight || allOptionsWithData.widthweight.default)
+	);
+	keys.compact.sort(onIndex);
+	keys.expanded.sort(onIndex);
+	const data = mergeBy(_data, meta, keys.compact, keys.expanded);
+	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
 
+
+
+	// useMemo(() => {
+	// 	console.log(2);
+	// 	const cols = Object.keys(metaString);
+	// 	const keys = {
+	// 		compact: [],
+	// 		expanded: [],
+	// 	};
+	// 	let _meta = {};
+	// 	cols.map((col, i) => {
+	// 		_meta[col] = metaString[col] ? JSON.parse(metaString[col]) : {};
+	// 		if (_meta[col].display === "compact") {
+	// 			keys.compact.push(cols[i]);
+	// 		} else if (_meta[col].display === "expanded") {
+	// 			keys.expanded.push(cols[i]);
+	// 		}
+	// 	});
+	// 	const onIndex = (a, b) => (
+	// 		(_meta[a].indexweight || allOptionsWithData.widthweight.default) - (_meta[b].indexweight || allOptionsWithData.widthweight.default)
+	// 	);
+	// 	keys.compact.sort(onIndex);
+	// 	keys.expanded.sort(onIndex);
+	// 	setKeys(keys);
+	// 	setMeta(_meta);
+	// }, [ Object.keys(metaString)[0]]);
+	//
+	// useMemo(() => {
+	// 	if (
+	// 		Object.keys(_data)[0]
+	// 		&& Object.keys(meta)[0])
+	// 	{
+	// 		setData(mergeBy(_data, meta, keys.compact, keys.expanded));
+	// 	}
+	// }, [Object.keys(_data)[0], Object.keys(meta)[0], Object.keys(keys)[0]]);
+	//
 
 	return (
 		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
