@@ -30,6 +30,7 @@ const Gravatar = ({first_name, last_name, width}) => {
 	        display: inline-block;
 	        vertical-align: middle;
 	        position: relative;
+					/* right: 5px; */
 	        background-color: ${tertiary.color};
 	        color: ${tertiary.text};
 					font-size: 0.7em;

@@ -81,7 +81,7 @@ const ViewTable = ({data}) => {
 		if ((value !== viewdata[attr]) || mode === "duplicated") {
 			try {
 				console.log("trying..");
-				const res = await fetch("/api/edit-view", {
+				const res = await fetch("/api/view/edit-view", {
 					method: "PATCH",
 					body: JSON.stringify({
 						attr,
@@ -128,7 +128,13 @@ const ViewTable = ({data}) => {
 			}
 		}, 5000));
 
-	}, [dataState, lastSavedDataState]);
+	}, [dataState]);
+
+	useEffect(() => {
+		const option = allOptions[0];
+		requestSort(option,
+			typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" );
+	}, []);
 
 	return (
 		<>
@@ -141,17 +147,18 @@ const ViewTable = ({data}) => {
 					<thead>
 						<tr>
 							<th className="crossdivider" onClick={() => requestSort(null)}>{sortConfig && sortConfig.key && <FontAwesomeIcon icon={faTimes} />}</th>
-							{allOptions.map((option, i) => <th key={i} onClick={() => requestSort(option,
-								typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" )}>
-								{
-									sortConfig && sortConfig.key === option &&
+							{allOptions.map((option, i) =>
+								<th key={i} onClick={() => requestSort(option,
+									typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" )}>
+									{
+										sortConfig && sortConfig.key === option &&
 							(
 								sortConfig.direction === "ascending" && <FontAwesomeIcon icon={faArrowDown} />
 							||
 								sortConfig.direction === "descending" && <FontAwesomeIcon icon={faArrowUp} />
 							)}
-								{option}
-							</th>)}
+									{option}
+								</th>)}
 						</tr>
 					</thead>
 					<tbody>

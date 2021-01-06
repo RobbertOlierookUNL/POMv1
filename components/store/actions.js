@@ -28,10 +28,13 @@ export const setTopInView = (store, amount) => {
 export const setActive = (store, amount) => {
 	store.setState({active: amount});
 };
+export const setShadowRef = (store, amount) => {
+	store.setState({shadowRef: amount});
+};
 export const setSchema = (store, amount) => {
 	const schema = amount;
 	store.setState({...colorSchematic(schema)});
 };
-export const setSelectMode = (store, amount) => {
-	store.setState({selectMode: amount});
+export const toggleSelectMode = (store) => {
+	store.setState({selectMode: !store.state.selectMode});
 };

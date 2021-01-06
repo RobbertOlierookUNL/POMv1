@@ -29,7 +29,11 @@ export const allOptionsWithData = {
 	},
 	valuetype : {
 		default: "text",
-		input: ["text", "number"],
+		input: ["text", "number", "date"],
+	},
+	merge : {
+		default: "getOne",
+		input: ["add", "mergeBy", "firstDate", "getOne"],
 	},
 
 

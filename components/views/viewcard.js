@@ -63,10 +63,10 @@ const ViewCard = ({view}) => {
 
 	async function deleteEntry() {
 		setDeleting(true);
-		let res = await fetch(`/api/delete-view?view_name=${view_name}`, { method: "DELETE" });
+		let res = await fetch(`/api/view/delete-view?view_name=${view_name}`, { method: "DELETE" });
 		let json = await res.json();
 		if (!res.ok) throw Error(json.message);
-		mutate("/api/get-views");
+		mutate("/api/view/get-views");
 		setDeleting(false);
 	}
 

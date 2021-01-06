@@ -1,12 +1,12 @@
 import { NextApiHandler } from 'next'
-import { query } from '../../lib/db'
+import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
   try {
     if (req.method === "GET") {
       const results = await query(/* sql */`
-        SELECT * FROM view_metadata_table_v3test
-        ORDER BY view_name DESC
+        SELECT * FROM user_table_v3test
+        ORDER BY userId DESC
     `)
 
       return res.json(results)

@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import Skeleton from "react-loading-skeleton";
+import moment from "moment";
 
 import useGlobal from "../store";
 
-const Cell = ({data, width, rowId, colName, inViewport}) => {
+
+const Cell = ({cellData, width, rowId, colName, noExpand}) => {
 	const [active] = useGlobal(
 		state => state.active,
 		() => null
@@ -14,25 +16,25 @@ const Cell = ({data, width, rowId, colName, inViewport}) => {
 	);
 	return (
 		<td className={colName}
-		>{data === false ?
+		>{cellData === false ?
 				<Skeleton />
-				:
-				(!data || data === "0") ? "" : data
+				: (moment.isMoment(cellData)) ? cellData.format("YYYY-MM-DD") :
+					(!cellData || cellData === "0") ? "" : cellData
 			}
 			<style jsx>{`
         td {
           border: 1px solid ${gray_light.color};
           border-width: 0 1px 1px 0;
-					/* grid-column-end: span ${width}; */
+					grid-column-start: ${colName};
 					cursor: pointer;
 					padding: 2px;
-			 	${active === rowId ? "" : (`
+			 	${(active === rowId) || noExpand ? "" : (`
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;`)
 		}
         }
-        td:nth-last-child(2) {
+        td:nth-last-child(${noExpand ? 1 : 2}) {
           border-width: 0 0 1px 0;
         }
     `}

@@ -10,6 +10,11 @@ const initialState = {
 	userMenu: false,
 	menuButton: {current: null},
 	userButton: {current: null},
+	setShadowRef: {current: null},
+	// formRefs: {
+	// 	rollRef: {current: null},
+	// 	categoryRef: {current: null},
+	// 	chainRef: {current: null}},
 	active: false,
 	topInView: true,
 	selectMode: false,
