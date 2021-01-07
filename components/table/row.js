@@ -7,7 +7,7 @@ import Expand from "./expand";
 import useGlobal from "../store";
 
 
-const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewport, forwardedRef}) => {
+const PreRow = ({id, order, meta, rowData, keysForTableCols, additionalColKeys, inViewport, forwardedRef}) => {
 	const [active, setActive] = useGlobal(
 		state => state.active,
 		actions => actions.setActive
@@ -42,7 +42,7 @@ const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewp
 	};
 
 	useEffect(() => {
-		if (id === 4) {
+		if (order === 4) {
 			setTopInView(inViewport);
 		}
 	}, [inViewport]);
@@ -58,7 +58,7 @@ const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewp
 			<>
 				{selectMode &&
 				<td>
-					<input type="checkbox" id={id} name={id}/>	
+					<input type="checkbox" id={id} name={id}/>
 				</td>}
 				{keysForTableCols.map((key, i) =>
 					<Cell

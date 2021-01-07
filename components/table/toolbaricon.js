@@ -21,6 +21,7 @@ const ToolbarIcon = ({type, iconClick}) => {
 			<FontAwesomeIcon icon={icon} />
 			<style jsx>{`
         cursor: pointer;
+				font-size: 0.8em;
       `}</style>
 		</div>
 	);

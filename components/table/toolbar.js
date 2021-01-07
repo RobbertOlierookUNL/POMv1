@@ -26,7 +26,7 @@ const Toolbar = ({options}) => {
 			<style jsx>{`
       .toolbar {
         width:100%;
-        height: 25px;
+        height: 18px;
         position: sticky;
 				display: grid;
 				grid-template-columns: [start] 1fr [midLeft] 1fr [midRight] 1fr [end];
@@ -37,7 +37,7 @@ const Toolbar = ({options}) => {
 
 			.toolbarPart {
 				width: 100%;
-				padding: 2px;
+				padding: 0 2px;
 			}
 			.leftSide {
 				grid-column: start / midLeft;

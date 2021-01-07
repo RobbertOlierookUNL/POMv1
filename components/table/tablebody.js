@@ -37,6 +37,7 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 							<Row
 								onEnterViewport={() => updateParameters(i)}
 								id={row}
+								order={i}
 								rowData={data[row]}
 								meta={meta}
 								keysForTableCols={keysForTableCols}
