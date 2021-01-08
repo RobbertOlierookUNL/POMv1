@@ -3,16 +3,18 @@ import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, {useContext} from "react";
 
-import useGlobal from "../../components/store";
-import { useViews } from "../../lib/swr-hooks";
-import Button from "../../components/button";
-import GetViews from "../../components/views/getviews";
-import Header from "../../components/header";
+import useGlobal from "../../../../components/store";
+import { useViews } from "../../../../lib/swr-hooks";
+import Button from "../../../../components/button";
+import GetViews from "../../../../components/views/getviews";
+import Header from "../../../../components/header";
 
 const Views = () => {
 	const {views, isLoading, isError} = useViews();
+	const Router = useRouter();
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -31,7 +33,7 @@ const Views = () => {
 					<link rel="icon" href="/unilever.ico" />
 				</Head>
 				<Header>
-					<Link href="/view-manager/new">
+					<Link href={`/admin/${Router.query.userId}/view-manager/new`}>
 						<div>
 							<Button style={{fontSize: "1.1em"}}>
 								<div>

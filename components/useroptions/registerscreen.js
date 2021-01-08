@@ -74,7 +74,7 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 			const [fName, lName] = data.email.replace("@unilever.com", "").replace("-", " ").split(".");
 			const firstName = titleCase(fName);
 			const lastName = titleCase(lName);
-			
+
 			try {
 				const res = await fetch("/api/user/create-user", {
 					method: "PUT",
@@ -86,7 +86,7 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 				console.log(2);
 				const json = await res.json();
 				if (!res.ok) throw Error(json.message);
-				await Router.push(`/${json.insertId}`);
+				await Router.push(`/${json.insertId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
 				expandUserMenu(false);
 
 			// const res2 = await fetch(`/api/user/get-user-id?email=${data.email}`, {

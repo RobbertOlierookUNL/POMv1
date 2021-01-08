@@ -2,6 +2,8 @@ import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
+  const { keys,  } = req.query
+
   try {
     if (req.method === "GET") {
       const results = await query(/* sql */`

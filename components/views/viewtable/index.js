@@ -3,6 +3,8 @@ import { faTimes, faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-ico
 import {useRouter} from "next/router";
 import React, {useState, useEffect, useContext} from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
+import Snackbar from "@material-ui/core/Snackbar";
+
 
 import { allOptions, allOptionsWithData } from "../../../config/viewOptions";
 import { useSortableData } from "../../../lib/custom-hooks";
@@ -227,7 +229,19 @@ const ViewTable = ({data}) => {
 					</tbody>
 				</table>
 			</div>
-			{saving && <div className="saving">Saving...</div>}
+			{/* {saving && <div className="saving">Saving...</div>} */}
+			<Snackbar
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "left",
+				}}
+				open={saving}
+				// autoHideDuration={6000}
+				// onClose={handleClose}
+				message="Saving..."
+			/>
+
+
 			<style jsx>{`
 			.container{
 				width: calc(100% - 30px);

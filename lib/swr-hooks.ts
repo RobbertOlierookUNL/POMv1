@@ -28,7 +28,7 @@ export function useUsers() {
   const { data, error } = useSWR(`/api/view/get-users`, fetcher)
 
   return {
-    views: data,
+    users: data,
     isLoading: !error && !data,
     isError: error,
   }

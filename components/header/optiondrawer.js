@@ -52,7 +52,7 @@ const OptionDrawer = ({children}) => {
 
 		<>
 			<div className="drawer">{children}</div>
-			<Shadow zIndex={8} trigger={options || userMenu} clickthrough={false}/>
+			<Shadow zIndex={8} trigger={options || userMenu} softTrigger={userMenu && !options} clickthrough={false}/>
 			<style jsx>{`
         .drawer {
           z-index: 10;
