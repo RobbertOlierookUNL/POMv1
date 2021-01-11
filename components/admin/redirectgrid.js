@@ -34,26 +34,26 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 	const {categories, isLoading: categoriesAreLoading, isError: categoriesGiveError} = useCategories();
 
 
-	const [colWidths, setColWidths] = useState([5, 4, 3]);
+	const [colWidths, setColWidths] = useState([5, 5, 2]);
 
 	const expandFirstCol = () => {
 		// setColWidths([7.5, 4, 3]);
-		setColWidths([5, 4, 3]);
+		setColWidths([5, 5, 2]);
 
 	};
 
 	const expandSecondCol = () => {
 		// setColWidths([5, 7, 3]);
-		setColWidths([5, 4, 3]);
+		setColWidths([5, 5, 2]);
 
 	};
 
 	const expandThirdCol = () => {
-		setColWidths([5, 4, 3]);
+		setColWidths([5, 5, 2]);
 	};
 
 	const resetCols = () => {
-		setColWidths([5, 4, 3]);
+		setColWidths([5, 5, 2]);
 	};
 
 	return (
@@ -75,7 +75,7 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 						loggedIn={loggedIn}
 						columns="firstName lastName roll category chain lastLogin"
 						height="30px"
-						width="3fr 3fr 2fr 2fr 2fr 3fr"
+						width="4fr 4fr 4fr 2fr 3fr 3fr"
 					/>
 				</Card>
 			</div>
@@ -166,16 +166,17 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
         .grid-container{
           width: 100%;
           height: 100%;
-          padding: 48.67px 10px 10px 10px;
+          padding: 68.67px 30px 30px;
           top: 0;
           position: fixed;
           display: grid;
-          grid-gap: 10px 10px;
+          grid-gap: 30px 30px;
           grid-template:
-              "users rolls categories"  4fr
+              "users rolls categories"  2fr
+              "users rolls categories"  2fr
               "users rolls views"       4fr
-              "users chains views"      3fr
-              "users chains button"     1fr
+              "users chains views"      2.5fr
+              "users chains button"     1.5fr
               / ${colWidths[0]}fr ${colWidths[1]}fr ${colWidths[2]}fr
         }
         .grid-item {

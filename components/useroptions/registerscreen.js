@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
-
 import { makeStyles } from "@material-ui/core/styles";
+import { useForm, Controller } from "react-hook-form";
+import {useRouter} from "next/router";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import React, { useState, useEffect } from "react";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
+import { useCategories, useChains, useRolls } from "../../lib/swr-hooks";
 import Button from "../button";
-import { useForm, Controller } from "react-hook-form";
-import {useRouter} from "next/router";
 import useGlobal from "../store";
+
 
 
 
@@ -20,7 +21,7 @@ import useGlobal from "../store";
 const useStyles = makeStyles((theme) => ({
 	formControl: {
 		marginTop: theme.spacing(1),
-		minWidth: 120,
+		width: 120,
 	},
 	formControlRight: {
 		float: "right",
@@ -52,6 +53,9 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 	const classes = useStyles();
 	const Router = useRouter();
 	const watchRoll = watch("roll");
+	const {rolls, isLoading: rollsAreLoading, isError: rollsGiveError} = useRolls();
+	const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
+	const {categories, isLoading: categoriesAreLoading, isError: categoriesGiveError} = useCategories();
 	const [, expandUserMenu] = useGlobal(
 		() => null,
 		actions => actions.expandUserMenu
@@ -74,6 +78,7 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 			const [fName, lName] = data.email.replace("@unilever.com", "").replace("-", " ").split(".");
 			const firstName = titleCase(fName);
 			const lastName = titleCase(lName);
+			const roll = data.roll.rollName;
 
 			try {
 				const res = await fetch("/api/user/create-user", {
@@ -81,8 +86,8 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({...data, firstName, lastName}),
-				});
+					body: JSON.stringify({...data, roll, firstName, lastName}),
+				}, {signal});
 				console.log(2);
 				const json = await res.json();
 				if (!res.ok) throw Error(json.message);
@@ -151,7 +156,7 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 					</div>
 				}
 
-				<FormControl
+				{rolls && <FormControl
 					className={classes.formControl}
 					error={!!errors.roll}
 					margin="dense"
@@ -166,9 +171,9 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 							tabIndex={active ? 0 : -1}
 							{...props}
 						>
-							<MenuItem value={"test"}>Ten</MenuItem>
-							<MenuItem value={"test2"}>Twenty</MenuItem>
-							<MenuItem value={"test3"}>Thirty</MenuItem>
+							{rolls.map((roll, i) => (roll.rollName !== "Admin" &&
+								<MenuItem key={i} value={roll}>{roll.rollName}</MenuItem>
+							))}
 						</Select>
 					)
 					}
@@ -180,8 +185,9 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 					{errors.roll && <div className="error-message">Kies een rol</div>}
 
 				</FormControl>
+				}
 
-				<FormControl
+				{categories && <FormControl
 					className={classes.formControl +" "+ classes.formControlRight}
 					error={!!errors.category}
 					margin="dense"
@@ -194,9 +200,9 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 							className="disable-on-inactive"
 							tabIndex={active ? 0 : -1}
 						>
-							<MenuItem value={"test"}>Ten</MenuItem>
-							<MenuItem value={"test2"}>Twenty</MenuItem>
-							<MenuItem value={"test3"}>Thirty</MenuItem>
+							{categories.map((category, i) => (
+								<MenuItem key={i} value={category.categoryName}>{category.categoryName}</MenuItem>
+							))}
 						</Select>
 					}
 					name="category"
@@ -206,8 +212,9 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 					/>
 					{errors.category && <div className="error-message">Kies een categorie</div>}
 				</FormControl>
-
-				{watchRoll === 20 &&
+				}
+				{console.log({chains, watchRoll})}
+				{chains && watchRoll && watchRoll.hasChain === 1 &&
 					<FormControl
 						className={classes.formControl}
 						error={!!errors.chain}
@@ -221,9 +228,9 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 								className="disable-on-inactive"
 								tabIndex={active ? 0 : -1}
 							>
-								<MenuItem value={"test"}>Ten</MenuItem>
-								<MenuItem value={"test2"}>Twenty</MenuItem>
-								<MenuItem value={"test3"}>Thirty</MenuItem>
+								{chains.map((chain, i) => (
+									<MenuItem key={i} value={chain.chainName}>{chain.chainName}</MenuItem>
+								))}
 							</Select>
 						}
 						name="chain"
