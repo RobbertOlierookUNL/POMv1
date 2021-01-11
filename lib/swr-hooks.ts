@@ -4,8 +4,8 @@ function fetcher(url: string) {
   return window.fetch(url).then((res) => res.json())
 }
 
-export function useEntries(initialData: object) {
-  const { data, error } = useSWR(`/api/data/get-entries`, fetcher, {initialData})
+export function useEntries() {
+  const { data, error } = useSWR(`/api/data/get-entries`, fetcher,)
 
   return {
     data,

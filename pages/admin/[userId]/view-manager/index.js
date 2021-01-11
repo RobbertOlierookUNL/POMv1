@@ -1,20 +1,25 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPlusSquare, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/router";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, {useContext} from "react";
+import React from "react";
 
-import useGlobal from "../../../../components/store";
-import { useViews } from "../../../../lib/swr-hooks";
+import { useUser, useViews } from "../../../../lib/swr-hooks";
 import Button from "../../../../components/button";
 import GetViews from "../../../../components/views/getviews";
 import Header from "../../../../components/header";
+import useGlobal from "../../../../components/store";
+
+
 
 const Views = () => {
 	const {views, isLoading, isError} = useViews();
 	const Router = useRouter();
+	const {userId} = Router.query;
+	const {data: user} = useUser(userId || 0);
+
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -32,16 +37,26 @@ const Views = () => {
 					<title>View Manager</title>
 					<link rel="icon" href="/unilever.ico" />
 				</Head>
-				<Header admin>
-					<Link href={`/admin/${Router.query.userId}/view-manager/new`}>
-						<div>
-							<Button style={{fontSize: "1.1em"}}>
-								<div>
-									<FontAwesomeIcon icon={faPlusSquare} />
-								</div>
-							</Button>
-						</div>
-					</Link>
+				<Header admin fName={user && user.firstName} lName={user && user.lastName}>
+					<div className="header-button-container">
+						<Link href={`/admin/${Router.query.userId}`}>
+							<div>
+								<Button style={{fontSize: "1.1em"}}>
+									<FontAwesomeIcon icon={faArrowLeft} />
+								</Button>
+							</div>
+						</Link>
+						<Link href={`/admin/${Router.query.userId}/view-manager/new`}>
+							<div>
+								<Button style={{fontSize: "1.1em"}}>
+									<div>
+										<FontAwesomeIcon icon={faPlusSquare} />
+									</div>
+								</Button>
+							</div>
+						</Link>
+
+					</div>
         View Manager
 				</Header>
 				{isLoading ?
@@ -62,6 +77,11 @@ const Views = () => {
 					left: 0;
 					justify-content: center;
 					align-items: center;
+					display: flex;
+				}
+			`}</style>
+				<style jsx>{`
+				.header-button-container {
 					display: flex;
 				}
 			`}</style>

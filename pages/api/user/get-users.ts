@@ -6,7 +6,6 @@ const handler: NextApiHandler = async (req, res) => {
     if (req.method === "GET") {
       const results = await query(/* sql */`
         SELECT * FROM user_table_v3test
-        ORDER BY userId DESC
     `)
 
       return res.json(results)

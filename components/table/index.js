@@ -11,7 +11,7 @@ import Toolbar from "./toolbar";
 import useGlobal from "../store";
 
 
-const Table = ({initialData, view, initialViewMeta}) => {
+const Table = ({view, initialViewMeta}) => {
 	console.log("tablererender");
 	const {data: _meta} = useView(view, initialViewMeta);
 	const {data: preData} = useEntries();

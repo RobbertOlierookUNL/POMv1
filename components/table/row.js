@@ -2,6 +2,7 @@ import React, {useRef, useEffect} from "react";
 import handleViewport from "react-in-viewport";
 
 import { allOptionsWithData } from "../../config/viewOptions";
+import { useColors, useTheme } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import Expand from "./expand";
 import useGlobal from "../store";
@@ -16,22 +17,16 @@ const PreRow = ({id, order, meta, rowData, keysForTableCols, additionalColKeys, 
 		() => null,
 		actions => actions.setTopInView
 	);
-	const [gray_very_light] = useGlobal(
-		state => state.gray_very_light,
-		() => null
-	);
-	const [gray_light] = useGlobal(
-		state => state.gray_light,
-		() => null
-	);
-	const [tertiary] = useGlobal(
-		state => state.tertiary,
-		() => null
-	);
 	const [selectMode] = useGlobal(
 		state => state.selectMode,
 		() => null
 	);
+	const {
+		gray_very_light,
+		gray_light,
+		tertiary
+	} = useTheme();
+
 	const expandRef = useRef(null);
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {

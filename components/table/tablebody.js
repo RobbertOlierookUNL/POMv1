@@ -10,7 +10,7 @@ import Row from "./row.js";
 
 const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKeys}) => {
 	const numberInView = 100;
-	const fakedata = new Array(26).fill(".");
+	const fakedata = new Array(12).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
 	const updateParameters = (i) => {
 		if (i%(numberInView/2-10) === 0) {

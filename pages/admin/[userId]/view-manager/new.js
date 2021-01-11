@@ -3,12 +3,14 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import React, {useState, useEffect, useContext} from "react";
+import React, { useState, useEffect } from "react";
 
-import useGlobal from "../../../../components/store";
+import { useUser } from "../../../../lib/swr-hooks";
 import Button from "../../../../components/button";
 import Header from "../../../../components/header/index";
 import NewViewName from "../../../../components/views/newviewname";
+import useGlobal from "../../../../components/store";
+
 
 
 
@@ -22,8 +24,10 @@ import NewViewName from "../../../../components/views/newviewname";
 
 const View = () => {
 	const Router = useRouter();
-	const {duplicate} = Router.query;
+	const {duplicate, userId} = Router.query;
 	const [title, setTitle] = useState("Nieuwe view");
+	const {data: user} = useUser(userId || 0);
+
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -50,7 +54,7 @@ const View = () => {
 				<title>{title}</title>
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
-			<Header admin>
+			<Header admin fName={user && user.firstName} lName={user && user.lastName}>
 				<Link href={`/admin/${Router.query.userId}/view-manager`}>
 					<div>
 						<Button style={{fontSize: "1.1em"}}>

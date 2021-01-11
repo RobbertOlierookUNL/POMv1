@@ -1,6 +1,8 @@
 import React, {useRef, useEffect, useState} from "react";
 
+import Shadow from "./shadow";
 import useGlobal from "./store";
+
 
 
 
@@ -9,16 +11,12 @@ const UserMenu = ({children}) => {
 		state => state.userMenu,
 		actions => actions.expandUserMenu
 	);
-	const [userButton] = useGlobal(
-		state => state.userButton,
+	const [options] = useGlobal(
+		state => state.options,
 		() => null
 	);
 	const [shadowRef] = useGlobal(
 		state => state.shadowRef,
-		() => null
-	);
-	const [formRefs] = useGlobal(
-		state => state.formRefs,
 		() => null
 	);
 	const ref = useRef(null);
@@ -66,6 +64,7 @@ const UserMenu = ({children}) => {
 			<div className="usermenu_container" ref={ref}>
 				{children}
 			</div>
+			<Shadow zIndex={8} trigger={options || userMenu} softTrigger={userMenu && !options} clickthrough={false}/>
 			<style jsx>{`
         .usermenu_container {
           z-index: 10;

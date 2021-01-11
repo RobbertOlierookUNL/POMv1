@@ -15,6 +15,7 @@ import UserMenu from "../../../components/usermenu";
 import UserOptions from "../../../components/useroptions";
 import ViewButtons from "../../../components/viewbuttons";
 import useGlobal from "../../../components/store";
+import AdminRedirectGrid from "../../../components/admin/redirectgrid";
 
 
 
@@ -57,7 +58,11 @@ const Admin = () => {
 			<UserMenu>
 				<UserOptions loggedIn={user && !!user.userId}/>
 			</UserMenu>
-
+			<AdminRedirectGrid
+				hasRead={true}
+				hasWrite={true}
+				loggedIn
+			/>
 			<style jsx global>{`
 				body, html{
 					background-color: ${secondary.color};
