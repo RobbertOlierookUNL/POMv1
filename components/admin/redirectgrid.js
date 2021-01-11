@@ -1,14 +1,22 @@
-import React from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import React, {useState} from "react";
 
-
+import {
+	useCategories,
+	useChains,
+	useRolls,
+	useUsers,
+	useViews
+} from "../../lib/swr-hooks";
 import { useColors } from "../../lib/custom-hooks";
-import { useUsers, useViews } from "../../lib/swr-hooks";
 import Card from "../card";
 import ShowEntries from "./showentries";
+
+
+
 
 
 
@@ -18,17 +26,44 @@ import ShowEntries from "./showentries";
 const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 	const [gray_very_light] = useColors("gray_lighter");
 	const Router = useRouter();
+	const {userId} = Router.query;
 	const {users, isLoading: usersAreLoading, isError: usersGiveError} = useUsers();
 	const {views, isLoading: viewsAreLoading, isError: viewsGiveError} = useViews();
+	const {rolls, isLoading: rollsAreLoading, isError: rollsGiveError} = useRolls();
+	const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
+	const {categories, isLoading: categoriesAreLoading, isError: categoriesGiveError} = useCategories();
+
+
+	const [colWidths, setColWidths] = useState([5, 4, 3]);
+
+	const expandFirstCol = () => {
+		// setColWidths([7.5, 4, 3]);
+		setColWidths([5, 4, 3]);
+
+	};
+
+	const expandSecondCol = () => {
+		// setColWidths([5, 7, 3]);
+		setColWidths([5, 4, 3]);
+
+	};
+
+	const expandThirdCol = () => {
+		setColWidths([5, 4, 3]);
+	};
+
+	const resetCols = () => {
+		setColWidths([5, 4, 3]);
+	};
 
 	return (
 		<div className="grid-container">
-			<div className="grid-item users">
+			<div className="grid-item users" onMouseEnter={expandFirstCol} onMouseLeave={resetCols}>
 				<Card
 					title="Gebruikersaccounts"
 					bodyPadding
 					titlefloater={hasWrite &&
-          <Link href={{}}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+          <Link href={`/admin/${userId}/edit/users`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
           </Link>
 					}>
 					<ShowEntries
@@ -44,71 +79,71 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 					/>
 				</Card>
 			</div>
-			<div className="grid-item rolls">
+			<div className="grid-item rolls" onMouseOver={expandSecondCol} onMouseLeave={resetCols}>
 				<Card
 					title="Rollen"
 					titlefloater={hasWrite &&
-          <Link href={{}}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+          <Link href={`/admin/${userId}/edit/rolls`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
           </Link>}
 					bodyPadding>
 					<ShowEntries
-						data={users}
-						loading={usersAreLoading}
-						error={usersGiveError}
+						data={rolls}
+						loading={rollsAreLoading}
+						error={rollsGiveError}
 						hasRead={hasRead}
 						hasWrite={hasWrite}
 						loggedIn={loggedIn}
-						columns="firstName lastName roll category chain lastLogin"
+						columns="rollName defaultView hasChain adminRights"
 						height="30px"
-						width="3fr 3fr 2fr 2fr 2fr 3fr"
+						width="3fr 3fr 2fr 2fr"
 					/>
 				</Card>
 			</div>
-			<div className="grid-item categories">
+			<div className="grid-item categories" onMouseOver={expandSecondCol} onMouseLeave={resetCols}>
 				<Card
 					title="Categorieën"
 					titlefloater={hasWrite &&
-          <Link href={{}}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+          <Link href={`/admin/${userId}/edit/categories`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
           </Link>}
 					bodyPadding>
 					<ShowEntries
-						data={users}
-						loading={usersAreLoading}
-						error={usersGiveError}
+						data={categories}
+						loading={categoriesAreLoading}
+						error={categoriesGiveError}
 						hasRead={hasRead}
 						hasWrite={hasWrite}
 						loggedIn={loggedIn}
-						columns="firstName lastName roll category chain lastLogin"
+						columns="categoryName"
 						height="30px"
-						width="3fr 3fr 2fr 2fr 2fr 3fr"
+						width="auto"
 					/>
 				</Card>
 			</div>
-			<div className="grid-item chains">
+			<div className="grid-item chains" onMouseOver={expandThirdCol} onMouseLeave={resetCols}>
 				<Card
 					title="Chains"
 					titlefloater={hasWrite &&
-          <Link href={{}}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+          <Link href={`/admin/${userId}/edit/chains`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
           </Link>}
 					bodyPadding>
 					<ShowEntries
-						data={users}
-						loading={usersAreLoading}
-						error={usersGiveError}
+						data={chains}
+						loading={chainsAreLoading}
+						error={chainsGiveError}
 						hasRead={hasRead}
 						hasWrite={hasWrite}
 						loggedIn={loggedIn}
-						columns="firstName lastName roll category chain lastLogin"
+						columns="chainName stores"
 						height="30px"
-						width="3fr 3fr 2fr 2fr 2fr 3fr"
+						width="1fr 3fr"
 					/>
 				</Card>
 			</div>
-			<div className="grid-item views">
+			<div className="grid-item views" onMouseOver={expandThirdCol} onMouseLeave={resetCols}>
 				<Card
 					title="Views"
 					titlefloater={hasWrite &&
-          <Link href={`/admin/${Router.query.userId}/view-manager`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+          <Link href={`/admin/${userId}/view-manager`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
           </Link>}
 					bodyPadding>
 					<ShowEntries
@@ -137,16 +172,17 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
           display: grid;
           grid-gap: 10px 10px;
           grid-template:
-              "users rolls chains"      4fr
+              "users rolls categories"  4fr
               "users rolls views"       4fr
-              "users categories views"  3fr
-              "users categories button" 1fr
-              / 5fr 4fr 3fr
+              "users chains views"      3fr
+              "users chains button"     1fr
+              / ${colWidths[0]}fr ${colWidths[1]}fr ${colWidths[2]}fr
         }
         .grid-item {
           box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
           background-color: ${gray_very_light.color};
           overflow-y: auto;
+          transition: all 100ms linear;
         }
         .act-as-button{
           cursor: pointer;
