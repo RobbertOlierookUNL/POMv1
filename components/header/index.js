@@ -6,7 +6,7 @@ import useGlobal from "../store";
 import Gravatar from "../gravatar";
 
 
-const Header = ({children, fName, lName}) => {
+const Header = ({children, fName, lName, admin=false}) => {
 	// const [{usermenu}, dispatch] = useContext(Context);
 	const [userMenu, expandUserMenu] = useGlobal(
 		state => state.userMenu,

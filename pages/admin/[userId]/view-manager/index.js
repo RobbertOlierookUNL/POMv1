@@ -32,7 +32,7 @@ const Views = () => {
 					<title>View Manager</title>
 					<link rel="icon" href="/unilever.ico" />
 				</Head>
-				<Header>
+				<Header admin>
 					<Link href={`/admin/${Router.query.userId}/view-manager/new`}>
 						<div>
 							<Button style={{fontSize: "1.1em"}}>

@@ -25,7 +25,7 @@ export function useViews() {
 }
 
 export function useUsers() {
-  const { data, error } = useSWR(`/api/view/get-users`, fetcher)
+  const { data, error } = useSWR(`/api/user/get-users`, fetcher)
 
   return {
     users: data,
@@ -43,9 +43,9 @@ export function useView(view: string, initialData: object) {
 }
 
 export function useUser(userId: number) {
-  return useSWR(`/api/view/get-user?userId=${userId}`, fetcher)
+  return useSWR(`/api/user/get-user?userId=${userId}`, fetcher)
 }
 
 export function useUserId(email: string) {
-  return useSWR(`/api/view/get-user-id?email=${email}`, fetcher)
+  return useSWR(`/api/user/get-user-id?email=${email}`, fetcher)
 }

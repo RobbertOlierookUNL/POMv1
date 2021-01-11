@@ -1,18 +1,25 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Head from "next/head";
 import Link from "next/link";
-import useRouter from "next/router";
-import React, {useContext} from "react";
+import React from "react";
 
-import useGlobal from "../../../../components/store";
-import { useViews } from "../../../../lib/swr-hooks";
-import Button from "../../../../components/button";
-import GetViews from "../../../../components/views/getviews";
-import Header from "../../../../components/header";
+import Button from "../../components/button";
+import Header from "../../components/header";
+import OptionDrawer from "../../components/header/optiondrawer";
+import SchemaDropdown from "../../components/schemadropdown";
+import UserMenu from "../../components/usermenu";
+import UserOptions from "../../components/useroptions";
+import ViewButtons from "../../components/viewbuttons";
+import useGlobal from "../../components/store";
+
+
 
 const Admin = () => {
+	const [secondary] = useGlobal(
+		state => state.secondary,
+		() => null
+	);
 
 	return (
 		<>
@@ -20,7 +27,7 @@ const Admin = () => {
 				<title>Admin</title>
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
-			<Header>
+			<Header admin>
 				<Link href="/view-manager/new">
 					<div>
 						<Button style={{fontSize: "1.1em"}}>
@@ -30,14 +37,16 @@ const Admin = () => {
 						</Button>
 					</div>
 				</Link>
-        View Manager
+        Admin
 			</Header>
-			{isLoading ?
-				<div className="circle-container">
-					<CircularProgress/>
-				</div>
-				:
-				<GetViews views={views}/>}
+			<OptionDrawer>
+				<SchemaDropdown/>
+				<ViewButtons/>
+			</OptionDrawer>
+			<UserMenu>
+				<UserOptions loggedIn={false}/>
+			</UserMenu>
+
 			<style jsx global>{`
 				body, html{
 					background-color: ${secondary.color};
@@ -59,4 +68,4 @@ const Admin = () => {
 
 
 
-export default Views;
+export default Admin;
