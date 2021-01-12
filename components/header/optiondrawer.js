@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
 
 import useGlobal from "../store";
-import Shadow from "../shadow";
 
 
 
@@ -11,10 +10,6 @@ const OptionDrawer = ({children}) => {
 	const [options, expandOptions] = useGlobal(
 		state => state.options,
 		actions => actions.expandOptions
-	);
-	const [userMenu] = useGlobal(
-		state => state.userMenu,
-		() => null
 	);
 	const [shadowRef] = useGlobal(
 		state => state.shadowRef,
@@ -52,7 +47,6 @@ const OptionDrawer = ({children}) => {
 
 		<>
 			<div className="drawer">{children}</div>
-			<Shadow zIndex={8} trigger={options || userMenu} clickthrough={false}/>
 			<style jsx>{`
         .drawer {
           z-index: 10;

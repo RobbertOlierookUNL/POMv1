@@ -2,7 +2,11 @@ import React, { useState, useMemo, useRef } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
 import { allOptionsWithData } from "../../config/viewOptions";
-import { useEntries, useView } from "../../lib/swr-hooks";
+import {
+	useEntries,
+	useUserSpecificEntries,
+	useView
+} from "../../lib/swr-hooks";
 import { useSortableData, useToolkit } from "../../lib/custom-hooks";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
@@ -11,16 +15,20 @@ import Toolbar from "./toolbar";
 import useGlobal from "../store";
 
 
-const Table = ({initialData, view, initialViewMeta}) => {
+
+const Table = ({view, initialViewMeta, user}) => {
 	console.log("tablererender");
 	const {data: _meta} = useView(view, initialViewMeta);
-	const {data: _data} = useEntries(initialData);
+	const {data: preData} = useEntries();
+
+
 	const {view_name, created_at, updated_at, config, ...meta} = _meta;
 	const notUsed = {};
 	notUsed.variables = {view_name, created_at, updated_at, config};
 	// const [meta, setMeta] = useState({});
 	// const [keys, setKeys] = useState({});
-	// const [data, setData] = useState({});
+	const [data, setData] = useState({});
+	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
 	const {mergeBy} = useToolkit();
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
@@ -53,8 +61,9 @@ const Table = ({initialData, view, initialViewMeta}) => {
 	);
 	keys.compact.sort(onIndex);
 	keys.expanded.sort(onIndex);
-	const data = mergeBy(_data, meta, keys.compact, keys.expanded);
-	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
+	// const {data: preData} = useUserSpecificEntries(keys.compact.concat(keys.expanded), user.roll && user.roll.rollName);
+	// console.log(preData);
+	const _data = preData || [];
 
 
 
@@ -83,15 +92,15 @@ const Table = ({initialData, view, initialViewMeta}) => {
 	// 	setMeta(_meta);
 	// }, [ Object.keys(metaString)[0]]);
 	//
-	// useMemo(() => {
-	// 	if (
-	// 		Object.keys(_data)[0]
-	// 		&& Object.keys(meta)[0])
-	// 	{
-	// 		setData(mergeBy(_data, meta, keys.compact, keys.expanded));
-	// 	}
-	// }, [Object.keys(_data)[0], Object.keys(meta)[0], Object.keys(keys)[0]]);
-	//
+	useMemo(() => {
+		if (
+			Object.keys(_data)[0]
+			&& Object.keys(meta)[0])
+		{
+			setData(mergeBy(_data, meta, keys.compact, keys.expanded));
+		}
+	}, [Object.keys(_data)[0], Object.keys(meta)[0], Object.keys(keys)[0]]);
+
 
 	return (
 		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>

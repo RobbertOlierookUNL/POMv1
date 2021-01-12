@@ -5,7 +5,7 @@ const handler: NextApiHandler = async (req, res) => {
   try {
     if (req.method === "GET") {
       const results = await query(/* sql */`
-        SELECT * FROM user_table_v3test
+        SELECT * FROM chain_metadata_table_v3test
     `)
 
       return res.json(results)

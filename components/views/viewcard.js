@@ -2,6 +2,7 @@ import {mutate} from "swr";
 import Link from "next/link";
 import React, {useState, useEffect, useContext} from "react";
 import moment from "moment";
+import { useRouter } from "next/router";
 
 import useGlobal from "../store";
 import Button from "../button";
@@ -22,6 +23,7 @@ const ViewCard = ({view}) => {
 	const [undef, setUndef] = useState(0);
 	const [deleting, setDeleting] = useState(false);
 	const [verify, setVerify] = useState(false);
+	const Router = useRouter();
 	const [primary] = useGlobal(
 		state => state.primary,
 		() => null
@@ -82,22 +84,22 @@ const ViewCard = ({view}) => {
 					<p><b>Verborgen kolommen: </b>{hidden}</p>
 					<p><b>Ongedefinieerde kolommen: </b>{undef}</p>
 					<br/>
-					<p><i>View aangemaakt: </i>{moment(created_at).locale("nl").format("LLL")}</p>
-					<p><i>View laatst aangepast: </i>{moment(updated_at).locale("nl").format("LLL")}</p>
+					<p><i>View aangemaakt: </i><div className="date">{moment(created_at).locale("nl").format("LLL")}</div></p>
+					<p><i>View laatst aangepast: </i><div className="date">{moment(updated_at).locale("nl").format("LLL")}</div></p>
 					<br/>
 					<br/>
 					<div className="button-container">
-						<Link href={`/view-manager/${view_name}`}>
+						<Link href={`/admin/${Router.query.userId}/view-manager/${view_name}`}>
 							<div>
 								<Button width="109px">Bekijken</Button>
 							</div>
 						</Link>
-						<Link href={`/view-manager/${view_name}?v=edit`}>
+						<Link href={`/admin/${Router.query.userId}/view-manager/${view_name}?v=edit`}>
 							<div>
 								<Button width="109px">Aanpassen</Button>
 							</div>
 						</Link>
-						<Link href={`/view-manager/new?duplicate=${view_name}`}>
+						<Link href={`/admin/${Router.query.userId}/view-manager/new?duplicate=${view_name}`}>
 							<div>
 								<Button width="109px">Dupliceren</Button>
 							</div>
@@ -148,6 +150,10 @@ const ViewCard = ({view}) => {
         b, i{
           float: left;
         }
+				.date {
+					max-width: 105px;
+					display: inline-block;
+				}
         .button-container{
 					height: 80.67px;
           display: flex;

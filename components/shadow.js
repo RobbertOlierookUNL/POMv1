@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import useGlobal from "./store";
 
-const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, clickthrough = true, selfAnimate = false}) => {
+const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, softTrigger = false, clickthrough = true, selfAnimate = false}) => {
 	const [triggerState, setTriggerState] = useState(trigger);
 	const shadowRef = useRef(null);
 	const [, setShadowRef] = useGlobal(
@@ -31,7 +31,7 @@ const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, clickthrough = true
           width: 100vw;
           height: 100vh;
           transition: background-color 0.3s ease-in-out;
-          background-color: rgba(0, 0, 0, ${triggerState ? thickness : 0});
+          background-color: rgba(0, 0, 0, ${triggerState && !softTrigger ? thickness : 0 });
         }
       `}
 			</style>

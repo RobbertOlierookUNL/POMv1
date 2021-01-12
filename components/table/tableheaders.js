@@ -59,7 +59,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig}) => {
 			<style jsx>{`
         tr {
 			    position: sticky;
-					top: 25px;
+					top: 18px;
 					background-color: ${primary.color};
         }
 

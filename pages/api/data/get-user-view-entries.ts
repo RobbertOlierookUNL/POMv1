@@ -2,11 +2,16 @@ import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
+  const { keys, category } = req.query
+
   try {
     if (req.method === "GET") {
       const results = await query(/* sql */`
-        SELECT * FROM user_table_v3test
-    `)
+        SELECT * FROM website_output_table_v3test
+        WHERE category = ?
+        `,
+      category
+    )
 
       return res.json(results)
     } else {

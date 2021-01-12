@@ -45,7 +45,9 @@ async function migrate() {
 		await query(/* sql */`
     CREATE TABLE IF NOT EXISTS roll_metadata_table_v3test (
       rollName VARCHAR(100) PRIMARY KEY,
-			defaultView TEXT NOT NULL,
+			defaultView TEXT NOT NULL DEFAULT "defaultview",
+			hasChain BOOLEAN NOT NULL DEFAULT 0,
+			adminRights TEXT NOT NULL DEFAULT "none",
 			preferences JSON,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at

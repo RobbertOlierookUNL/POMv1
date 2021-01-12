@@ -21,13 +21,9 @@ const UserOptions = ({loggedIn}) => {
 	const Router = useRouter();
 
 
-	const logout = () => {
-		console.log(0);
-		Router.push("/", undefined, {shallow: true});
-		console.log(1);
+	const logout = async () => {
+		await Router.push(Router.query.slug[1] ? `/${Router.query.slug[1]}` : "/");
 		expandUserMenu(false);
-		console.log(2);
-
 	};
 	const login = () => {
 		setRegisterMode(false);

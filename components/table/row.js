@@ -2,12 +2,13 @@ import React, {useRef, useEffect} from "react";
 import handleViewport from "react-in-viewport";
 
 import { allOptionsWithData } from "../../config/viewOptions";
+import { useColors, useTheme } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import Expand from "./expand";
 import useGlobal from "../store";
 
 
-const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewport, forwardedRef}) => {
+const PreRow = ({id, order, meta, rowData, keysForTableCols, additionalColKeys, inViewport, forwardedRef}) => {
 	const [active, setActive] = useGlobal(
 		state => state.active,
 		actions => actions.setActive
@@ -16,22 +17,16 @@ const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewp
 		() => null,
 		actions => actions.setTopInView
 	);
-	const [gray_very_light] = useGlobal(
-		state => state.gray_very_light,
-		() => null
-	);
-	const [gray_light] = useGlobal(
-		state => state.gray_light,
-		() => null
-	);
-	const [tertiary] = useGlobal(
-		state => state.tertiary,
-		() => null
-	);
 	const [selectMode] = useGlobal(
 		state => state.selectMode,
 		() => null
 	);
+	const {
+		gray_very_light,
+		gray_light,
+		tertiary
+	} = useTheme();
+
 	const expandRef = useRef(null);
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
@@ -42,7 +37,7 @@ const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewp
 	};
 
 	useEffect(() => {
-		if (id === 4) {
+		if (order === 4) {
 			setTopInView(inViewport);
 		}
 	}, [inViewport]);
@@ -58,7 +53,7 @@ const PreRow = ({id, meta, rowData, keysForTableCols, additionalColKeys, inViewp
 			<>
 				{selectMode &&
 				<td>
-					<input type="checkbox" id={id} name={id}/>	
+					<input type="checkbox" id={id} name={id}/>
 				</td>}
 				{keysForTableCols.map((key, i) =>
 					<Cell

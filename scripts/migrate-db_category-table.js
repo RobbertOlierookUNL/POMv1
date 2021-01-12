@@ -44,7 +44,7 @@ async function migrate() {
 	try {
 		await query(/* sql */`
     CREATE TABLE IF NOT EXISTS category_metadata_table_v3test (
-      categeryName VARCHAR(100) PRIMARY KEY,
+      categoryName VARCHAR(100) PRIMARY KEY,
       preferences JSON,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at

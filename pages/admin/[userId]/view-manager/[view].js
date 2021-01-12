@@ -3,12 +3,14 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import React, {useState, useEffect, useContext} from "react";
+import React from "react";
 
-import useGlobal from "../../components/store";
-import Button from "../../components/button";
-import Header from "../../components/header/index";
-import NewViewName from "../../components/views/newviewname";
+import { useUser, useView } from "../../../../lib/swr-hooks";
+import Button from "../../../../components/button";
+import Header from "../../../../components/header/index";
+import ViewTable from "../../../../components/views/viewtable";
+import useGlobal from "../../../../components/store";
+
 
 
 
@@ -21,21 +23,16 @@ import NewViewName from "../../components/views/newviewname";
 
 
 const View = () => {
-	const router = useRouter();
-	const {duplicate} = router.query;
-	const [title, setTitle] = useState("Nieuwe view");
+	const Router = useRouter();
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
 	);
+	const {view, v, from, userId } = Router.query;
+	const {data: user} = useUser(userId || 0);
 
-	useEffect(() => {
-		if (duplicate) {
-			setTitle(`${duplicate} dupliceren`);
-		}
-	}, []);
-
-
+	console.log(v === "duplicated" ? from : view);
+	const { data } = useView(v === "duplicated" ? from : view);
 	// const [mounted, setMounted] = useState(false);
 	// const { data } = useView(mounted ? view : null);
 	// useEffect(() => {
@@ -47,35 +44,20 @@ const View = () => {
 	return (
 		<>
 			<Head>
-				<title>{title}</title>
+				<title>{view}</title>
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
-			<Header>
-				<Link href="/view-manager">
+			<Header admin fName={user && user.firstName} lName={user && user.lastName}>
+				<Link href={`/admin/${Router.query.userId}/view-manager/`}>
 					<div>
 						<Button style={{fontSize: "1.1em"}}>
 							<FontAwesomeIcon icon={faArrowLeft} />
 						</Button>
 					</div>
 				</Link>
-				{title}
+				{view}
 			</Header>
-			<div className="viewname-container">
-				<NewViewName duplicate={duplicate}/>
-			</div>
-			<style jsx>{`
-				.viewname-container {
-					width: 100%;
-					height: 100%;
-					position: absolute;
-					top: 0;
-					left: 0;
-					justify-content: center;
-					align-items: center;
-					display: flex;
-					transform: translateY(-50px);
-				}
-			`}</style>
+			<ViewTable data={data}/>
 			<style jsx global>{`
         body, html{
           background-color: ${secondary.color};

@@ -3,27 +3,28 @@ import { useForm } from "react-hook-form";
 import FloatingLabelInput from "react-floating-label-input";
 import Button from "../button";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import {useRouter} from "next/router";
 import useGlobal from "../store";
 
 
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		"& > *": {
-			width: "100%",
-		},
-	},
-}));
+// const useStyles = makeStyles((theme) => ({
+// 	root: {
+// 		"& > *": {
+// 			width: "100%",
+// 		},
+// 	},
+// }));
 
 const LoginScreen = ({active, initialData, transportData}) => {
 	const { register, handleSubmit, getValues, errors } = useForm();
-	const classes = useStyles();
+	// const classes = useStyles();
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState(false);
 	const [data, setData] = useState(false);
 	const Router = useRouter();
+	console.log(Router);
 	const [, expandUserMenu] = useGlobal(
 		() => null,
 		actions => actions.expandUserMenu
@@ -44,7 +45,7 @@ const LoginScreen = ({active, initialData, transportData}) => {
 				const res = await fetch(`/api/user/get-user-id?email=${data.email.toLowerCase()}`, {signal});
 				const json = await res.json();
 				if (!res.ok) throw Error(json.message);
-				await Router.push(`/${json.userId}`);
+				await Router.push(`/${json.userId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
 				expandUserMenu(false);
 			} catch (e) {
 				setSubmitting(false);
@@ -66,7 +67,10 @@ const LoginScreen = ({active, initialData, transportData}) => {
 		<div>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h3>Inloggen</h3>
-				<div className={typeof window !== "undefined" && classes.root}>
+				<div
+					className={"full-width"}
+					// className={typeof window !== "undefined" && classes.root}
+				>
 					<TextField
 						id="email"
 						name="email"
@@ -74,7 +78,7 @@ const LoginScreen = ({active, initialData, transportData}) => {
 						type="email"
 						inputRef={register({required: true})}
 						// value={email}
-						className="disable-on-inactive"
+						className="disable-on-inactive full-width"
 						tabIndex={active ? 0 : -1}
 						defaultValue={initialData.email || ""}
 						error={!!errors.email || error}
@@ -105,6 +109,9 @@ const LoginScreen = ({active, initialData, transportData}) => {
 			<style jsx global>{`
 				.disable-on-inactive {
 					pointer-events: ${active ? "auto" : "none"};
+				}
+				.full-width {
+					width: 100%;
 				}
 			`}</style>
 		</div>

@@ -77,12 +77,7 @@ export const staticColors =
 	primary_dark: {color: "#001f82", text: "white"},
 	gray: {color: "#9e9e9e", text: "black"},
 	gray_light: {color: "#cfcfcf", text: "black"},
+	gray_lighter: {color:" #ececec", text: "black"},
 	gray_very_light: {color: "#f2f2f2", text: "black"},
 	gray_dark: {color: "#707070", text: "white"},
 };
-// const unilever_blue = {
-// 	base: {color: "#1F36C7",text: "white"},
-// 	base_very_light: {color: "rgb(209,213,236)", text: "black"},
-// 	base_light: {color: "#005eef", text: "white"},
-// 	base_dark: {color: "#001f82", text: "white"},
-// };
