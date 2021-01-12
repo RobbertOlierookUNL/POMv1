@@ -15,6 +15,22 @@ export function useEntries() {
   }
 }
 
+export function useUserSpecificEntries(keys: Array<any>, category: any ) {
+  if (!keys || !category) {
+    return useEntries();
+  }
+  const keyString = `(${keys.join(", ")})`;
+  console.log({keys, category, keyString})
+
+  const { data, error } = useSWR(`/api/data/get-user-view-entries?keys=${keyString}&category=${category}`, fetcher,)
+
+  return {
+    data,
+    isLoading: !error && !data,
+    isError: error,
+  }
+}
+
 export function useViews() {
   const { data, error } = useSWR(`/api/view/get-views`, fetcher)
 

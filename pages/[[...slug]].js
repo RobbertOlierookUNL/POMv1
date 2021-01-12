@@ -50,7 +50,9 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 			<Table
 				// initialData={initialData}
 				view={view}
-				initialViewMeta={initialViewMeta} />
+				initialViewMeta={initialViewMeta}
+				user={user}
+			/>
 			<style jsx global>{`
 				body, html{
 					background-color: ${secondary.color};
@@ -63,7 +65,6 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 export async function getStaticProps(context) {
 	let user = {};
 	let view = "defaultview";
-	view = "salesview";
 	if (context.params && context.params.slug){
 		if (context.params.slug[0]) {
 			if (isNumeric(context.params.slug[0])) {
@@ -74,7 +75,38 @@ export async function getStaticProps(context) {
 				context.params.slug[0]
 				);
 				if (!getUser[0]) {return {notFound: true};}
-				user = JSON.parse(JSON.stringify(getUser[0]));
+				user = getUser[0];
+				if (user.roll) {
+					const getRoll = await query(/* sql */`
+						 SELECT * FROM roll_metadata_table_v3test
+						 WHERE rollName = ?
+						 `,
+					user.roll
+					);
+					user.roll = getRoll[0];
+					view = getRoll[0].defaultView;
+				}
+				if (user.chain) {
+					const getChain = await query(/* sql */`
+						 SELECT * FROM chain_metadata_table_v3test
+						 WHERE chainName = ?
+						 `,
+					user.chain
+					);
+					user.chain = getChain[0];
+				}
+				if (user.category) {
+					const getCategory = await query(/* sql */`
+						 SELECT * FROM category_metadata_table_v3test
+						 WHERE categoryName = ?
+						 `,
+					user.category
+					);
+					user.category = getCategory[0];
+				}
+
+				user = JSON.parse(JSON.stringify(user));
+
 				if (context.params.slug[1]) {
 					view = context.params.slug[1];
 				}
@@ -83,11 +115,6 @@ export async function getStaticProps(context) {
 			}
 		}
 	}
-	// const getData = await query(/* sql */`
-	// 	SELECT * FROM website_output_table_v3test
-	// 	ORDER BY tkey DESC
-	// 	`);
-	// const initialData = JSON.parse(JSON.stringify(getData));
 
 	const getView = await query(/* sql */`
 		SELECT *
@@ -105,7 +132,6 @@ export async function getStaticProps(context) {
 	return {
 		props: {
 			user,
-			// initialData,
 			view,
 			initialViewMeta,
 			myContext

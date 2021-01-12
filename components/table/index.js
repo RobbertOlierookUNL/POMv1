@@ -2,7 +2,11 @@ import React, { useState, useMemo, useRef } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
 import { allOptionsWithData } from "../../config/viewOptions";
-import { useEntries, useView } from "../../lib/swr-hooks";
+import {
+	useEntries,
+	useUserSpecificEntries,
+	useView
+} from "../../lib/swr-hooks";
 import { useSortableData, useToolkit } from "../../lib/custom-hooks";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
@@ -11,11 +15,13 @@ import Toolbar from "./toolbar";
 import useGlobal from "../store";
 
 
-const Table = ({view, initialViewMeta}) => {
+
+const Table = ({view, initialViewMeta, user}) => {
 	console.log("tablererender");
 	const {data: _meta} = useView(view, initialViewMeta);
 	const {data: preData} = useEntries();
-	const _data = preData || [];
+
+
 	const {view_name, created_at, updated_at, config, ...meta} = _meta;
 	const notUsed = {};
 	notUsed.variables = {view_name, created_at, updated_at, config};
@@ -55,6 +61,9 @@ const Table = ({view, initialViewMeta}) => {
 	);
 	keys.compact.sort(onIndex);
 	keys.expanded.sort(onIndex);
+	// const {data: preData} = useUserSpecificEntries(keys.compact.concat(keys.expanded), user.roll && user.roll.rollName);
+	// console.log(preData);
+	const _data = preData || [];
 
 
 

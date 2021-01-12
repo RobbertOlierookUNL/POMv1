@@ -2,21 +2,21 @@ import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-  const { view } = req.query
+  const { roll } = req.query
   try {
-    if (!view) {
-      return res.status(400).json({ message: '`view` required' })
+    if (!roll) {
+      return res.status(400).json({ message: '`roll` required' })
     }
-    if (view === "undefined") {
+    if (roll === "undefined") {
       return;
     }
     const results = await query(
       `
       SELECT *
-      FROM view_metadata_table_v3test
-      WHERE view_name = ?
+      FROM roll_metadata_table_v3test
+      WHERE rollName = ?
     `,
-      view
+      roll
     )
 
     return res.json(results[0])
