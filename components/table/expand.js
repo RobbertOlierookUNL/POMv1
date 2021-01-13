@@ -1,9 +1,10 @@
 import React, {useRef, useEffect, useState, forwardRef} from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
-import { useToolkit } from "../../lib/custom-hooks";
+import { useColors, useToolkit } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import useGlobal from "../store";
+
 
 
 
@@ -12,14 +13,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
 	const {mergeRefs} = useToolkit();
-	const [gray_light] = useGlobal(
-		state => state.gray_light,
-		() => null
-	);
-	const [quadiary] = useGlobal(
-		state => state.quadiary,
-		() => null
-	);
+	const [gray_light, gray_lighter] = useColors("gray_light", "gray_lighter");
 
 	useEffect(() => {
 		rowData && setHeight(expandCell.current.scrollHeight + 1.33 + "px");
@@ -85,8 +79,8 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 				}
 				.sub-table {
 					width: 100%;
-					background-color: ${quadiary.color};
-					color: ${quadiary.text};
+					background-color: ${gray_lighter.color};
+					color: ${gray_lighter.text};
 					border-collapse: collapse;
 					font-weight: bold;
 				}

@@ -8,8 +8,11 @@ import React from "react";
 import { useUser, useView } from "../../../../lib/swr-hooks";
 import Button from "../../../../components/button";
 import Header from "../../../../components/header/index";
+import UserMenu from "../../../../components/usermenu";
+import UserOptions from "../../../../components/useroptions";
 import ViewTable from "../../../../components/views/viewtable";
 import useGlobal from "../../../../components/store";
+
 
 
 
@@ -30,7 +33,7 @@ const View = () => {
 	);
 	const {view, v, from, userId } = Router.query;
 	const {data: user} = useUser(userId || 0);
-
+	console.log({user, userId});
 	console.log(v === "duplicated" ? from : view);
 	const { data } = useView(v === "duplicated" ? from : view);
 	// const [mounted, setMounted] = useState(false);
@@ -57,6 +60,9 @@ const View = () => {
 				</Link>
 				{view}
 			</Header>
+			<UserMenu>
+				<UserOptions loggedIn={user && !!user.userId} admin/>
+			</UserMenu>
 			<ViewTable data={data}/>
 			<style jsx global>{`
         body, html{

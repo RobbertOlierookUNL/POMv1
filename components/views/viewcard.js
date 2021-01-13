@@ -84,8 +84,8 @@ const ViewCard = ({view}) => {
 					<p><b>Verborgen kolommen: </b>{hidden}</p>
 					<p><b>Ongedefinieerde kolommen: </b>{undef}</p>
 					<br/>
-					<p><i>View aangemaakt: </i><div className="date">{moment(created_at).locale("nl").format("LLL")}</div></p>
-					<p><i>View laatst aangepast: </i><div className="date">{moment(updated_at).locale("nl").format("LLL")}</div></p>
+					<div className="as-p"><i>View aangemaakt: </i><div className="date">{moment(created_at).locale("nl").format("LLL")}</div></div>
+					<div className="as-p"><i>View laatst aangepast: </i><div className="date">{moment(updated_at).locale("nl").format("LLL")}</div></div>
 					<br/>
 					<br/>
 					<div className="button-container">
@@ -150,6 +150,9 @@ const ViewCard = ({view}) => {
         b, i{
           float: left;
         }
+				.as-p{
+					display: block;
+				}
 				.date {
 					max-width: 105px;
 					display: inline-block;

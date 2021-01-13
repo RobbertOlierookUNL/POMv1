@@ -34,7 +34,7 @@ const NewViewName = ({duplicate}) => {
 			});
 			const json = await res.json();
 			if (!res.ok) throw Error(json.message);
-			Router.push(`/view-manager/${viewName}?v=${duplicate ? `duplicated&from=${duplicate}` : "edit"}`);
+			Router.push(`/admin/${Router.query.userId}/view-manager/${viewName}?v=${duplicate ? `duplicated&from=${duplicate}` : "edit"}`);
 		} catch (e) {
 			if (e.message && e.message.includes("ER_DUP_ENTRY")) {
 				setError(`${viewName} bestaat al; geen dubbele entries`);
@@ -56,7 +56,7 @@ const NewViewName = ({duplicate}) => {
 				}}/>
 				{error && <span className="error-message">{error}</span>}
 				<div className="button-container">
-					<Link href="/view-manager"><div><Button style={{visibility: submitting ? "hidden" : "visible", marginRight: "7px"}}>Annuleren</Button></div></Link>
+					<Link href={`/admin/${Router.query.userId}/view-manager`}><div><Button style={{visibility: submitting ? "hidden" : "visible", marginRight: "7px"}}>Annuleren</Button></div></Link>
 					<Button disabled={submitting} onClick={save}>{submitting ? "Verwerken.." : "Opslaan"}</Button>
 				</div>
 

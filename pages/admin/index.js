@@ -44,7 +44,7 @@ const Admin = () => {
 				<ViewButtons/>
 			</OptionDrawer>
 			<UserMenu>
-				<UserOptions loggedIn={false}/>
+				<UserOptions loggedIn={false} admin/>
 			</UserMenu>
 
 			<style jsx global>{`

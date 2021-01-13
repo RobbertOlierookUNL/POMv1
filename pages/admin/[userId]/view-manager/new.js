@@ -9,7 +9,10 @@ import { useUser } from "../../../../lib/swr-hooks";
 import Button from "../../../../components/button";
 import Header from "../../../../components/header/index";
 import NewViewName from "../../../../components/views/newviewname";
+import UserMenu from "../../../../components/usermenu";
+import UserOptions from "../../../../components/useroptions";
 import useGlobal from "../../../../components/store";
+
 
 
 
@@ -64,6 +67,9 @@ const View = () => {
 				</Link>
 				{title}
 			</Header>
+			<UserMenu>
+				<UserOptions loggedIn={user && !!user.userId} admin/>
+			</UserMenu>
 			<div className="viewname-container">
 				<NewViewName duplicate={duplicate}/>
 			</div>

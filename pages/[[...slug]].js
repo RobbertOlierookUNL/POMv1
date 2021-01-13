@@ -74,7 +74,10 @@ export async function getStaticProps(context) {
 						`,
 				context.params.slug[0]
 				);
-				if (!getUser[0]) {return {notFound: true};}
+				if (!getUser[0]) {return {redirect: {
+					destination: "/",
+					permanent: false,
+				},};}
 				user = getUser[0];
 				if (user.roll) {
 					const getRoll = await query(/* sql */`
@@ -136,6 +139,7 @@ export async function getStaticProps(context) {
 			initialViewMeta,
 			myContext
 		},
+		revalidate: 1,
 	};
 }
 

@@ -45,7 +45,7 @@ function titleCase(str) {
 	return splitStr.join(" ");
 }
 
-const RegisterScreen = ({active, initialData, transportData}) => {
+const RegisterScreen = ({active, initialData, transportData, admin}) => {
 	const { register, handleSubmit, watch, errors, control, getValues } = useForm();
 	const [submitting, setSubmitting] = useState(false);
 	const [duplicateError, setDuplicateError] = useState(false);
@@ -91,7 +91,7 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 				console.log(2);
 				const json = await res.json();
 				if (!res.ok) throw Error(json.message);
-				await Router.push(`/${json.insertId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
+				await Router.push(`${admin ? "/admin" : ""}/${json.insertId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
 				expandUserMenu(false);
 
 			// const res2 = await fetch(`/api/user/get-user-id?email=${data.email}`, {
@@ -150,13 +150,13 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 						margin="dense"
 					/>
 				</div>
-				{errors.email || duplicateError &&
+				{(errors.email || duplicateError) &&
 					<div className="error-message">
 						{duplicateError || "Voer een geldig Unilever emailadres in"}
 					</div>
 				}
 
-				{rolls && <FormControl
+				<FormControl
 					className={classes.formControl}
 					error={!!errors.roll}
 					margin="dense"
@@ -171,7 +171,7 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 							tabIndex={active ? 0 : -1}
 							{...props}
 						>
-							{rolls.map((roll, i) => (roll.rollName !== "Admin" &&
+							{!rollsAreLoading && !rollsGiveError && rolls.map((roll, i) => (roll.rollName !== "Admin" &&
 								<MenuItem key={i} value={roll}>{roll.rollName}</MenuItem>
 							))}
 						</Select>
@@ -185,9 +185,9 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 					{errors.roll && <div className="error-message">Kies een rol</div>}
 
 				</FormControl>
-				}
 
-				{categories && <FormControl
+
+				<FormControl
 					className={classes.formControl +" "+ classes.formControlRight}
 					error={!!errors.category}
 					margin="dense"
@@ -200,7 +200,7 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 							className="disable-on-inactive"
 							tabIndex={active ? 0 : -1}
 						>
-							{categories.map((category, i) => (
+							{!categoriesAreLoading && !categoriesGiveError && categories.map((category, i) => (
 								<MenuItem key={i} value={category.categoryName}>{category.categoryName}</MenuItem>
 							))}
 						</Select>
@@ -212,9 +212,8 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 					/>
 					{errors.category && <div className="error-message">Kies een categorie</div>}
 				</FormControl>
-				}
-				{console.log({chains, watchRoll})}
-				{chains && watchRoll && watchRoll.hasChain === 1 &&
+				{console.log({watchRoll, chains, chainsAreLoading, chainsGiveError})}
+				{watchRoll && watchRoll.hasChain === 1 &&
 					<FormControl
 						className={classes.formControl}
 						error={!!errors.chain}
@@ -228,7 +227,7 @@ const RegisterScreen = ({active, initialData, transportData}) => {
 								className="disable-on-inactive"
 								tabIndex={active ? 0 : -1}
 							>
-								{chains.map((chain, i) => (
+								{!chainsAreLoading && !chainsGiveError && chains.map((chain, i) => (
 									<MenuItem key={i} value={chain.chainName}>{chain.chainName}</MenuItem>
 								))}
 							</Select>

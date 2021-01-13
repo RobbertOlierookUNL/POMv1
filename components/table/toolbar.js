@@ -1,14 +1,15 @@
 import React from "react";
 
+import { useColors, useTheme } from "../../lib/custom-hooks";
 import ToolbarIcon from "./toolbaricon";
 import useGlobal from "../store";
 
 
+
+
 const Toolbar = ({options}) => {
-	const [quadiary] = useGlobal(
-		state => state.quadiary,
-		() => null
-	);
+	const {gray_light} = useTheme();
+
 	const [, toggleSelectMode] = useGlobal(
 		() => null,
 		actions => actions.toggleSelectMode,
@@ -31,8 +32,8 @@ const Toolbar = ({options}) => {
 				display: grid;
 				grid-template-columns: [start] 1fr [midLeft] 1fr [midRight] 1fr [end];
         top:0;
-        background-color: ${quadiary.color};
-        color: ${quadiary.text};
+        background-color: ${gray_light.color};
+        color: ${gray_light.text};
       }
 
 			.toolbarPart {

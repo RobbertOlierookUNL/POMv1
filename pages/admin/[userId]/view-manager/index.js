@@ -10,7 +10,10 @@ import { useUser, useViews } from "../../../../lib/swr-hooks";
 import Button from "../../../../components/button";
 import GetViews from "../../../../components/views/getviews";
 import Header from "../../../../components/header";
+import UserMenu from "../../../../components/usermenu";
+import UserOptions from "../../../../components/useroptions";
 import useGlobal from "../../../../components/store";
+
 
 
 
@@ -59,6 +62,9 @@ const Views = () => {
 					</div>
         View Manager
 				</Header>
+				<UserMenu>
+					<UserOptions loggedIn={user && !!user.userId} admin/>
+				</UserMenu>
 				{isLoading ?
 					<div className="circle-container">
 						<CircularProgress/>

@@ -49,7 +49,7 @@ const Admin = () => {
 				<ViewButtons/>
 			</OptionDrawer>
 			<UserMenu>
-				<UserOptions loggedIn={false}/>
+				<UserOptions loggedIn={true}/>
 			</UserMenu>
 
 			<style jsx global>{`

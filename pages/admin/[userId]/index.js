@@ -56,7 +56,7 @@ const Admin = () => {
 				<ViewButtons/>
 			</OptionDrawer>
 			<UserMenu>
-				<UserOptions loggedIn={user && !!user.userId}/>
+				<UserOptions loggedIn={user && !!user.userId} admin/>
 			</UserMenu>
 			<AdminRedirectGrid
 				hasRead={true}

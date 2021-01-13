@@ -18,11 +18,11 @@ import useGlobal from "../store";
 
 const Table = ({view, initialViewMeta, user}) => {
 	console.log("tablererender");
-	const {data: _meta} = useView(view, initialViewMeta);
+	const {data: preMeta} = useView(view, initialViewMeta);
 	const {data: preData} = useEntries();
 
 
-	const {view_name, created_at, updated_at, config, ...meta} = _meta;
+	const {view_name, created_at, updated_at, config, ..._meta} = preMeta;
 	const notUsed = {};
 	notUsed.variables = {view_name, created_at, updated_at, config};
 	// const [meta, setMeta] = useState({});
@@ -43,13 +43,14 @@ const Table = ({view, initialViewMeta, user}) => {
 		tableRef.current.scrollTo(0, 0);
 	};
 
-	const cols = Object.keys(meta);
+	const cols = Object.keys(_meta);
+	const meta = {};
 	const keys = {
 		compact: [],
 		expanded: [],
 	};
 	cols.map((col, i) => {
-		meta[col] = meta[col] ? JSON.parse(meta[col]) : {};
+		meta[col] = _meta[col] ? JSON.parse(_meta[col]) : {};
 		if (meta[col].display === "compact") {
 			keys.compact.push(cols[i]);
 		} else if (meta[col].display === "expanded") {
@@ -97,9 +98,9 @@ const Table = ({view, initialViewMeta, user}) => {
 			Object.keys(_data)[0]
 			&& Object.keys(meta)[0])
 		{
-			setData(mergeBy(_data, meta, keys.compact, keys.expanded));
+			setData(mergeBy(_data, meta));
 		}
-	}, [Object.keys(_data)[0], Object.keys(meta)[0], Object.keys(keys)[0]]);
+	}, [preData, preMeta]);
 
 
 	return (
@@ -110,6 +111,7 @@ const Table = ({view, initialViewMeta, user}) => {
 					top={`${38.67 + 25 + (verPadding * 3)}px`}
 					left={`calc(100vw - ${50 + 2*verPadding}px)`}
 				/>}
+			{console.log(data)}
 			<div className="tableContainer" ref={tableRef}>
 				<Toolbar/>
 				{meta && Object.keys(meta)[0] ?

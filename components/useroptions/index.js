@@ -1,13 +1,15 @@
+import {useRouter} from "next/router";
 import React, {useState} from "react";
 
+import { useCategories, useChains, useRolls } from "../../lib/swr-hooks";
 import LoginScreen from "./loginscreen";
 import RegisterScreen from "./registerscreen";
 import UserScreen from "./userscreen";
 import useGlobal from "../store";
-import {useRouter} from "next/router";
 
 
-const UserOptions = ({loggedIn}) => {
+
+const UserOptions = ({loggedIn, admin}) => {
 	const [registerMode, setRegisterMode] = useState(false);
 	const [primary] = useGlobal(
 		state => state.primary,
@@ -22,7 +24,7 @@ const UserOptions = ({loggedIn}) => {
 
 
 	const logout = async () => {
-		await Router.push(Router.query.slug[1] ? `/${Router.query.slug[1]}` : "/");
+		await Router.push(`${admin ? "/admin" : ""}${Router.query.slug && Router.query.slug[1] ? `/${Router.query.slug[1]}` : "/"}`);
 		expandUserMenu(false);
 	};
 	const login = () => {
@@ -48,12 +50,15 @@ const UserOptions = ({loggedIn}) => {
 					<RegisterScreen
 						active={userMenu}
 						initialData={transportedData}
-						transportData={setTransportedData}/>
+						transportData={setTransportedData}
+						admin={admin}
+					/>
 					:
 					<LoginScreen
 						active={userMenu}
 						initialData={transportedData}
 						transportData={setTransportedData}
+						admin={admin}
 					/>
 			}
 			<style jsx>{`
