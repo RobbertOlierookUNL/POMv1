@@ -241,7 +241,7 @@ const ViewTable = ({data}) => {
 														// onBlur={() => saveData(attribute)}
 														>
 															{allOptionsWithData[option].input.map((optionvalue, k) =>
-																<option value={optionvalue} key={k}>{optionvalue}</option>
+																<option value={optionvalue} key={k}>{optionvalue !== false ? optionvalue :"none"}</option>
 															)}
 														</select>
 													}

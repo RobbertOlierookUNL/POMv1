@@ -38,3 +38,13 @@ export const setSchema = (store, amount) => {
 export const toggleSelectMode = (store) => {
 	store.setState({selectMode: !store.state.selectMode});
 };
+
+export const addToFilters = (store, filter) => {
+	store.setState({arrayOfFilters: [...store.state.arrayOfFilters, filter]});
+};
+export const clearFilters = (store) => {
+	store.setState({arrayOfFilters: []});
+};
+export const removeFromFilters = (store, filter) => {
+	store.setState({arrayOfFilters: [...store.state.arrayOfFilters.filter(item => item != filter)]});
+};

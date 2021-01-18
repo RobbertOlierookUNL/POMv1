@@ -1,8 +1,12 @@
 import React from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
+import { useTheme } from "../../lib/custom-hooks";
+import FilterAndUnitCell from "./filterbar/filterandunitcell";
 import TableHeadCell from "./tableheadcell";
 import useGlobal from "../store";
+
+
 
 
 
@@ -12,10 +16,9 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig}) => {
 		state => state.selectMode,
 		() => null
 	);
-	const [primary] = useGlobal(
-		state => state.primary,
-		() => null
-	);
+	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
+
+	const {primary, gray_lighter} = useTheme();
 
 	let colString = selectMode ? "[selectboxes] 20px " : "";
 	keysForTableCols.map(col => {
@@ -49,23 +52,54 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig}) => {
 	colString += "[end]";
 	return (
 		<thead>
-			<tr>
+			<tr className="headers gridded-row">
 				{
 					keysForTableCols.map((col, i) => (
-						<TableHeadCell requestSort={requestSort} sortConfig={sortConfig} colMetaData={meta[col]} colName={col} first={i===0} key={i}/>
+						<TableHeadCell
+							requestSort={requestSort}
+							sortConfig={sortConfig}
+							colMetaData={meta[col]}
+							colName={col}
+							first={i===0}
+							key={i}
+						/>
+					))
+				}
+			</tr>
+			<tr className="filters gridded-row">
+				{
+					keysForTableCols.map((col, i) => (
+						<FilterAndUnitCell
+							unit={meta[col].unit || allOptionsWithData.unit.default}
+							filtertype={meta[col].filtertype === "false" ? false : meta[col].filtertype || allOptionsWithData.filtertype.default}
+							valuetype={meta[col].valuetype || allOptionsWithData.valuetype.default}
+							boxTitle={meta[col].hovername || meta[col].title || col}
+							filterName={meta[col].title || col}
+							reference={col}
+							key={i}
+						/>
 					))
 				}
 			</tr>
 			<style jsx>{`
-        tr {
+        .headers {
 			    position: sticky;
-					top: 18px;
+					top: ${arrayOfFilters.length ? "45px" : "18px"};
+					transition: top 100ms ease-in;
 					background-color: ${primary.color};
         }
+				.filters {
+					position: sticky;
+					top: ${arrayOfFilters.length ? "63.67px" : "36.57px"};
+					transition: top 100ms ease-in;
+					background-color: ${gray_lighter.color};
+					color: ${gray_lighter.text};
+					box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+				}
 
       `}</style>
 			<style jsx global>{`
-				tr {
+				.gridded-row {
 					display: grid;
 		    	grid-template-columns: ${colString};
 				}

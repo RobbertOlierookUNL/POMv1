@@ -56,6 +56,7 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 			<style jsx global>{`
 				body, html{
 					background-color: ${secondary.color};
+					background: linear-gradient(80deg, ${secondary.color}, white);
 				}
 			`}</style>
 		</>
@@ -139,7 +140,7 @@ export async function getStaticProps(context) {
 			initialViewMeta,
 			myContext
 		},
-		revalidate: 1,
+		// revalidate: 1,
 	};
 }
 

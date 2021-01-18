@@ -1,19 +1,21 @@
 import React from "react";
 
-import { useColors, useTheme } from "../../lib/custom-hooks";
+import { useColors, useTheme } from "../../../lib/custom-hooks";
 import ToolbarIcon from "./toolbaricon";
-import useGlobal from "../store";
+import useGlobal from "../../store";
 
 
 
 
 const Toolbar = ({options}) => {
-	const {gray_light} = useTheme();
+	const {primary_dark} = useTheme();
 
 	const [, toggleSelectMode] = useGlobal(
 		() => null,
 		actions => actions.toggleSelectMode,
 	);
+	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
+
 	return (
 		<>
 			<div className="toolbar">
@@ -31,9 +33,10 @@ const Toolbar = ({options}) => {
         position: sticky;
 				display: grid;
 				grid-template-columns: [start] 1fr [midLeft] 1fr [midRight] 1fr [end];
-        top:0;
-        background-color: ${gray_light.color};
-        color: ${gray_light.text};
+        top: ${arrayOfFilters.length ? "27px" : 0};
+				transition: top 100ms ease-in;
+        background-color: ${primary_dark.color};
+        color: ${primary_dark.text};
       }
 
 			.toolbarPart {

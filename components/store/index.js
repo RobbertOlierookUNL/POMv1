@@ -18,6 +18,7 @@ const initialState = {
 	active: false,
 	topInView: true,
 	selectMode: false,
+	arrayOfFilters: [],
 	...staticColors,
 	...colorSchematic(10)
 };

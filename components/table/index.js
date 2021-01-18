@@ -8,11 +8,13 @@ import {
 	useView
 } from "../../lib/swr-hooks";
 import { useSortableData, useToolkit } from "../../lib/custom-hooks";
+import FilterBar from "./filterbar";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
 import Toolbar from "./toolbar";
 import useGlobal from "../store";
+
 
 
 
@@ -32,8 +34,8 @@ const Table = ({view, initialViewMeta, user}) => {
 	const {mergeBy} = useToolkit();
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
-	const horPadding = 15;
-	const verPadding = 15;
+	const horPadding = 6;
+	const verPadding = 6;
 	const [primary_very_light] = useGlobal(
 		state => state.primary_very_light,
 		() => null
@@ -108,11 +110,12 @@ const Table = ({view, initialViewMeta, user}) => {
 			{data && Object.keys(data)[0] &&
 				<ToTopButton
 					handleClick={handleClick}
-					top={`${38.67 + 25 + (verPadding * 3)}px`}
+					top={`${38.67 + 25 + (verPadding * 5)}px`}
 					left={`calc(100vw - ${50 + 2*verPadding}px)`}
 				/>}
 			{console.log(data)}
 			<div className="tableContainer" ref={tableRef}>
+				<FilterBar/>
 				<Toolbar/>
 				{meta && Object.keys(meta)[0] ?
 					<table className="table">
@@ -157,13 +160,14 @@ const Table = ({view, initialViewMeta, user}) => {
 			</div>
 			<style jsx>{`
 				.tableContainer {
-					width: calc(100% - ${horPadding *2 - 10}px);
+					width: calc(100% - ${horPadding *2 - 0}px);
 					overflow: auto;
 					height: calc(100vh - 38.67px - ${verPadding * 2}px);
 					position: relative;
-					top: ${horPadding}px;
-					left: ${verPadding}px;
+					top: ${verPadding}px;
+					left: ${horPadding}px;
 					box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
+					border-radius: 6px;
 
 
 				}

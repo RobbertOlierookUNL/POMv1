@@ -5,7 +5,7 @@ import moment from "moment";
 import useGlobal from "../store";
 
 
-const Cell = ({cellData, width, rowId, colName, noExpand}) => {
+const Cell = ({cellData, omit, rowId, colName, noExpand}) => {
 	const [active] = useGlobal(
 		state => state.active,
 		() => null
@@ -19,7 +19,7 @@ const Cell = ({cellData, width, rowId, colName, noExpand}) => {
 		>{cellData === false ?
 				<Skeleton />
 				: (moment.isMoment(cellData)) ? cellData.format("YYYY-MM-DD") :
-					(!cellData || cellData === "0") ? "" : cellData
+					(!cellData || cellData === "0" || omit) ? "" : cellData
 			}
 			<style jsx>{`
         td {

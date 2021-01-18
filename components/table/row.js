@@ -47,7 +47,7 @@ const PreRow = ({id, order, meta, rowData, keysForTableCols, additionalColKeys, 
 
 	return (
 		<tr
-			className={active === id && "active"}
+			className={`gridded-row ${active === id ? "active" : ""}`}
 			onClick={inViewport ? handleClick : undefined}
 			ref={forwardedRef}>
 			<>
@@ -61,7 +61,14 @@ const PreRow = ({id, order, meta, rowData, keysForTableCols, additionalColKeys, 
 						colName={key}
 						width={meta[key].widthweight || allOptionsWithData.widthweight.default}
 						key={i}
-						rowId={id}/>
+						rowId={id}
+						omit={
+							(rowData
+								&& rowData.addedProps
+								&& !rowData.addedProps.merged
+								&& meta[key].merge === "count")
+						}
+					/>
 				)}
 				<Expand
 					additionalColKeys={additionalColKeys}
