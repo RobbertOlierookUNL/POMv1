@@ -48,7 +48,7 @@ const PreRow = ({id, order, meta, rowData, keysForTableCols, additionalColKeys, 
 	return (
 		<tr
 			className={`gridded-row ${active === id ? "active" : ""}`}
-			onClick={inViewport ? handleClick : undefined}
+			onDoubleClick={inViewport ? handleClick : undefined}
 			ref={forwardedRef}>
 			<>
 				{selectMode &&

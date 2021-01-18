@@ -55,15 +55,18 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, filterName, r
           text-align: center;
           cursor: pointer;
           color: ${gray_dark.color};
-          background-color: ${gray_lighter.color};
-          box-shadow: 0px 0px 0px ${gray_lighter.color};
-          transition: color 200ms ease-in, background-color 200ms ease-in;
+          transform: scaleY(1);
+
+          /* background-color: ${gray_lighter.color};
+          box-shadow: 0px 0px 0px ${gray_lighter.color}; */
+          transition: color 200ms ease-in, transform 100ms ease-in;
         }
 
         .filter:hover {
-          box-shadow: 0px 0px 5px ${tertiary.color};
-          background-color: ${tertiary.color};
-          color: ${tertiary.text};
+          transform: scaleY(1.1);
+          /* box-shadow: 0px 0px 5px ${tertiary.color};
+          background-color: ${tertiary.color}; */
+          color: ${primary.color};
         }
       `}</style>
 		</th>

@@ -15,6 +15,10 @@ const OptionDrawer = ({children}) => {
 		state => state.shadowRef,
 		() => null
 	);
+	const [headerRef] = useGlobal(
+		state => state.headerRef,
+		() => null
+	);
 	const [handleClickOutside, setHandleClickOutside] = useState(false);
 	useEffect(() => {
 		if (handleClickOutside) {
@@ -24,7 +28,10 @@ const OptionDrawer = ({children}) => {
 
 		if(options) {
 			setHandleClickOutside(() => function (event) {
-				if (event.target === shadowRef.current
+				if (
+					event.target === shadowRef.current
+					||
+					event.target === headerRef.current
 				){
 					expandOptions(false);
 				}

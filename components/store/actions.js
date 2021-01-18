@@ -10,35 +10,44 @@
 
 import { colorSchematic } from "../../config/colors";
 
-export const expandOptions = (store, amount) => {
-	store.setState({options: amount});
-};
-export const setMenuButton = (store, amount) => {
-	store.setState({menuButton: amount});
-};
-export const expandUserMenu = (store, amount) => {
-	store.setState({userMenu: amount});
-};
-export const setUserButton = (store, amount) => {
-	store.setState({userButton: amount});
-};
-export const setTopInView = (store, amount) => {
-	store.setState({topInView: amount});
-};
-export const setActive = (store, amount) => {
-	store.setState({active: amount});
-};
-export const setShadowRef = (store, amount) => {
-	store.setState({shadowRef: amount});
-};
-export const setSchema = (store, amount) => {
-	const schema = amount;
+//Theme
+export const setSchema = (store, schema) => {
 	store.setState({...colorSchematic(schema)});
+};
+
+//Refs
+export const setMenuButton = (store, ref) => {
+	store.setState({menuButton: ref});
+};
+export const setUserButton = (store, ref) => {
+	store.setState({userButton: ref});
+};
+export const setShadowRef = (store, ref) => {
+	store.setState({shadowRef: ref});
+};
+export const setHeaderRef = (store, ref) => {
+	store.setState({headerRef: ref});
+};
+
+//Specifics
+export const expandOptions = (store, shouldExpand) => {
+	store.setState({options: shouldExpand});
+};
+export const expandUserMenu = (store, shouldExpand) => {
+	store.setState({userMenu: shouldExpand});
+};
+
+export const setTopInView = (store, isInView) => {
+	store.setState({topInView: isInView});
+};
+export const setActive = (store, activeRow) => {
+	store.setState({active: activeRow});
 };
 export const toggleSelectMode = (store) => {
 	store.setState({selectMode: !store.state.selectMode});
 };
 
+//Filters
 export const addToFilters = (store, filter) => {
 	store.setState({arrayOfFilters: [...store.state.arrayOfFilters, filter]});
 };

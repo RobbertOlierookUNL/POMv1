@@ -1,15 +1,16 @@
-import { useForm } from "react-hook-form";
+// import { useForm } from "react-hook-form";
 import React, {useState} from "react";
-import TextField from "@material-ui/core/TextField";
+import Slider from "@material-ui/core/Slider";
 
 import Button from "../../../button";
 import useGlobal from "../../../store";
 
 
 
-const SearchField = ({reference, filterName, close}) => {
+const RangeSlider = ({reference, filterName, close}) => {
 	const [, addToFilters] = useGlobal(() => null, actions => actions.addToFilters);
-	const { register, handleSubmit, errors } = useForm();
+	// const { register, handleSubmit, errors } = useForm();
+	const [value, setValue] = useState([0, 100]);
 
 	const add = ({filter}) => {
 		let reducedLength;
@@ -28,23 +29,24 @@ const SearchField = ({reference, filterName, close}) => {
 		});
 		close();
 	};
+
+	const handleChange = (event, newValue) => {
+		setValue(newValue);
+	};
+
+	function valuetext(value) {
+		return `${value}`;
+	}
 	return (
-		<form onSubmit={handleSubmit(add)} className="searchfield">
+		<form onSubmit={add} className="rangeslider">
 			<h2>Filteren</h2>
-			<TextField
-				id="filter"
-				name="filter"
-				label="Tekstfilter"
-				type="text"
-				inputRef={register({required: true})}
-				// value={email}
-				className="full-width"
-				defaultValue={""}
-				error={!!errors.filter}
-				margin="dense"
-				// onChange={e => setEmail(e.target.value)}
-			/>
-			{errors.filter && <div className="error-message">{"Voer tekst in om te filteren"}</div>}
+			<Slider
+			        value={value}
+			        onChange={handleChange}
+			        valueLabelDisplay="auto"
+			        aria-labelledby="range-slider"
+			        getAriaValueText={valuetext}
+			      />
 			<Button
 				width={"100%"}
 				style={{marginTop: "15px"}}
@@ -57,7 +59,7 @@ const SearchField = ({reference, filterName, close}) => {
           text-align: left;
           margin: 0;
         }
-        .searchfield {
+        .rangeslider {
           margin: 7px;
         }
       `}
@@ -66,4 +68,4 @@ const SearchField = ({reference, filterName, close}) => {
 	);
 };
 
-export default SearchField;
+export default RangeSlider;

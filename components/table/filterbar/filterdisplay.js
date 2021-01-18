@@ -32,15 +32,16 @@ const FilterDisplay = ({filterObject}) => {
           box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.4);
         }
         .remove-button {
-          margin-left: 2.5px;
+          margin-left: 4px;
           display: inline-block;
           cursor: pointer;
           color: ${gray_light.color};
+          transform: translateY(0.5px);
           transition: color 100ms linear, transform 100ms linear;
         }
         .remove-button:hover {
           color: ${tertiary.text};
-          transform: scale(1.1);
+          transform: translateY(0.5px) scale(1.1);
           filter: drop-shadow(0px 0px 5px ${gray_light.color});
         }
       `}

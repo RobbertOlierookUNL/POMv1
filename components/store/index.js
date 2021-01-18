@@ -11,6 +11,7 @@ const initialState = {
 	menuButton: {current: null},
 	userButton: {current: null},
 	setShadowRef: {current: null},
+	headerRef: {current: null},
 	// formRefs: {
 	// 	rollRef: {current: null},
 	// 	categoryRef: {current: null},

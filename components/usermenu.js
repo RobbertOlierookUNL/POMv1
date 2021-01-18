@@ -19,6 +19,10 @@ const UserMenu = ({children}) => {
 		state => state.shadowRef,
 		() => null
 	);
+	const [headerRef] = useGlobal(
+		state => state.headerRef,
+		() => null
+	);
 	const ref = useRef(null);
 	const [handleClickOutside, setHandleClickOutside] = useState(false);
 	useEffect(() => {
@@ -39,7 +43,10 @@ const UserMenu = ({children}) => {
 			// 	return true;
 			// };
 			setHandleClickOutside(() => function (event) {
-				if (event.target === shadowRef.current
+				if (
+					event.target === shadowRef.current
+				||
+				event.target === headerRef.current
 				// checkExceptionRefs({ref, userButton, ...formRefs}, event.target)
 				){
 					expandUserMenu(false);

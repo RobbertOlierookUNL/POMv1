@@ -16,12 +16,19 @@ const Header = ({children, fName, lName, admin=false}) => {
 		() => null,
 		actions => actions.setUserButton
 	);
+	const [, setHeaderRef] = useGlobal(
+		() => null,
+		actions => actions.setHeaderRef
+	);
 	const [primary] = useGlobal(
 		state => state.primary,
 		() => null
 	);
-	const ref = useRef(null);
-	useEffect(() => {setUserButton(ref);},[]);
+	const userButtonRef = useRef(null);
+	const headerRef = useRef(null);
+	useEffect(() => {setUserButton(userButtonRef);},[]);
+	useEffect(() => {setHeaderRef(headerRef);},[]);
+
 
 	const handleClick = () => {
 		expandUserMenu(!userMenu);
@@ -29,14 +36,14 @@ const Header = ({children, fName, lName, admin=false}) => {
 
 	return (
 		<>
-			<header>
+			<header ref={headerRef}>
 				<div className={"left_side"}>
 					{children[0]}
 				</div>
 				<div className={"mid"}>
 					{children[1]}
 				</div>
-				<div className={"right_side"} onClick={handleClick} ref={ref}>
+				<div className={"right_side"} onClick={handleClick} userButtonRef={userButtonRef}>
 					<div className="welcome_container">{fName && lName ? fName + " " + lName : userMenu ? <FontAwesomeIcon icon={faTimes}/> : "Inloggen" }</div>
 					<div className={"gravatar_container"}>
 						<Gravatar first_name={fName} last_name={lName} width={"25px"}/>
