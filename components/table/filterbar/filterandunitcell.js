@@ -7,7 +7,7 @@ import FilterBox from "./filterbox";
 
 
 
-const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, filterName, reference}) => {
+const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, filterName, parameters, reference}) => {
 	const {primary, tertiary, gray, gray_dark, gray_lighter} = useTheme();
 	const [boxActive, setBoxActive] = useState(false);
 	return (
@@ -26,6 +26,7 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, filterName, r
         		filterName={filterName}
         		reference={reference}
         		close={() => setBoxActive(false)}
+        		parameters={parameters}
         	/>
         </>
 			}

@@ -43,7 +43,7 @@ const Header = ({children, fName, lName, admin=false}) => {
 				<div className={"mid"}>
 					{children[1]}
 				</div>
-				<div className={"right_side"} onClick={handleClick} userButtonRef={userButtonRef}>
+				<div className={"right_side"} onClick={handleClick} ref={userButtonRef}>
 					<div className="welcome_container">{fName && lName ? fName + " " + lName : userMenu ? <FontAwesomeIcon icon={faTimes}/> : "Inloggen" }</div>
 					<div className={"gravatar_container"}>
 						<Gravatar first_name={fName} last_name={lName} width={"25px"}/>

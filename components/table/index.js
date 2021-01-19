@@ -30,8 +30,9 @@ const Table = ({view, initialViewMeta, user}) => {
 	// const [meta, setMeta] = useState({});
 	// const [keys, setKeys] = useState({});
 	const [data, setData] = useState({});
+	const [filterParameters, setFilterParameters] = useState({});
 	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
-	const {mergeBy} = useToolkit();
+	const {prepareData} = useToolkit();
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
 	const horPadding = 6;
@@ -100,7 +101,9 @@ const Table = ({view, initialViewMeta, user}) => {
 			Object.keys(_data)[0]
 			&& Object.keys(meta)[0])
 		{
-			setData(mergeBy(_data, meta));
+			const {processedData, parameters} = prepareData(_data, meta);
+			setData(processedData);
+			setFilterParameters(parameters);
 		}
 	}, [preData, preMeta]);
 
@@ -123,13 +126,16 @@ const Table = ({view, initialViewMeta, user}) => {
 							requestSort={requestSort}
 							sortConfig={sortConfig}
 							meta={meta}
-							keysForTableCols={keys.compact}/>
+							keysForTableCols={keys.compact}
+							filterParameters={filterParameters}
+						/>
 						<TableBody
 							meta={meta}
 							data={data}
 							keysForTableCols={keys.compact}
 							additionalColKeys={keys.expanded}
-							sortedRowKeys={sortedKeys}/>
+							sortedRowKeys={sortedKeys}
+						/>
 					</table>
 					:
 					<table className="table">

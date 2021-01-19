@@ -11,7 +11,7 @@ import useGlobal from "../store";
 
 
 
-const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig}) => {
+const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterParameters}) => {
 	const [selectMode] = useGlobal(
 		state => state.selectMode,
 		() => null
@@ -75,6 +75,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig}) => {
 							valuetype={meta[col].valuetype || allOptionsWithData.valuetype.default}
 							boxTitle={meta[col].hovername || meta[col].title || col}
 							filterName={meta[col].title || col}
+							parameters={filterParameters[col] || false}
 							reference={col}
 							key={i}
 						/>
@@ -94,7 +95,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig}) => {
 					transition: top 100ms ease-in;
 					background-color: ${gray_lighter.color};
 					color: ${gray_lighter.text};
-					box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+					box-shadow: 0px 3px 5px rgba(0, 31, 130, 0.25);
 				}
 
       `}</style>

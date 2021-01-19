@@ -25,7 +25,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 				<table className={"sub-table"}>
 					<tbody>
 						{mergedFrom.map((row, idx) =>
-							<tr key={idx}>
+							<tr className="gridded-row" key={idx}>
 								{keysForMergedRows.map((key, i) =>
 									<Cell
 										cellData={rowData === false ? false : row[key]}

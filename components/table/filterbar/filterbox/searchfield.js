@@ -7,16 +7,16 @@ import useGlobal from "../../../store";
 
 
 
-const SearchField = ({reference, filterName, close}) => {
+const SearchField = ({reference, filterName, close, level}) => {
 	const [, addToFilters] = useGlobal(() => null, actions => actions.addToFilters);
 	const { register, handleSubmit, errors } = useForm();
 
 	const add = ({filter}) => {
 		let reducedLength;
-		if (filter.length < 7) {
+		if (filter.length < 10) {
 			reducedLength = filter;
 		} else {
-			reducedLength = `${filter.substring(0,5)}..`;
+			reducedLength = `${filter.substring(0,8)}..`;
 		}
 		addToFilters({
 			shorthand: {
@@ -25,12 +25,14 @@ const SearchField = ({reference, filterName, close}) => {
 			},
 			value: filter,
 			reference,
+			level,
+			filter: "searchField"
 		});
 		close();
 	};
 	return (
 		<form onSubmit={handleSubmit(add)} className="searchfield">
-			<h2>Filteren</h2>
+			<h2>Zoeken op..</h2>
 			<TextField
 				id="filter"
 				name="filter"

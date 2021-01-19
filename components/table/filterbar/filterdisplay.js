@@ -14,7 +14,8 @@ const FilterDisplay = ({filterObject}) => {
 
 	return (
 		<div className="filter-display">
-			<b>{`${shorthand.filterName}:${shorthand.value}`}</b>
+			{`${shorthand.filterName}: `}
+			<small><b>{`${shorthand.value}`}</b></small>
 			<div className="remove-button" onClick={() => removeFromFilters(filterObject)}
 			>
 				<FontAwesomeIcon icon={faTimes}/>
