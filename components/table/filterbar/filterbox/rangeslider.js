@@ -45,16 +45,20 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 		newValue[1] = event.target.value === "" ? "" : Number(event.target.value);
 	 setValue(newValue);
 	};
-	const handleBlur = () => {
-		if (value[0] < min) {
-			const newValue= value;
+
+	const forceLimits = (value, parameters) => {
+		const {min, max} = parameters;
+		const newValue = [...value];
+		if (newValue[0] < min) {
 			newValue[0] = min;
-			setValue(newValue);
-		} else if (value > max) {
-			const newValue= [...value];
-			newValue[1] = max;
-			setValue(newValue);
 		}
+		if (newValue[1] > max) {
+			newValue[1] = max;
+		}
+		setValue(newValue);
+	};
+	const handleBlur = () => {
+		forceLimits(value, parameters);
 	};
 
 	function valuetext(value) {
@@ -62,8 +66,8 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 	}
 
 	useEffect(() => {
-		//
-	}, [min, max]);
+		forceLimits(value, parameters);
+	}, [parameters]);
 	return (
 		<form onSubmit={add} className="rangeslider">
 			<h2>Waardes tussen..</h2>
@@ -78,7 +82,6 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 						min,
 						max,
 						type: "number",
-						"aria-labelledby": "input-slider",
 					}}
 				/>
 				<Input
@@ -91,7 +94,6 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 						min,
 						max,
 						type: "number",
-						"aria-labelledby": "input-slider",
 					}}
 				/>
 				<div style={{gridColumn: "span 2"}}>
