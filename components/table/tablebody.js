@@ -45,23 +45,34 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 								onEnterViewport={() => updateParameters(i)}
 								id={row}
 								order={i}
+								totalRows={sortedRowKeys.length}
 								rowData={data[row]}
 								meta={meta}
 								keysForTableCols={keysForTableCols}
 								additionalColKeys={additionalColKeys}
 								key={i}/>
 						))}
-					</> : <>
-						{fakedata.map((row, i) => (
-							<Row
-								id={i}
-								rowData={false}
-								meta={meta}
-								keysForTableCols={keysForTableCols}
-								additionalColKeys={additionalColKeys}
-								key={i}/>
-						))}
-					</>
+					</> :
+					data === false ?
+						<>
+							<tr>
+								<td>
+									Geen resultaat
+								</td>
+							</tr>
+						</>
+						:
+						<>
+							{fakedata.map((row, i) => (
+								<Row
+									id={i}
+									rowData={false}
+									meta={meta}
+									keysForTableCols={keysForTableCols}
+									additionalColKeys={additionalColKeys}
+									key={i}/>
+							))}
+						</>
 				}
 			</tbody>
 		</>

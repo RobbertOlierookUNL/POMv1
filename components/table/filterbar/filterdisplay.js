@@ -14,8 +14,12 @@ const FilterDisplay = ({filterObject}) => {
 
 	return (
 		<div className="filter-display">
-			{`${shorthand.filterName}: `}
-			<small><b>{`${shorthand.value}`}</b></small>
+			<div className="filter-text">
+				{`${shorthand.filterName}: `}
+				<b>
+					{`${shorthand.value}`}
+				</b>
+			</div>
 			<div className="remove-button" onClick={() => removeFromFilters(filterObject)}
 			>
 				<FontAwesomeIcon icon={faTimes}/>
@@ -25,13 +29,19 @@ const FilterDisplay = ({filterObject}) => {
           border-radius: 0.75em;
           border: 1.5px solid ${tertiary.color};
           line-height: 1;
+					height: 20px;
           background-color: ${tertiary.color};
           color: ${tertiary.text};
-          display: inline-block;
+          display: inline-flex;
           margin: 0 1.5px;
           padding: 2.5px 2.5px;
           box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.4);
         }
+				.filter-text {
+					display: inline-block;
+					font-size: smaller;
+					align-self: center;
+				}
         .remove-button {
           margin-left: 4px;
           display: inline-block;

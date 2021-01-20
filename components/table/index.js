@@ -7,13 +7,18 @@ import {
 	useUserSpecificEntries,
 	useView
 } from "../../lib/swr-hooks";
-import { useSortableData, useToolkit } from "../../lib/custom-hooks";
+import {
+	useFilterableData,
+	useSortableData,
+	useToolkit
+} from "../../lib/custom-hooks";
 import FilterBar from "./filterbar";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
 import Toolbar from "./toolbar";
 import useGlobal from "../store";
+
 
 
 
@@ -59,9 +64,11 @@ const Table = ({view, initialViewMeta, user}) => {
 
 
 	const _data = preData || [];
-	const [data, setData] = useState({});
-	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data, {
+	const [data, setData] = useState([]);
+	const filteredData = useFilterableData(data);
+	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(filteredData, {
 		key: keys.compact[0],
+		direction: "ascending",
 		type: keys.compact[0]?.valuetype || allOptionsWithData.valuetype.default
 	});
 	const {prepareData} = useToolkit();
@@ -90,10 +97,10 @@ const Table = ({view, initialViewMeta, user}) => {
 			{data && Object.keys(data)[0] &&
 				<ToTopButton
 					handleClick={handleClick}
-					top={`${38.67 + 25 + (verPadding * 5)}px`}
+					top={`${38.67 + 52 + (verPadding * 5)}px`}
 					left={`calc(100vw - ${50 + 2*verPadding}px)`}
 				/>}
-			{console.log(data)}
+			{console.log({filteredData})}
 			<div className="tableContainer" ref={tableRef}>
 				<FilterBar/>
 				<Toolbar/>
@@ -108,7 +115,7 @@ const Table = ({view, initialViewMeta, user}) => {
 						/>
 						<TableBody
 							meta={meta}
-							data={data}
+							data={filteredData}
 							keysForTableCols={keys.compact}
 							additionalColKeys={keys.expanded}
 							sortedRowKeys={sortedKeys}

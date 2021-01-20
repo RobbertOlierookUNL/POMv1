@@ -8,7 +8,7 @@ import Expand from "./expand";
 import useGlobal from "../store";
 
 
-const PreRow = ({id, order, meta, rowData, keysForTableCols, additionalColKeys, inViewport, forwardedRef}) => {
+const PreRow = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys, inViewport, forwardedRef}) => {
 	const [active, setActive] = useGlobal(
 		state => state.active,
 		actions => actions.setActive
@@ -39,8 +39,12 @@ const PreRow = ({id, order, meta, rowData, keysForTableCols, additionalColKeys, 
 	useEffect(() => {
 		if (order === 4) {
 			setTopInView(inViewport);
+			return function cleanup () {
+				totalRows < 10 ? setTopInView(true) : setTopInView(false);
+			};
 		}
-	}, [inViewport]);
+	}, [inViewport, order, totalRows]);
+
 
 
 

@@ -60,7 +60,6 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 							sortConfig={sortConfig}
 							colMetaData={meta[col]}
 							colName={col}
-							first={i===0}
 							key={i}
 						/>
 					))

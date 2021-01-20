@@ -17,7 +17,6 @@ const ToTopButton = ({handleClick, top, left}) => {
 		state => state.tertiary,
 		() => null
 	);
-	console.log("i'm here!");
 	return (
 		<div onClick={handleClick} className="toTopButton">
 			<FontAwesomeIcon icon={faArrowUp} />
