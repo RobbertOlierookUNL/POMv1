@@ -1,5 +1,5 @@
 // import { useForm } from "react-hook-form";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Slider from "@material-ui/core/Slider";
 import Input from "@material-ui/core/Input";
 
@@ -12,8 +12,12 @@ import useGlobal from "../../../store";
 const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 	const [, addToFilters] = useGlobal(() => null, actions => actions.addToFilters);
 	const {min, max, ggd} = parameters;
-	// const { register, handleSubmit, errors } = useForm();
 	const [value, setValue] = useState([min, max]);
+	// const focusRef = useRef(null);
+	//
+	// useEffect(() => {
+	// 	focusRef.current.focus();
+	// }, []);
 	const step = 1 / Math.pow(10, ggd);
 
 	const add = () => {
@@ -75,6 +79,7 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 				<Input
 					value={value[0]}
 					margin="dense"
+					// inputRef={focusRef}
 					onChange={handleMinInputChange}
 					onBlur={handleBlur}
 					inputProps={{

@@ -1,15 +1,22 @@
 import { useForm } from "react-hook-form";
-import React, {useState} from "react";
+import React, {useRef, useEffect} from "react";
 import TextField from "@material-ui/core/TextField";
 
+import { mergeRefs } from "../../../../lib/custom-hooks";
 import Button from "../../../button";
 import useGlobal from "../../../store";
+
 
 
 
 const SearchField = ({reference, filterName, close, level}) => {
 	const [, addToFilters] = useGlobal(() => null, actions => actions.addToFilters);
 	const { register, handleSubmit, errors } = useForm();
+	const focusRef = useRef(null);
+
+	useEffect(() => {
+	  focusRef.current.focus();
+	}, []);
 
 	const add = ({filter}) => {
 		let reducedLength;
@@ -38,7 +45,7 @@ const SearchField = ({reference, filterName, close, level}) => {
 				name="filter"
 				label="Tekstfilter"
 				type="text"
-				inputRef={register({required: true})}
+				inputRef={mergeRefs(focusRef, register({required: true}))}
 				// value={email}
 				className="full-width"
 				defaultValue={""}

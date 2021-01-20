@@ -46,8 +46,9 @@ const FilterDisplay = ({filterObject}) => {
           margin-left: 4px;
           display: inline-block;
           cursor: pointer;
-          color: ${gray_light.color};
+          color: ${tertiary.text};
           transform: translateY(0.5px);
+					/* filter: drop-shadow(0px 0px 5px ${tertiary.text}); */
           transition: color 100ms linear, transform 100ms linear;
         }
         .remove-button:hover {
