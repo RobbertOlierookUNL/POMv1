@@ -22,17 +22,12 @@ const Table = ({view, initialViewMeta, user}) => {
 	console.log("tablererender");
 	const {data: preMeta} = useView(view, initialViewMeta);
 	const {data: preData} = useEntries();
-
-
 	const {view_name, created_at, updated_at, config, ..._meta} = preMeta;
 	const notUsed = {};
 	notUsed.variables = {view_name, created_at, updated_at, config};
 	// const [meta, setMeta] = useState({});
 	// const [keys, setKeys] = useState({});
-	const [data, setData] = useState({});
 	const [filterParameters, setFilterParameters] = useState({});
-	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
-	const {prepareData} = useToolkit();
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
 	const horPadding = 6;
@@ -41,10 +36,6 @@ const Table = ({view, initialViewMeta, user}) => {
 		state => state.primary_very_light,
 		() => null
 	);
-
-	const handleClick = () => {
-		tableRef.current.scrollTo(0, 0);
-	};
 
 	const cols = Object.keys(_meta);
 	const meta = {};
@@ -65,37 +56,16 @@ const Table = ({view, initialViewMeta, user}) => {
 	);
 	keys.compact.sort(onIndex);
 	keys.expanded.sort(onIndex);
-	// const {data: preData} = useUserSpecificEntries(keys.compact.concat(keys.expanded), user.roll && user.roll.rollName);
-	// console.log(preData);
+
+
 	const _data = preData || [];
+	const [data, setData] = useState({});
+	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data, {
+		key: keys.compact[0],
+		type: keys.compact[0]?.valuetype || allOptionsWithData.valuetype.default
+	});
+	const {prepareData} = useToolkit();
 
-
-
-	// useMemo(() => {
-	// 	console.log(2);
-	// 	const cols = Object.keys(metaString);
-	// 	const keys = {
-	// 		compact: [],
-	// 		expanded: [],
-	// 	};
-	// 	let _meta = {};
-	// 	cols.map((col, i) => {
-	// 		_meta[col] = metaString[col] ? JSON.parse(metaString[col]) : {};
-	// 		if (_meta[col].display === "compact") {
-	// 			keys.compact.push(cols[i]);
-	// 		} else if (_meta[col].display === "expanded") {
-	// 			keys.expanded.push(cols[i]);
-	// 		}
-	// 	});
-	// 	const onIndex = (a, b) => (
-	// 		(_meta[a].indexweight || allOptionsWithData.widthweight.default) - (_meta[b].indexweight || allOptionsWithData.widthweight.default)
-	// 	);
-	// 	keys.compact.sort(onIndex);
-	// 	keys.expanded.sort(onIndex);
-	// 	setKeys(keys);
-	// 	setMeta(_meta);
-	// }, [ Object.keys(metaString)[0]]);
-	//
 	useMemo(() => {
 		if (
 			Object.keys(_data)[0]
@@ -106,6 +76,13 @@ const Table = ({view, initialViewMeta, user}) => {
 			setFilterParameters(parameters);
 		}
 	}, [preData, preMeta]);
+
+
+	const [scrollTop, setScrollTop] = useState(false);
+	const handleClick = () => {
+		setScrollTop(true);
+		tableRef.current.scrollTo(0, 0);
+	};
 
 
 	return (
@@ -135,6 +112,8 @@ const Table = ({view, initialViewMeta, user}) => {
 							keysForTableCols={keys.compact}
 							additionalColKeys={keys.expanded}
 							sortedRowKeys={sortedKeys}
+							scrollTop={scrollTop}
+							setScrollTop={setScrollTop}
 						/>
 					</table>
 					:

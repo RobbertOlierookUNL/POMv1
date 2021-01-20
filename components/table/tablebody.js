@@ -8,7 +8,7 @@ import Row from "./row.js";
 
 
 
-const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKeys}) => {
+const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop}) => {
 	const numberInView = 100;
 	const fakedata = new Array(26).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
@@ -24,6 +24,13 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 	useEffect(() => {
 		updateParameters(0);
 	}, []);
+
+	useEffect(() => {
+		if (scrollTop) {
+			setScrollTop(false);
+			updateParameters(0);
+		}
+	}, [scrollTop]);
 
 
 
