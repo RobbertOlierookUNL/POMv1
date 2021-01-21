@@ -1,9 +1,13 @@
-import React, {useContext, useEffect, useRef} from "react";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import useGlobal from "../store";
+import React, {useContext, useEffect, useRef} from "react";
+
+import { headerHeight } from "../../config/globalvariables";
+import { useTheme } from "../../lib/custom-hooks";
 import Gravatar from "../gravatar";
+import useGlobal from "../store";
+
+
 
 
 const Header = ({children, fName, lName, admin=false}) => {
@@ -20,10 +24,8 @@ const Header = ({children, fName, lName, admin=false}) => {
 		() => null,
 		actions => actions.setHeaderRef
 	);
-	const [primary] = useGlobal(
-		state => state.primary,
-		() => null
-	);
+	const {primary, secondary, primary_dark, tertiary} = useTheme();
+
 	const userButtonRef = useRef(null);
 	const headerRef = useRef(null);
 	useEffect(() => {setUserButton(userButtonRef);},[]);
@@ -40,7 +42,7 @@ const Header = ({children, fName, lName, admin=false}) => {
 				<div className={"left_side"}>
 					{children[0]}
 				</div>
-				<div className={"mid"}>
+				<div className={"mid header-title"}>
 					{children[1]}
 				</div>
 				<div className={"right_side"} onClick={handleClick} ref={userButtonRef}>
@@ -52,10 +54,12 @@ const Header = ({children, fName, lName, admin=false}) => {
 			</header>
 			<style jsx>{`
         header {
+					font-family: 'Montserrat', sans-serif;
 					z-index: 9;
 					position: relative;
 					width: 100%;
 					top: 0;
+					height: ${headerHeight};
 					display: flex;
 					flex-direction: row;
 					justify-content: space-between;
@@ -67,18 +71,82 @@ const Header = ({children, fName, lName, admin=false}) => {
         }
 				.mid {
 					font-size: 1.6em;
-					font-weight: bolder;
-					/* text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); */
+					font-weight: 400;
+					font-family: 'Potta One', cursive;
 					left: 50%;
 					position: absolute;
 					top: 50%;
-					transform: translate(-50%, -50%);
+					transform: translate(calc(-50% - 1.5px), calc(-50% - 1.5px));
 					cursor: default;
 					pointer-events: none;
 					user-select: none;
+					letter-spacing:4px;
+					-webkit-text-fill-color: transparent;
+					-webkit-text-stroke-width: 1px;
+					-webkit-text-stroke-color: ${tertiary.color === "#005eef" ? tertiary.text : tertiary.color};
 
+					animation: shift 10s infinite linear;
 
 				}
+
+				@keyframes shift {
+					0% {
+						text-shadow:
+					            1.5px 1.5px ${primary.color},
+					            5px 5px ${primary.color},
+											1.5px 1.5px 0px ${secondary.color};
+					}
+
+					50% {
+						text-shadow:
+					            1.5px 1.5px ${primary.color},
+					            /* 1.5px 1.5px ${primary_dark.color}, */
+											5px 5px ${primary_dark.color},
+											1.5px 1.5px 15px ${secondary.color},
+											0.5px -0.5px 10px ${tertiary.color};
+
+					}
+					100% {
+						text-shadow:
+											1.5px 1.5px ${primary.color},
+											5px 5px ${primary.color},
+											1.5px 1.5px 0px ${secondary.color};
+					}
+				}
+				/* .mid {
+					font-size: 1.6em;
+					font-weight: 400;
+					font-family: "Archivo Black", "Archivo", sans-serif;
+					left: 50%;
+					position: absolute;
+					top: 50%;
+					transform: translate(calc(-50%), calc(-50%));
+					cursor: default;
+					pointer-events: none;
+					user-select: none;
+					color: ${tertiary.text};
+  				animation: neon 3s infinite;
+					--shadow-color: ${tertiary.color};
+					--shadow-color-light: ${tertiary.text};
+				}
+
+				@keyframes neon {
+				  0% {
+				    text-shadow: -1px -1px 1px var(--shadow-color-light), -1px 1px 1px var(--shadow-color-light), 1px -1px 1px var(--shadow-color-light), 1px 1px 1px var(--shadow-color-light),
+				    0 0 3px var(--shadow-color-light), 0 0 10px var(--shadow-color-light), 0 0 20px var(--shadow-color-light),
+				    0 0 30px var(--shadow-color), 0 0 40px var(--shadow-color), 0 0 50px var(--shadow-color), 0 0 70px var(--shadow-color), 0 0 100px var(--shadow-color), 0 0 200px var(--shadow-color);
+				  }
+				  50% {
+				    text-shadow: -1px -1px 1px var(--shadow-color-light), -1px 1px 1px var(--shadow-color-light), 1px -1px 1px var(--shadow-color-light), 1px 1px 1px var(--shadow-color-light),
+				    0 0 5px var(--shadow-color-light), 0 0 15px var(--shadow-color-light), 0 0 25px var(--shadow-color-light),
+				    0 0 40px var(--shadow-color), 0 0 50px var(--shadow-color), 0 0 60px var(--shadow-color), 0 0 80px var(--shadow-color), 0 0 110px var(--shadow-color), 0 0 210px var(--shadow-color);
+				  }
+				  100% {
+				    text-shadow: -1px -1px 1px var(--shadow-color-light), -1px 1px 1px var(--shadow-color-light), 1px -1px 1px var(--shadow-color-light), 1px 1px 1px var(--shadow-color-light),
+				    0 0 3px var(--shadow-color-light), 0 0 10px var(--shadow-color-light), 0 0 20px var(--shadow-color-light),
+				    0 0 30px var(--shadow-color), 0 0 40px var(--shadow-color), 0 0 50px var(--shadow-color), 0 0 70px var(--shadow-color), 0 0 100px var(--shadow-color), 0 0 200px var(--shadow-color);
+				  }
+				} */
 				.right_side{
 					display: flex;
 					align-items: center;

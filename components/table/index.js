@@ -3,10 +3,15 @@ import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
 import { allOptionsWithData } from "../../config/viewOptions";
 import {
-	useEntries,
-	useUserSpecificEntries,
-	useView
-} from "../../lib/swr-hooks";
+	filterAndUnitBarHeight,
+	filterDisplayBarHeight,
+	headerHeight,
+	horPadding,
+	tableHeadersBarHeight,
+	toolBarHeight,
+	verPadding
+} from "../../config/globalvariables";
+import { useEntries, useView } from "../../lib/swr-hooks";
 import {
 	useFilterableData,
 	useSortableData,
@@ -23,6 +28,9 @@ import useGlobal from "../store";
 
 
 
+
+
+
 const Table = ({view, initialViewMeta, user}) => {
 	console.log("tablererender");
 	const {data: preMeta} = useView(view, initialViewMeta);
@@ -30,17 +38,16 @@ const Table = ({view, initialViewMeta, user}) => {
 	const {view_name, created_at, updated_at, config, ..._meta} = preMeta;
 	const notUsed = {};
 	notUsed.variables = {view_name, created_at, updated_at, config};
-	// const [meta, setMeta] = useState({});
-	// const [keys, setKeys] = useState({});
 	const [filterParameters, setFilterParameters] = useState({});
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
-	const horPadding = 6;
-	const verPadding = 6;
+
 	const [primary_very_light] = useGlobal(
 		state => state.primary_very_light,
 		() => null
 	);
+	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
+
 
 	const cols = Object.keys(_meta);
 	const meta = {};
@@ -97,8 +104,17 @@ const Table = ({view, initialViewMeta, user}) => {
 			{data && Object.keys(data)[0] &&
 				<ToTopButton
 					handleClick={handleClick}
-					top={`${38.67 + 52 + (verPadding * 5)}px`}
-					left={`calc(100vw - ${50 + 2*verPadding}px)`}
+					top={
+						`calc(
+							${headerHeight} +
+							${verPadding}px +
+							${arrayOfFilters.length ? filterDisplayBarHeight : "0px"} +
+							${toolBarHeight} +
+							${tableHeadersBarHeight} +
+							${filterAndUnitBarHeight} +
+							${verPadding}px)`
+					}
+					right={`${2*horPadding + 10}px`}
 				/>}
 			{console.log({filteredData})}
 			<div className="tableContainer" ref={tableRef}>

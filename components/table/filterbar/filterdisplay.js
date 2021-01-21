@@ -1,9 +1,11 @@
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 
+import { horPadding } from "../../../config/globalvariables";
 import { useTheme } from "../../../lib/custom-hooks";
 import useGlobal from "../../store";
+
 
 
 
@@ -20,6 +22,7 @@ const FilterDisplay = ({filterObject}) => {
 					{`${shorthand.value}`}
 				</b>
 			</div>
+			<div className="separator"/>
 			<div className="remove-button" onClick={() => removeFromFilters(filterObject)}
 			>
 				<FontAwesomeIcon icon={faTimes}/>
@@ -33,17 +36,24 @@ const FilterDisplay = ({filterObject}) => {
           background-color: ${tertiary.color};
           color: ${tertiary.text};
           display: inline-flex;
-          margin: 0 1.5px;
-          padding: 2.5px 2.5px;
+          margin: 0 ${horPadding - 3 - 1.5}px;
+          padding: 2.5px 3px;
           box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.4);
+					position: relative;
         }
 				.filter-text {
 					display: inline-block;
 					font-size: smaller;
 					align-self: center;
 				}
+				.separator {
+					height: 20px;
+					position: relative;
+					top: -4px;
+					border-left: 1px solid ${gray_light.color};
+					margin: 0 3px;
+				}
         .remove-button {
-          margin-left: 4px;
           display: inline-block;
           cursor: pointer;
           color: ${tertiary.text};

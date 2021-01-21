@@ -1,14 +1,19 @@
 import React, {useRef, useEffect} from "react";
-import handleViewport from "react-in-viewport";
+// import handleViewport from "react-in-viewport";
+import {useInViewport} from "react-in-viewport";
+
 
 import { allOptionsWithData } from "../../config/viewOptions";
-import { useColors, useTheme } from "../../lib/custom-hooks";
+import { useTheme } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import Expand from "./expand";
 import useGlobal from "../store";
 
 
-const PreRow = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys, inViewport, forwardedRef}) => {
+const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys,
+	// inViewport, forwardedRef,
+	onEnterViewport
+}) => {
 	const [active, setActive] = useGlobal(
 		state => state.active,
 		actions => actions.setActive
@@ -28,6 +33,9 @@ const PreRow = ({id, order, totalRows, meta, rowData, keysForTableCols, addition
 	} = useTheme();
 
 	const expandRef = useRef(null);
+	const rowRef = useRef(null);
+	const {inViewport} = useInViewport(rowRef, undefined, { disconnectOnLeave: true }, {onEnterViewport});
+
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
 			active === id ?
@@ -52,8 +60,8 @@ const PreRow = ({id, order, totalRows, meta, rowData, keysForTableCols, addition
 	return (
 		<tr
 			className={`gridded-row ${active === id ? "active" : ""}`}
-			onDoubleClick={inViewport ? handleClick : undefined}
-			ref={forwardedRef}>
+			onDoubleClick={handleClick}
+			ref={rowRef}>
 			<>
 				{selectMode &&
 				<td>
@@ -103,7 +111,7 @@ const PreRow = ({id, order, totalRows, meta, rowData, keysForTableCols, addition
 	);
 };
 
-const Row = handleViewport(PreRow);
+// const Row = handleViewport(PreRow, undefined, {disconnectOnLeave: true});
 
 
 export default Row;

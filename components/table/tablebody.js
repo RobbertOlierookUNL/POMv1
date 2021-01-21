@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 
+import { numberInView } from "../../config/globalvariables";
 import Row from "./row.js";
 
 
@@ -8,8 +9,8 @@ import Row from "./row.js";
 
 
 
+
 const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop}) => {
-	const numberInView = 100;
 	const fakedata = new Array(26).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
 	const updateParameters = (i) => {

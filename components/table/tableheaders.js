@@ -1,10 +1,19 @@
 import React from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
+import {
+	filterAndUnitBarHeight,
+	filterDisplayBarHeight,
+	tableHeadersBarHeight,
+	toolBarHeight
+} from "../../config/globalvariables";
 import { useTheme } from "../../lib/custom-hooks";
 import FilterAndUnitCell from "./filterbar/filterandunitcell";
 import TableHeadCell from "./tableheadcell";
 import useGlobal from "../store";
+
+
+
 
 
 
@@ -84,13 +93,15 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 			<style jsx>{`
         .headers {
 			    position: sticky;
-					top: ${arrayOfFilters.length ? "45px" : "18px"};
+					top: calc(${toolBarHeight} + ${arrayOfFilters.length ? filterDisplayBarHeight : "0px"});
 					transition: top 100ms ease-in;
+					height: ${tableHeadersBarHeight};
 					background-color: ${primary.color};
         }
 				.filters {
 					position: sticky;
-					top: ${arrayOfFilters.length ? "63.67px" : "36.57px"};
+					height: ${filterAndUnitBarHeight};
+					top: calc(${toolBarHeight} + ${tableHeadersBarHeight} + ${arrayOfFilters.length ? filterDisplayBarHeight : "0px"});
 					transition: top 100ms ease-in;
 					background-color: ${gray_lighter.color};
 					color: ${gray_lighter.text};
