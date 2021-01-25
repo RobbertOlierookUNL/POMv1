@@ -25,10 +25,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const DropDown = ({reference, filterName, close, parameters, level}) => {
+const DropDown = ({reference, filterName, close, parameters = {}, level}) => {
+
 	const [, addToFilters] = useGlobal(() => null, actions => actions.addToFilters);
 	const classes = useStyles();
-	const {options} = parameters;
+	const {options = []} = parameters;
+
 	const sortedOptions = options.sort();
 	const [value, setValue] = useState("");
 	const [error, setError] = useState(false);
@@ -49,7 +51,7 @@ const DropDown = ({reference, filterName, close, parameters, level}) => {
 			level,
 			filter: "dropdown"
 		});
-		close();
+		close && close();
 	};
 
 	// useEffect(() => {

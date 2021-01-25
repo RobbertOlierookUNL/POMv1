@@ -18,8 +18,13 @@ const Cell = ({cellData, omit, rowId, colName, noExpand}) => {
 		<td className={colName}
 		>{cellData === false ?
 				<Skeleton />
-				: (moment.isMoment(cellData)) ? cellData.format("YYYY-MM-DD") :
-					(!cellData || cellData === "0" || omit) ? "" : cellData
+				: (moment.isMoment(cellData)) ?
+					cellData.format("YYYY-MM-DD")
+					: (!cellData || cellData === "0" || omit) ?
+						""
+						: Array.isArray(cellData) ?
+							<i>..</i>
+							: cellData
 			}
 			<style jsx>{`
         td {

@@ -70,7 +70,7 @@ const DatePicker = ({reference, filterName, close, level}) => {
 			level,
 			filter: "datePicker"
 		});
-		close();
+		close && close();
 	};
 
 	// useEffect(() => {
@@ -84,46 +84,48 @@ const DatePicker = ({reference, filterName, close, level}) => {
 			<ThemeProvider theme={defaultMaterialTheme}>
 
 				<MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nl">
-					<KeyboardDatePicker
-						autoOk={true}
-						showTodayButton={true}
-						orientation="landscape"
-						error={error}
-						// variant="inline"
-						label="Vanaf"
-						// placeholder="Laat leeg om te negeren"
-						value={selectedFromDate}
-						format="DD/MM/YY"
- 					inputValue={inputFromValue}
-						onChange={onFromDateChange}
-						rifmFormatter={dateFormatter}
-						clearable
-						cancelLabel="Annuleren"
-						clearLabel="Wissen"
-						todayLabel="Vandaag"
-					/>
-					<br/>
-					{error && <div className="error-message">Gebruik tenminste 1 van de 2 datumselecters</div>}
+					<>
+						<KeyboardDatePicker
+							autoOk={true}
+							showTodayButton={true}
+							orientation="landscape"
+							error={error}
+							// variant="inline"
+							label="Vanaf"
+							// placeholder="Laat leeg om te negeren"
+							value={selectedFromDate}
+							format="DD/MM/YY"
+ 							inputValue={inputFromValue}
+							onChange={onFromDateChange}
+							rifmFormatter={dateFormatter}
+							clearable
+							cancelLabel="Annuleren"
+							clearLabel="Wissen"
+							todayLabel="Vandaag"
+						/>
+						<br/>
+						{error && <div className="error-message">Gebruik tenminste 1 van de 2 datumselecters</div>}
 
-					<KeyboardDatePicker
-						autoOk={true}
-						showTodayButton={true}
-						orientation="landscape"
-						error={error}
+						<KeyboardDatePicker
+							autoOk={true}
+							showTodayButton={true}
+							orientation="landscape"
+							error={error}
 
-						// variant="inline"
-						label="Tot"
-						// placeholder="Laat leeg om te negeren"
-						value={selectedToDate}
-						format="DD/MM/YY"
- 					inputValue={inputToValue}
-						onChange={onToDateChange}
-						rifmFormatter={dateFormatter}
-						clearable
-						cancelLabel="Annuleren"
-						clearLabel="Wissen"
-						todayLabel="Vandaag"
-					/>
+							// variant="inline"
+							label="Tot"
+							// placeholder="Laat leeg om te negeren"
+							value={selectedToDate}
+							format="DD/MM/YY"
+ 							inputValue={inputToValue}
+							onChange={onToDateChange}
+							rifmFormatter={dateFormatter}
+							clearable
+							cancelLabel="Annuleren"
+							clearLabel="Wissen"
+							todayLabel="Vandaag"
+						/>
+					</>
 				</MuiPickersUtilsProvider>
 			</ThemeProvider>
 

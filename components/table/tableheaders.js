@@ -27,7 +27,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 	);
 	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
 
-	const {primary, gray_lighter} = useTheme();
+	const {primary, gray_light, gray_lighter} = useTheme();
 
 	let colString = selectMode ? "[selectboxes] 20px " : "";
 	keysForTableCols.map(col => {
@@ -62,6 +62,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 	return (
 		<thead>
 			<tr className="headers gridded-row">
+				{selectMode && <th/>}
 				{
 					keysForTableCols.map((col, i) => (
 						<TableHeadCell
@@ -75,6 +76,10 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 				}
 			</tr>
 			<tr className="filters gridded-row">
+				{selectMode &&
+				<th className="select-all">
+					<input type="checkbox" id="select-all" name="select-all"/>
+				</th>}
 				{
 					keysForTableCols.map((col, i) => (
 						<FilterAndUnitCell
@@ -106,6 +111,13 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 					background-color: ${gray_lighter.color};
 					color: ${gray_lighter.text};
 					box-shadow: 0px 3px 5px rgba(0, 31, 130, 0.25);
+				}
+				th {
+					border: 1px solid ${gray_light.color};
+					border-width: 0 1px 0 0;
+				}
+				.select-all {
+					padding: 0px 0px 2px;
 				}
 
       `}</style>

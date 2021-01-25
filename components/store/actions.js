@@ -36,6 +36,9 @@ export const expandOptions = (store, shouldExpand) => {
 export const expandUserMenu = (store, shouldExpand) => {
 	store.setState({userMenu: shouldExpand});
 };
+export const openFilterModal = (store, shouldOpen) => {
+	store.setState({filterModal: shouldOpen});
+};
 
 export const setTopInView = (store, isInView) => {
 	store.setState({topInView: isInView});

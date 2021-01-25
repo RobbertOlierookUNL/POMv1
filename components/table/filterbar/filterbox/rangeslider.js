@@ -9,10 +9,12 @@ import useGlobal from "../../../store";
 
 
 
-const RangeSlider = ({reference, filterName, close, parameters, level}) => {
+const RangeSlider = ({reference, filterName, close, parameters = {}, level}) => {
+
 	const [, addToFilters] = useGlobal(() => null, actions => actions.addToFilters);
 	const {min, max, ggd} = parameters;
 	const [value, setValue] = useState([min, max]);
+
 	// const focusRef = useRef(null);
 	//
 	// useEffect(() => {
@@ -21,7 +23,7 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 	const step = 1 / Math.pow(10, ggd);
 
 	const add = () => {
-		const toText = value.join("-");
+		const toText = value.join("\u2013");
 		addToFilters({
 			shorthand: {
 				filterName,
@@ -33,7 +35,7 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 			filter: "range"
 
 		});
-		close();
+		close && close();
 	};
 
 	const handleChange = (event, newValue) => {
@@ -72,6 +74,7 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 	useEffect(() => {
 		forceLimits(value, parameters);
 	}, [parameters]);
+
 	return (
 		<form onSubmit={add} className="rangeslider">
 			<h2>Waardes tussen..</h2>
@@ -109,7 +112,7 @@ const RangeSlider = ({reference, filterName, close, parameters, level}) => {
 						getAriaValueText={valuetext}
 						min={min}
 						max={max}
-						step={step}
+						step={step || 1}
 					/>
 				</div>
 			</div>

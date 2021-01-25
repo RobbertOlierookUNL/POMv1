@@ -5,7 +5,8 @@ import {
 	horPadding,
 	toolBarHeight
 } from "../../../config/globalvariables";
-import { useTheme } from "../../../lib/custom-hooks";
+import { useHandleClickOutstide, useTheme } from "../../../lib/custom-hooks";
+
 import ToolbarIcon from "./toolbaricon";
 import useGlobal from "../../store";
 
@@ -14,21 +15,31 @@ import useGlobal from "../../store";
 
 
 
+
+
+
+
 const Toolbar = ({options}) => {
 	const {primary_dark, primary_very_light} = useTheme();
+	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
 
 	const [, toggleSelectMode] = useGlobal(
 		() => null,
 		actions => actions.toggleSelectMode,
 	);
-	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
+	const [filterModal, openFilterModal] = useGlobal(
+		state => state.filterModal,
+		actions => actions.openFilterModal,
+	);
+	useHandleClickOutstide(filterModal, () => openFilterModal(false));
+
 
 	return (
 		<>
 			<div className="toolbar">
 				<div className="toolbarPart leftSide">
 					<ToolbarIcon type={"multi-select"} iconClick={toggleSelectMode}/>
-					<ToolbarIcon type={"filter"} iconClick={toggleSelectMode}/>
+					<ToolbarIcon type={"filter"} iconClick={() => openFilterModal(true)}/>
 
 				</div>
 				<div className="toolbarPart mid"></div>

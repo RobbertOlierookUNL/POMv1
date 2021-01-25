@@ -1,6 +1,6 @@
-import React, {useRef, useEffect} from "react";
+import React, {useRef, useEffect, useState, useCallback} from "react";
 // import handleViewport from "react-in-viewport";
-import {useInViewport} from "react-in-viewport";
+import useInViewport from "../../lib/forked-useInViewport";
 
 
 import { allOptionsWithData } from "../../config/viewOptions";
@@ -33,8 +33,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 	} = useTheme();
 
 	const expandRef = useRef(null);
-	const rowRef = useRef(null);
-	const {inViewport} = useInViewport(rowRef, undefined, { disconnectOnLeave: true }, {onEnterViewport});
+	const {inViewport, getNode} = useInViewport({onEnterViewport}, undefined, { disconnectOnLeave: true });
 
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
@@ -53,7 +52,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 		}
 	}, [inViewport, order, totalRows]);
 
-
+	// useEffect(() => () => stopObserver(), []);
 
 
 
@@ -61,7 +60,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 		<tr
 			className={`gridded-row ${active === id ? "active" : ""}`}
 			onDoubleClick={handleClick}
-			ref={rowRef}>
+			ref={getNode}>
 			<>
 				{selectMode &&
 				<td>
@@ -104,7 +103,11 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 					font-weight: bold;
 					font-size: 0.97em;
 					border: none;
-
+				}
+				td {
+					border: 1px solid ${gray_light.color};
+          border-width: 0 1px 1px 0;
+					padding: 0;
 				}
       `}</style>
 		</tr>

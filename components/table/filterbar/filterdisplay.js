@@ -9,7 +9,7 @@ import useGlobal from "../../store";
 
 
 
-const FilterDisplay = ({filterObject}) => {
+const FilterDisplay = ({filterObject, omitRemoveTransform=false}) => {
 	const {shorthand} = filterObject;
 	const {tertiary, gray_light} = useTheme();
 	const [, removeFromFilters] = useGlobal(() => null, actions => actions.removeFromFilters);
@@ -57,13 +57,13 @@ const FilterDisplay = ({filterObject}) => {
           display: inline-block;
           cursor: pointer;
           color: ${tertiary.text};
-          transform: translateY(0.5px);
+          transform: translateY(${omitRemoveTransform ? "-1.5px" : "0.5px"});
 					/* filter: drop-shadow(0px 0px 5px ${tertiary.text}); */
           transition: color 100ms linear, transform 100ms linear;
         }
         .remove-button:hover {
           color: ${tertiary.text};
-          transform: translateY(0.5px) scale(1.1);
+          transform: translateY(${omitRemoveTransform ? "-1.5px" : "0.5px"}) scale(1.1);
           filter: drop-shadow(0px 0px 5px ${gray_light.color});
         }
       `}

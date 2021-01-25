@@ -227,7 +227,7 @@ const ViewTable = ({data}) => {
 															type={allOptionsWithData[option].input}
 															className={"optionInput"}
 															value={dataState[attribute] && dataState[attribute][option] ? dataState[attribute][option] : ""}
-															placeholder={dataState[attribute] && dataState[attribute][option] === null ? "-" : null  }
+															placeholder={dataState[attribute] && dataState[attribute][option] === null ? "" : null  }
 															onChange={(event) => setDataState({...dataState, [attribute]: {...dataState[attribute], [option]: event.target.value}})}
 														// onBlur={() => saveData(attribute)}
 														/>

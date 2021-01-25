@@ -35,7 +35,7 @@ const SearchField = ({reference, filterName, close, level}) => {
 			level,
 			filter: "searchField"
 		});
-		close();
+		close && close();
 	};
 	return (
 		<form onSubmit={handleSubmit(add)} className="searchfield">
@@ -43,7 +43,7 @@ const SearchField = ({reference, filterName, close, level}) => {
 			<TextField
 				id="filter"
 				name="filter"
-				label="Tekstfilter"
+				label={filterName}
 				type="text"
 				inputRef={mergeRefs(focusRef, register({required: true}))}
 				// value={email}

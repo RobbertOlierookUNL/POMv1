@@ -1,9 +1,11 @@
 import React, {useRef, useEffect, useState, forwardRef} from "react";
+import moment from "moment";
 
 import { allOptionsWithData } from "../../config/viewOptions";
 import { useColors, useToolkit } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import useGlobal from "../store";
+
 
 
 
@@ -45,12 +47,19 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 				{additionalColKeys &&
 					<div>
 						<dl className={"expandList"}>
-							{additionalColKeys.map((key, i) =>(
-								<div key={i}>
-									<dt key={"dt" + i}>{meta[key].title || key}</dt>
-									<dd key={"dd" + i}>{rowData[key]}</dd>
-								</div>
-							))
+							{additionalColKeys.map((key, i) => {
+								const cellData = rowData[key];
+								const omit = (rowData
+									&& rowData.addedProps
+									&& !rowData.addedProps.merged
+									&& meta[key].merge === "count");
+								return (
+									<div key={i}>
+										<dt key={"dt" + i}>{meta[key].hovername || meta[key].title || key}</dt>
+										<dd key={"dd" + i}>{(moment.isMoment(cellData)) ? cellData.format("YYYY-MM-DD") :
+											(!cellData || cellData === "0" || omit) ? "" : cellData}</dd>
+									</div>
+								);})
 							}
 
 						</dl></div>}

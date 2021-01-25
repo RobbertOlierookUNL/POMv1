@@ -56,9 +56,11 @@ const FilterBox = ({active, filtertype, filterName, valuetype, title, parameters
 		<div className="filter-box">
 			<div className="title">
 				{title}
-				<div className="close-button" onClick={close}>
-					<FontAwesomeIcon icon={faTimes}/>
-				</div>
+				{!!close &&
+					<div className="close-button" onClick={close}>
+						<FontAwesomeIcon icon={faTimes}/>
+					</div>
+				}
 			</div>
 			{parameters && level &&
 				<div className="scale">

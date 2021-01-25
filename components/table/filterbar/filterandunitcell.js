@@ -36,8 +36,12 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, filterName, p
           border-width: 0 1px 0px 0;
           border-bottom-color: ${primary.color};
           display: flex;
-          position: relative;
+					position: relative;;
           padding: 1px 1px 2px;
+					/* text-overflow: clip;
+					white-space: nowrap;
+					overflow: hidden; */
+					/* grid-column-start: ${reference}; */
         }
         th:last-child{
           border-width: 0 0 0px 0;

@@ -7,11 +7,13 @@ import Header from "../components/header";
 import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
 import SchemaDropdown from "../components/schemadropdown";
+import Shadow from "../components/shadow";
 import Table from "../components/table";
 import UserMenu from "../components/usermenu";
 import UserOptions from "../components/useroptions";
 import ViewButtons from "../components/viewbuttons";
 import useGlobal from "../components/store";
+
 
 
 
@@ -29,6 +31,19 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 		state => state.secondary,
 		() => null
 	);
+	const [options] = useGlobal(
+		state => state.options,
+		() => null
+	);
+	const [userMenu] = useGlobal(
+		state => state.userMenu,
+		() => null
+	);
+	const [filterModal] = useGlobal(
+		state => state.filterModal,
+		() => null
+	);
+
 	console.log({myContext, user, view});
 	return (
 		<>
@@ -40,6 +55,11 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 				<MenuButton/>
 				POM
 			</Header>
+			<Shadow
+				zIndex={8}
+				trigger={options || userMenu || filterModal}
+				softTrigger={userMenu && !options && !filterModal}
+				clickthrough={false}/>
 			<OptionDrawer>
 				<SchemaDropdown/>
 				<ViewButtons/>

@@ -8,6 +8,7 @@ import * as actions from "./actions";
 const initialState = {
 	options: false,
 	userMenu: false,
+	filterModal: false,
 	menuButton: {current: null},
 	userButton: {current: null},
 	setShadowRef: {current: null},
@@ -24,6 +25,6 @@ const initialState = {
 	...colorSchematic(10)
 };
 
-const useGlobal = useGlobalHook(React, initialState, actions);
+export const useGlobal = useGlobalHook(React, initialState, actions);
 
 export default useGlobal;

@@ -10,7 +10,7 @@ import Row from "./row.js";
 
 
 
-const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop}) => {
+const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop}) => {
 	const fakedata = new Array(26).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
 	const updateParameters = (i) => {
@@ -24,7 +24,7 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 	};
 	useEffect(() => {
 		updateParameters(0);
-	}, []);
+	}, [data]);
 
 	useEffect(() => {
 		if (scrollTop) {
@@ -38,7 +38,7 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 	return (
 		<>
 			<tbody>
-				{data && Object.keys(data)[0] ?
+				{hasLoaded && sortedRowKeys ?
 					<>
 						{sortedRowKeys.map((row, i) => (
 							minLoad <= i && i <= maxLoad &&
@@ -54,7 +54,7 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 								key={i}/>
 						))}
 					</> :
-					data === false ?
+					hasLoaded ?
 						<>
 							<tr>
 								<td>

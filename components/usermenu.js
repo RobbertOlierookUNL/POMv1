@@ -1,7 +1,9 @@
-import React, {useRef, useEffect, useState} from "react";
+import React from "react";
 
-import Shadow from "./shadow";
+import { useHandleClickOutstide } from "../lib/custom-hooks";
 import useGlobal from "./store";
+
+
 
 
 
@@ -11,67 +13,13 @@ const UserMenu = ({children}) => {
 		state => state.userMenu,
 		actions => actions.expandUserMenu
 	);
-	const [options] = useGlobal(
-		state => state.options,
-		() => null
-	);
-	const [shadowRef] = useGlobal(
-		state => state.shadowRef,
-		() => null
-	);
-	const [headerRef] = useGlobal(
-		state => state.headerRef,
-		() => null
-	);
-	const ref = useRef(null);
-	const [handleClickOutside, setHandleClickOutside] = useState(false);
-	useEffect(() => {
-		if (handleClickOutside) {
-			document.removeEventListener("click", handleClickOutside, true);
-			setHandleClickOutside(false);
-		}
+	useHandleClickOutstide(userMenu, () => expandUserMenu(false));
 
-		if(userMenu) {
-			// const checkExceptionRefs = (refObjs, target) => {
-			// 	for (var myRef in refObjs) {
-			// 		if(refObjs[myRef].current){
-			// 			if (refObjs[myRef].current.contains(target) || target.contains(refObjs[myRef].current)) {
-			// 				return false;
-			// 			}
-			// 		}
-			// 	}
-			// 	return true;
-			// };
-			setHandleClickOutside(() => function (event) {
-				if (
-					event.target === shadowRef.current
-				||
-				event.target === headerRef.current
-				// checkExceptionRefs({ref, userButton, ...formRefs}, event.target)
-				){
-					expandUserMenu(false);
-				}
-			});
-		}
-
-		return () => {
-			if(handleClickOutside) {
-				document.removeEventListener("click", handleClickOutside, true);
-			}
-		};
-	}, [shadowRef, userMenu]);
-
-	useEffect(() => {
-		if (handleClickOutside) {
-			document.addEventListener("click", handleClickOutside, true);
-		}
-	}, [handleClickOutside]);
 	return (
 		<>
-			<div className="usermenu_container" ref={ref}>
+			<div className="usermenu_container">
 				{children}
 			</div>
-			<Shadow zIndex={8} trigger={options || userMenu} softTrigger={userMenu && !options} clickthrough={false}/>
 			<style jsx>{`
         .usermenu_container {
           z-index: 10;

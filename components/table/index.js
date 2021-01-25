@@ -1,7 +1,6 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
-import { allOptionsWithData } from "../../config/viewOptions";
 import {
 	filterAndUnitBarHeight,
 	filterDisplayBarHeight,
@@ -11,13 +10,10 @@ import {
 	toolBarHeight,
 	verPadding
 } from "../../config/globalvariables";
-import { useEntries, useView } from "../../lib/swr-hooks";
-import {
-	useFilterableData,
-	useSortableData,
-	useToolkit
-} from "../../lib/custom-hooks";
+import { useData, useDataForView, useMeta } from "../../lib/enhanced-swr-hooks";
 import FilterBar from "./filterbar";
+import FilterModal from "./filterbar/filtermodal";
+import SharedShadowModal from "../sharedshadowmodal";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
@@ -31,14 +27,24 @@ import useGlobal from "../store";
 
 
 
+
+
+
+
+
+
 const Table = ({view, initialViewMeta, user}) => {
-	console.log("tablererender");
-	const {data: preMeta} = useView(view, initialViewMeta);
-	const {data: preData} = useEntries();
-	const {view_name, created_at, updated_at, config, ..._meta} = preMeta;
-	const notUsed = {};
-	notUsed.variables = {view_name, created_at, updated_at, config};
-	const [filterParameters, setFilterParameters] = useState({});
+	console.log("rerender");
+	const {
+		filteredData,
+		meta,
+		keys,
+		hasLoaded,
+		filterParameters,
+		sortedKeys,
+		requestSort,
+		sortConfig
+	} = useDataForView(view, initialViewMeta);
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
 
@@ -47,49 +53,9 @@ const Table = ({view, initialViewMeta, user}) => {
 		() => null
 	);
 	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
-
-
-	const cols = Object.keys(_meta);
-	const meta = {};
-	const keys = {
-		compact: [],
-		expanded: [],
-	};
-	cols.map((col, i) => {
-		meta[col] = _meta[col] ? JSON.parse(_meta[col]) : {};
-		if (meta[col].display === "compact") {
-			keys.compact.push(cols[i]);
-		} else if (meta[col].display === "expanded") {
-			keys.expanded.push(cols[i]);
-		}
-	});
-	const onIndex = (a, b) => (
-		(meta[a].indexweight || allOptionsWithData.widthweight.default) - (meta[b].indexweight || allOptionsWithData.widthweight.default)
+	const [filterModal] = useGlobal(
+		state => state.filterModal,
 	);
-	keys.compact.sort(onIndex);
-	keys.expanded.sort(onIndex);
-
-
-	const _data = preData || [];
-	const [data, setData] = useState([]);
-	const filteredData = useFilterableData(data);
-	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(filteredData, {
-		key: keys.compact[0],
-		direction: "ascending",
-		type: keys.compact[0]?.valuetype || allOptionsWithData.valuetype.default
-	});
-	const {prepareData} = useToolkit();
-
-	useMemo(() => {
-		if (
-			Object.keys(_data)[0]
-			&& Object.keys(meta)[0])
-		{
-			const {processedData, parameters} = prepareData(_data, meta);
-			setData(processedData);
-			setFilterParameters(parameters);
-		}
-	}, [preData, preMeta]);
 
 
 	const [scrollTop, setScrollTop] = useState(false);
@@ -100,8 +66,9 @@ const Table = ({view, initialViewMeta, user}) => {
 
 
 	return (
+
 		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
-			{data && Object.keys(data)[0] &&
+			{hasLoaded &&
 				<ToTopButton
 					handleClick={handleClick}
 					top={
@@ -116,7 +83,14 @@ const Table = ({view, initialViewMeta, user}) => {
 					}
 					right={`${2*horPadding + 10}px`}
 				/>}
-			{console.log({filteredData})}
+			<SharedShadowModal open={filterModal}>
+				<FilterModal
+					meta={meta}
+					keys={keys}
+					filterParameters={filterParameters}
+					sortedRowKeys={sortedKeys}
+				/>
+			</SharedShadowModal>
 			<div className="tableContainer" ref={tableRef}>
 				<FilterBar/>
 				<Toolbar/>
@@ -132,6 +106,7 @@ const Table = ({view, initialViewMeta, user}) => {
 						<TableBody
 							meta={meta}
 							data={filteredData}
+							hasLoaded={hasLoaded}
 							keysForTableCols={keys.compact}
 							additionalColKeys={keys.expanded}
 							sortedRowKeys={sortedKeys}
