@@ -21,6 +21,8 @@ const initialState = {
 	topInView: true,
 	selectMode: false,
 	arrayOfFilters: [],
+	silentFilters: [],
+	checked: {},
 	...staticColors,
 	...colorSchematic(10)
 };

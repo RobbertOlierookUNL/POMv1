@@ -1,7 +1,7 @@
 import React from "react";
 
-import { useHandleClickOutstide } from "../lib/custom-hooks";
-import useGlobal from "./store";
+import { useHandleClickOutstide } from "../../lib/custom-hooks";
+import useGlobal from "../store";
 
 
 

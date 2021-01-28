@@ -9,7 +9,7 @@ import { useUser } from "../../../../lib/swr-hooks";
 import Button from "../../../../components/button";
 import Header from "../../../../components/header/index";
 import NewViewName from "../../../../components/views/newviewname";
-import UserMenu from "../../../../components/usermenu";
+import UserMenu from "../../../../components/header/usermenu";
 import UserOptions from "../../../../components/useroptions";
 import useGlobal from "../../../../components/store";
 

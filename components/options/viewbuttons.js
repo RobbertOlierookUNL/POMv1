@@ -1,8 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
 
-import { isNumeric } from "../lib/custom-hooks";
-import { useViews } from "../lib/swr-hooks";
+import { isNumeric } from "../../lib/custom-hooks";
+import { useViews } from "../../lib/swr-hooks";
 
 
 

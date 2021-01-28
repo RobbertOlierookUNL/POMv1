@@ -1,5 +1,5 @@
 import React from "react";
-import useGlobal from "./store";
+import useGlobal from "../store";
 
 const SchemaDropdown = () => {
 	const [value, setValue] = React.useState(10);

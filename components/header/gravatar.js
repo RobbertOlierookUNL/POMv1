@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 
-import useGlobal from "./store";
+import useGlobal from "../store";
 
 
 

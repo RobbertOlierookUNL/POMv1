@@ -3,30 +3,31 @@ import React from "react";
 
 import { isNumeric } from "../lib/custom-hooks";
 import { query } from "../lib/db";
+import { useDataForView } from "../lib/enhanced-swr-hooks";
 import Header from "../components/header";
 import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
-import SchemaDropdown from "../components/schemadropdown";
+import Options from "../components/options";
 import Shadow from "../components/shadow";
 import Table from "../components/table";
-import UserMenu from "../components/usermenu";
+import UserMenu from "../components/header/usermenu";
 import UserOptions from "../components/useroptions";
-import ViewButtons from "../components/viewbuttons";
 import useGlobal from "../components/store";
 
 
 
 
-
-
-
-
-// const firstName="John";
-// const lastName="Doe";
-// const userId=true;
-
-
-export default function Home({user, myContext, view, initialViewMeta}) {
+export default function Home({user, view, initialViewMeta}) {
+	const {
+		filteredData,
+		meta,
+		keys,
+		hasLoaded,
+		filterParameters,
+		sortedKeys,
+		requestSort,
+		sortConfig
+	} = useDataForView(view, initialViewMeta);
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -44,7 +45,7 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 		() => null
 	);
 
-	console.log({myContext, user, view});
+	console.log({user});
 	return (
 		<>
 			<Head>
@@ -53,7 +54,7 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 			</Head>
 			<Header fName={user.firstName} lName={user.lastName}>
 				<MenuButton/>
-				POM
+				{user?.roll ? `${user.roll.hasCategory ? user.category.categoryName : ""} ${user.roll.rollName} ${user.roll.hasChain ? user.chain.chainName : ""}` : "POM"}
 			</Header>
 			<Shadow
 				zIndex={8}
@@ -61,17 +62,25 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 				softTrigger={userMenu && !options && !filterModal}
 				clickthrough={false}/>
 			<OptionDrawer>
-				<SchemaDropdown/>
-				<ViewButtons/>
+				<Options user={user} meta={meta}/>
 			</OptionDrawer>
 			<UserMenu>
 				<UserOptions loggedIn={!!user.userId}/>
 			</UserMenu>
 			<Table
 				// initialData={initialData}
-				view={view}
-				initialViewMeta={initialViewMeta}
-				user={user}
+				data={
+					{
+						filteredData,
+						meta,
+						keys,
+						hasLoaded,
+						filterParameters,
+						sortedKeys,
+						requestSort,
+						sortConfig
+					}
+				}
 			/>
 			<style jsx global>{`
 				body, html{
@@ -150,15 +159,11 @@ export async function getStaticProps(context) {
 	if (!getView[0]) {return {notFound: true};}
 	const initialViewMeta = JSON.parse(JSON.stringify(getView[0]));
 
-	const myContext = JSON.parse(JSON.stringify(context));
-
-
 	return {
 		props: {
 			user,
 			view,
 			initialViewMeta,
-			myContext
 		},
 		// revalidate: 1,
 	};

@@ -39,6 +39,10 @@ export const allOptionsWithData = {
 		default: "inherit",
 		input: ["inherit", "range", "datePicker", "searchField", "dropdown", false]
 	},
+	filterseperation: {
+		default: "spaces",
+		input: ["spaces", ";", ",", "none"]
+	},
 	merge : {
 		default: "getOne",
 		input: ["add", "mergeBy", "firstDate", "getOne", "displayMulti", "count"],

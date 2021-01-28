@@ -1,13 +1,13 @@
-import React, {useRef, useEffect, useState, useCallback} from "react";
-// import handleViewport from "react-in-viewport";
-import useInViewport from "../../lib/forked-useInViewport";
-
+import React, { useRef, useEffect } from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
 import { useTheme } from "../../lib/custom-hooks";
 import Cell from "./cell";
+import CheckBox from "../checkbox";
 import Expand from "./expand";
 import useGlobal from "../store";
+import useInViewport from "../../lib/forked-useInViewport";
+
 
 
 const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys,
@@ -64,7 +64,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 			<>
 				{selectMode &&
 				<td>
-					<input type="checkbox" id={id} name={id}/>
+					<CheckBox id={id}/>
 				</td>}
 				{keysForTableCols.map((key, i) =>
 					<Cell

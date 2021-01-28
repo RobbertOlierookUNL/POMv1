@@ -47,6 +47,7 @@ async function migrate() {
       rollName VARCHAR(100) PRIMARY KEY,
 			defaultView TEXT NOT NULL DEFAULT "defaultview",
 			hasChain BOOLEAN NOT NULL DEFAULT 0,
+			hasCategory BOOLEAN NOT NULL DEFAULT 1,
 			adminRights TEXT NOT NULL DEFAULT "none",
 			preferences JSON,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

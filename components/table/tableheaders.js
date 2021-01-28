@@ -8,6 +8,7 @@ import {
 	toolBarHeight
 } from "../../config/globalvariables";
 import { useTheme } from "../../lib/custom-hooks";
+import CheckAllBox from "../checkallbox";
 import FilterAndUnitCell from "./filterbar/filterandunitcell";
 import TableHeadCell from "./tableheadcell";
 import useGlobal from "../store";
@@ -20,7 +21,9 @@ import useGlobal from "../store";
 
 
 
-const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterParameters}) => {
+
+
+const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterParameters, numberOfEntries}) => {
 	const [selectMode] = useGlobal(
 		state => state.selectMode,
 		() => null
@@ -78,7 +81,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 			<tr className="filters gridded-row">
 				{selectMode &&
 				<th className="select-all">
-					<input type="checkbox" id="select-all" name="select-all"/>
+					<CheckAllBox/>
 				</th>}
 				{
 					keysForTableCols.map((col, i) => (
@@ -88,6 +91,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 							valuetype={meta[col].valuetype || allOptionsWithData.valuetype.default}
 							boxTitle={meta[col].hovername || meta[col].title || col}
 							filterName={meta[col].title || col}
+							seperation={meta[col].filterseperation || allOptionsWithData.filterseperation.default}
 							parameters={filterParameters[col] || false}
 							reference={col}
 							key={i}

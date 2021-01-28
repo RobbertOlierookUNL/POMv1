@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import React, {useContext, useEffect, useRef} from "react";
+import React, { useEffect, useRef } from "react";
 
 import { headerHeight } from "../../config/globalvariables";
 import { useTheme } from "../../lib/custom-hooks";
-import Gravatar from "../gravatar";
+import Gravatar from "./gravatar";
 import useGlobal from "../store";
+
 
 
 
@@ -55,6 +56,7 @@ const Header = ({children, fName, lName, admin=false}) => {
 			<style jsx>{`
         header {
 					font-family: 'Montserrat', sans-serif;
+					font-weight: 200;
 					z-index: 9;
 					position: relative;
 					width: 100%;
@@ -70,6 +72,21 @@ const Header = ({children, fName, lName, admin=false}) => {
 					box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
         }
 				.mid {
+					font-size: 1.3em;
+					font-weight: 400;
+					left: 50%;
+					position: absolute;
+					top: 50%;
+					transform: translate(calc(-50% - 1.5px), calc(-50% - 1.5px));
+					cursor: default;
+					pointer-events: none;
+					user-select: none;
+					color: ${tertiary.color === "#005eef" ? tertiary.text : tertiary.color};
+					text-shadow: 3px 3px 5px rgba(0, 0, 0, 1);
+
+
+				}
+				/* .mid {
 					font-size: 1.6em;
 					font-weight: 400;
 					font-family: 'Potta One', cursive;
@@ -100,7 +117,7 @@ const Header = ({children, fName, lName, admin=false}) => {
 					50% {
 						text-shadow:
 					            1.5px 1.5px ${primary.color},
-					            /* 1.5px 1.5px ${primary_dark.color}, */
+					             1.5px 1.5px ${primary_dark.color},
 											5px 5px ${primary_dark.color},
 											1.5px 1.5px 15px ${secondary.color},
 											0.5px -0.5px 10px ${tertiary.color};
@@ -112,7 +129,7 @@ const Header = ({children, fName, lName, admin=false}) => {
 											5px 5px ${primary.color},
 											1.5px 1.5px 0px ${secondary.color};
 					}
-				}
+				} */
 				/* .mid {
 					font-size: 1.6em;
 					font-weight: 400;

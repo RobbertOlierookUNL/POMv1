@@ -9,7 +9,7 @@ import useGlobal from "../../../store";
 
 
 
-const SearchField = ({reference, filterName, close, level}) => {
+const SearchField = ({reference, filterName, close, level, seperation}) => {
 	const [, addToFilters] = useGlobal(() => null, actions => actions.addToFilters);
 	const { register, handleSubmit, errors } = useForm();
 	const focusRef = useRef(null);
@@ -53,6 +53,7 @@ const SearchField = ({reference, filterName, close, level}) => {
 				margin="dense"
 				// onChange={e => setEmail(e.target.value)}
 			/>
+			{seperation !== "none" && <div>{`Scheid verschillende criteria met een ${seperation === "spaces" ? "spatie" : seperation}`}</div>}
 			{errors.filter && <div className="error-message">{"Voer tekst in om te filteren"}</div>}
 			<Button
 				width={"100%"}

@@ -10,7 +10,6 @@ import {
 	toolBarHeight,
 	verPadding
 } from "../../config/globalvariables";
-import { useData, useDataForView, useMeta } from "../../lib/enhanced-swr-hooks";
 import FilterBar from "./filterbar";
 import FilterModal from "./filterbar/filtermodal";
 import SharedShadowModal from "../sharedshadowmodal";
@@ -33,7 +32,7 @@ import useGlobal from "../store";
 
 
 
-const Table = ({view, initialViewMeta, user}) => {
+const Table = ({data}) => {
 	console.log("rerender");
 	const {
 		filteredData,
@@ -44,7 +43,7 @@ const Table = ({view, initialViewMeta, user}) => {
 		sortedKeys,
 		requestSort,
 		sortConfig
-	} = useDataForView(view, initialViewMeta);
+	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
 
@@ -102,6 +101,7 @@ const Table = ({view, initialViewMeta, user}) => {
 							meta={meta}
 							keysForTableCols={keys.compact}
 							filterParameters={filterParameters}
+							numberOfEntries={sortedKeys && sortedKeys.length}
 						/>
 						<TableBody
 							meta={meta}

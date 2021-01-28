@@ -200,9 +200,12 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 							className="disable-on-inactive"
 							tabIndex={active ? 0 : -1}
 						>
-							{!categoriesAreLoading && !categoriesGiveError && categories.map((category, i) => (
-								<MenuItem key={i} value={category.categoryName}>{category.categoryName}</MenuItem>
-							))}
+							{(!categoriesAreLoading && !categoriesGiveError) &&
+								watchRoll?.hasCategory ? categories.map((category, i) => (
+									<MenuItem key={i} value={category.categoryName}>{category.categoryName}</MenuItem>
+								)) :
+								<MenuItem value="all">Alle</MenuItem>
+							}
 						</Select>
 					}
 					name="category"

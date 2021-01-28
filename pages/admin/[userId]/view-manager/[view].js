@@ -8,7 +8,7 @@ import React from "react";
 import { useUser, useView } from "../../../../lib/swr-hooks";
 import Button from "../../../../components/button";
 import Header from "../../../../components/header/index";
-import UserMenu from "../../../../components/usermenu";
+import UserMenu from "../../../../components/header/usermenu";
 import UserOptions from "../../../../components/useroptions";
 import ViewTable from "../../../../components/views/viewtable";
 import useGlobal from "../../../../components/store";

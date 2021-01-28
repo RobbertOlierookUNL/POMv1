@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 
 import { numberInView } from "../../config/globalvariables";
 import Row from "./row.js";
+import useGlobal from "../store";
 
 
 
@@ -11,6 +12,7 @@ import Row from "./row.js";
 
 
 const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop}) => {
+
 	const fakedata = new Array(26).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
 	const updateParameters = (i) => {

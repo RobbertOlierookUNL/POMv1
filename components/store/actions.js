@@ -60,3 +60,24 @@ export const clearFilters = (store) => {
 export const removeFromFilters = (store, filter) => {
 	store.setState({arrayOfFilters: [...store.state.arrayOfFilters.filter(item => item != filter)]});
 };
+
+export const setSilentFilters = (store, silentFilters) => {
+	store.setState({silentFilters});
+};
+
+//Checkboxes
+export const toggleCheckBox = (store, boxId, value) => {
+	store.setState({checked: {...store.state.checked, [boxId]: value}});
+};
+export const toggleCheckAll = (store, value) => {
+	const newChecked = {...store.state.checked};
+	for (var box in newChecked) {
+		if (Object.prototype.hasOwnProperty.call(newChecked, box)) {
+			newChecked[box] = value;
+		}
+	}
+	store.setState({checked: newChecked});
+};
+export const clearBoxes = (store) => {
+	store.setState({checked: {}});
+};
