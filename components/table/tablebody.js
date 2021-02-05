@@ -11,7 +11,7 @@ import useGlobal from "../store";
 
 
 
-const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop}) => {
+const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop, updateEntry}) => {
 
 	const fakedata = new Array(26).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
@@ -53,6 +53,7 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 								meta={meta}
 								keysForTableCols={keysForTableCols}
 								additionalColKeys={additionalColKeys}
+								updateEntry={updateEntry}
 								key={i}/>
 						))}
 					</> :

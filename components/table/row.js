@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
+import { dataTable_pk } from "../../config/globalvariables";
 import { useTheme } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import CheckBox from "../checkbox";
@@ -10,9 +11,10 @@ import useInViewport from "../../lib/forked-useInViewport";
 
 
 
+
 const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys,
 	// inViewport, forwardedRef,
-	onEnterViewport
+	onEnterViewport, updateEntry
 }) => {
 	const [active, setActive] = useGlobal(
 		state => state.active,
@@ -71,8 +73,14 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 						cellData={rowData === false ? false : rowData[key]}
 						colName={key}
 						width={meta[key].widthweight || allOptionsWithData.widthweight.default}
+						updateable={meta[key].updateable}
+						dropdownUpdateOptions={meta[key].dropdownupdateoptions}
+						allowInputFrom={meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default}
+						valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 						key={i}
 						rowId={id}
+						primaryKey={rowData[dataTable_pk]}
+						updateEntry={updateEntry}
 						omit={
 							(rowData
 								&& rowData.addedProps

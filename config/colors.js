@@ -72,6 +72,7 @@ export const colorSchematic = (schema) => ({
 export const staticColors =
 {
 	primary: {color: "#1F36C7",text: "white"},
+	primary_overlay: {color: "rgba(31, 54, 199, 0.05)",text: "black"},
 	primary_very_light: {color: "rgb(209,213,236)", text: "black"},
 	primary_light: {color: "#005eef", text: "white"},
 	primary_dark: {color: "#001f82", text: "white"},

@@ -26,7 +26,8 @@ export default function Home({user, view, initialViewMeta}) {
 		filterParameters,
 		sortedKeys,
 		requestSort,
-		sortConfig
+		sortConfig,
+		updateEntry,
 	} = useDataForView(view, initialViewMeta);
 	const [secondary] = useGlobal(
 		state => state.secondary,
@@ -78,7 +79,8 @@ export default function Home({user, view, initialViewMeta}) {
 						filterParameters,
 						sortedKeys,
 						requestSort,
-						sortConfig
+						sortConfig,
+						updateEntry
 					}
 				}
 			/>

@@ -42,7 +42,8 @@ const Table = ({data}) => {
 		filterParameters,
 		sortedKeys,
 		requestSort,
-		sortConfig
+		sortConfig,
+		updateEntry
 	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
@@ -112,6 +113,7 @@ const Table = ({data}) => {
 							sortedRowKeys={sortedKeys}
 							scrollTop={scrollTop}
 							setScrollTop={setScrollTop}
+							updateEntry={updateEntry}
 						/>
 					</table>
 					:

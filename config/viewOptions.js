@@ -47,6 +47,19 @@ export const allOptionsWithData = {
 		default: "getOne",
 		input: ["add", "mergeBy", "firstDate", "getOne", "displayMulti", "count"],
 	},
+	updateable : {
+		default: "never",
+		input: ["never", "withFreeInput", "withDropdown", "auto"]
+	},
+	dropdownupdateoptions: {
+		default: "",
+		input: "text"
+	},
+	allowinputfrom: {
+		default: "op1, sa1",
+		input: ["op0, sa0", "op1, sa0", "op2, sa0", "op0, sa1", "op1, sa1", "op2, sa1", "op0, sa2", "op0, sa2", "op1, sa2", "op2, sa2"]
+	}
+
 
 
 

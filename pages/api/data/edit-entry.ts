@@ -1,23 +1,26 @@
 import { NextApiHandler } from 'next'
+
+import { dataTable } from '../../../config/globalvariables';
 import { query } from '../../../lib/db'
 
 
+
 const handler: NextApiHandler = async (req, res) => {
-  const { id, title, content } = req.body
+  const { id, col, val } = req.body
   try {
-    if (!id || !title || !content) {
+    if (!id || !col || !val) {
       return res
         .status(400)
-        .json({ message: '`id`,`title`, and `content` are all required' })
+        .json({ message: '`id`,`col`, and `val` are all required' })
     }
 
     const results = await query(
       `
-      UPDATE entries
-      SET title = ?, content = ?
-      WHERE id = ?
+      UPDATE ${dataTable}
+      SET ${col} = ?
+      WHERE tkey = ?
       `,
-      [title, content, id]
+      [val, id]
     )
 
     return res.json(results)
