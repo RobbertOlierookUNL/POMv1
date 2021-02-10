@@ -17,7 +17,7 @@ import useGlobal from "../components/store";
 
 
 
-export default function Home({user, view, initialViewMeta}) {
+export default function Home({user, view, initialViewMeta, extendedView, initialExtendedView}) {
 	const {
 		filteredData,
 		meta,
@@ -28,7 +28,7 @@ export default function Home({user, view, initialViewMeta}) {
 		requestSort,
 		sortConfig,
 		updateEntry,
-	} = useDataForView(view, initialViewMeta);
+	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView);
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -159,13 +159,33 @@ export async function getStaticProps(context) {
 	view
 	);
 	if (!getView[0]) {return {notFound: true};}
+
+	let getExtendedView = [null];
+	let extendedView = null;
+	if (getView[0]?.config) {
+		const config = JSON.parse(getView[0].config);
+		if (config?.extendable) {
+			extendedView = config.extend;
+			getExtendedView = await query(/* sql */`
+				SELECT *
+				FROM view_metadata_table_v3test
+				WHERE view_name = ?
+				`,
+			extendedView
+			);
+		}
+	}
+
 	const initialViewMeta = JSON.parse(JSON.stringify(getView[0]));
+	const initialExtendedView = JSON.parse(JSON.stringify(getExtendedView[0]));
 
 	return {
 		props: {
 			user,
 			view,
 			initialViewMeta,
+			extendedView,
+			initialExtendedView,
 		},
 		// revalidate: 1,
 	};

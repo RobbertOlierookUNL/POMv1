@@ -9,7 +9,7 @@ import ViewButtons from "./viewbuttons";
 const Options = ({user, meta}) => {
 	return (
 		<div>
-			<SchemaDropdown/>
+			{/* <SchemaDropdown/> */}
 			<ViewButtons/>
 			<SilentFilters user={user} meta={meta}/>
 		</div>

@@ -17,6 +17,7 @@ import Modal from "../modal";
 const ViewCard = ({view}) => {
 	const {view_name, created_at, updated_at, config, ...viewdata} = view;
 	// belangrijk om alle niet-JSON hierboven weg te filteren
+	const parsedConfig = (config && JSON.parse(config)) || {};
 	const [compact, setCompact] = useState(0);
 	const [hidden, setHidden] = useState(0);
 	const [expanded, setExpanded] = useState(0);
@@ -79,6 +80,8 @@ const ViewCard = ({view}) => {
 					<h4>{view_name}</h4>
 				</div>
 				<div className="body">
+					<p>{parsedConfig.extendable ? <><b>Neemt over van: </b> {parsedConfig.extend}</> : <><b>Zelfstandige view</b><span className="hide">{"."}</span></>}</p>
+					<br/>
 					<p><b>Initiële kolommen: </b>{compact}</p>
 					<p><b>Uitklapbare kolommen: </b>{expanded}</p>
 					<p><b>Verborgen kolommen: </b>{hidden}</p>
@@ -137,6 +140,9 @@ const ViewCard = ({view}) => {
           margin: 0;
           padding: 7px 0 7px 14px;
         }
+				.hide {
+					visibility: hidden;
+				}
         .body{
           background-color: white;
           color: black;

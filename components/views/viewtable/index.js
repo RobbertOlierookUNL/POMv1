@@ -8,7 +8,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 
 
 
-import { allOptions, allOptionsWithData } from "../../../config/viewOptions";
+import { allOptionsWithData} from "../../../config/viewOptions";
 import { useSortableData } from "../../../lib/custom-hooks";
 import useGlobal from "../../store";
 
@@ -17,15 +17,15 @@ function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-
-
-
-
-
 const ViewTable = ({data}) => {
 	const {view_name, created_at, updated_at, config, ...viewdata} = data || {};
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
+	const [allOptions, setAllOptions] = useState(Object.keys(allOptionsWithData));
+
+	useEffect(() => {
+	  setAllOptions(Object.keys(allOptionsWithData).filter(o => !allOptionsWithData[o].extendable));
+	}, [config]);
 	const [saving, setSaving] = useState(false);
 	const [saved, setSaved] = useState(false);
 	const [showSaved, setShowSaved] = useState(false);

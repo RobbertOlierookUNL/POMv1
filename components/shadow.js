@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import useGlobal from "./store";
 
-const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, softTrigger = false, clickthrough = true, selfAnimate = false}) => {
+const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, softTrigger = false, clickthrough = true, selfAnimate = false, ...props}) => {
 	const [triggerState, setTriggerState] = useState(trigger);
 	const shadowRef = useRef(null);
 	const [, setShadowRef] = useGlobal(
@@ -20,7 +20,7 @@ const Shadow = ({zIndex = 1, thickness =0.1, trigger = true, softTrigger = false
 	}, [trigger]);
 
 	return (
-		<div ref={shadowRef} className="shadow">
+		<div ref={shadowRef} className="shadow" {...props}>
 			<style jsx>{`
         .shadow {
           z-index: ${zIndex};
