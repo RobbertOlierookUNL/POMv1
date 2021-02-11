@@ -54,8 +54,8 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 				unit = "px";
 				break;
 			default: //relative
-				value = widthWeight;
-				unit = "fr";
+				value = `minmax(${widthWeight*8}px, ${widthWeight}`;
+				unit = "fr)";
 
 			}
 			colString += `[${col}] ${value}${unit} `;
