@@ -55,7 +55,7 @@ const ViewConfig = ({data: {view_name, config}, close}) => {
 				onChange={handleChange("extendable", true)}
 			/>
 			<br/>
-			<small style={{color:"red"}}>Dit verwijdert alle huidige kolomdata van deze view</small>
+			{!configData.extendable && <small style={{color:"red"}}>Dit verwijdert alle huidige kolomdata van deze view</small>}
 			<br/>
 			<label htmlFor={"extend"}>Baseren op: </label>
 			<select

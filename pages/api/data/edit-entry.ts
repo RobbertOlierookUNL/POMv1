@@ -8,7 +8,7 @@ import { query } from '../../../lib/db'
 const handler: NextApiHandler = async (req, res) => {
   const { id, col, val } = req.body
   try {
-    if (!id || !col || !val) {
+    if (!id || !col) {
       return res
         .status(400)
         .json({ message: '`id`,`col`, and `val` are all required' })

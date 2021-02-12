@@ -24,7 +24,13 @@ const ViewTable = ({data}) => {
 	const [allOptions, setAllOptions] = useState(Object.keys(allOptionsWithData));
 
 	useEffect(() => {
-	  setAllOptions(Object.keys(allOptionsWithData).filter(o => !allOptionsWithData[o].extendable));
+
+		if (config && JSON.parse(config)?.extendable) {
+			setAllOptions(Object.keys(allOptionsWithData).filter(o => !allOptionsWithData[o].extendable));
+		}
+		else {
+			setAllOptions(Object.keys(allOptionsWithData));
+		}
 	}, [config]);
 	const [saving, setSaving] = useState(false);
 	const [saved, setSaved] = useState(false);

@@ -81,6 +81,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 						rowId={id}
 						primaryKey={rowData[dataTable_pk]}
 						updateEntry={updateEntry}
+						hasBatches={rowData?.addedProps?.merged}
 						omit={
 							(rowData
 								&& rowData.addedProps
@@ -100,6 +101,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 						&& rowData.addedProps.merged
 						&& rowData.addedProps.mergedFrom}
 					keysForMergedRows={keysForTableCols}
+					updateEntry={updateEntry}
 				/>
 			</>
 			<style jsx>{`

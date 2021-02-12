@@ -2,6 +2,7 @@ import React, {useRef, useEffect, useState, forwardRef} from "react";
 import moment from "moment";
 
 import { allOptionsWithData } from "../../config/viewOptions";
+import { dataTable_pk } from "../../config/globalvariables";
 import { useColors, useToolkit } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import useGlobal from "../store";
@@ -11,7 +12,8 @@ import useGlobal from "../store";
 
 
 
-const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMergedRows}, ref) => {
+
+const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMergedRows, updateEntry}, ref) => {
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
 	const {mergeRefs} = useToolkit();
@@ -35,6 +37,12 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 										width={meta[key].widthweight || allOptionsWithData.widthweight.default}
 										key={i}
 										noExpand
+										updateable={meta[key].updateable}
+										dropdownUpdateOptions={meta[key].dropdownupdateoptions}
+										allowInputFrom={meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default}
+										valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
+										primaryKey={row[dataTable_pk]}
+										updateEntry={updateEntry}
 									/>
 								)}
 							</tr>
