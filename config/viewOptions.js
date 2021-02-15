@@ -77,6 +77,11 @@ export const allOptionsWithData = {
 			"op0, sa1", "op1, sa1", "op2, sa1",
 			"op0, sa2", "op1, sa2", "op2, sa2"],
 		extendable: true,
+	},
+	triggers: {
+		default: null,
+		input: "text",
+		extendable: true,
 	}
 
 

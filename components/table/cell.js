@@ -1,92 +1,39 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import Skeleton from "react-loading-skeleton";
 import moment from "moment";
-import mutate from "swr";
 
 import { useTheme } from "../../lib/custom-hooks";
-import DropDown from "./dropdown";
-import Input from "./input";
-import useGlobal from "../store";
 
 
 
-
-
-const Cell = ({cellData, omit, rowId, colName, noExpand, allowInputFrom, valueType, updateable, dropdownUpdateOptions, primaryKey, updateEntry, hasBatches = false}) => {
-	const [editMode, setEditMode] = useState(false);
-	const [saving, setSaving] = useState(false);
-	const [temporaryState, setTemporaryState] = useState(false);
-	const [active] = useGlobal(
-		state => state.active,
-		() => null
-	);
-	const {gray_light, primary_light, primary_overlay, secondary} = useTheme();
-	useEffect(() => {
-		if (temporaryState !== false) {
-			setTemporaryState(false);
-		}
-	}, [cellData]);
-
-	useEffect(() => {
-		if (temporaryState !== false) {
-			if (hasBatches) {
-				for (const pk of primaryKey) {
-					updateEntry(rowId, pk, colName, temporaryState);
-				}
-			} else {
-				updateEntry(rowId, primaryKey, colName, temporaryState);
-			}
-			setSaving(false);
-		}
-	}, [temporaryState, hasBatches]);
-
-	const edit = () => {
-		setEditMode(true);
-	};
-	const save = (e) => {
-		setEditMode(false);
-		if (e.target.value !== cellData) {
-			setSaving(true);
-			setTemporaryState(e.target.value);
-		}
-
-		setTimeout(() => setSaving(false), 2000);
-	};
-
-	const isEditable = (updateable === "withDropdown" || updateable === "withFreeInput");
-	const topLevel = (updateable === "withDropdown" || updateable === "withFreeInput") && hasBatches;
+const Cell = ({cellData, omit, active, colName, noExpand}) => {
+	const {gray_light} = useTheme();
 
 	return (
 		<td
-			className={colName + (isEditable ? " editable" : "") + (topLevel ? " topLevel" : "") +(temporaryState !== false ? " still-saving" : "")}
-			onClick={isEditable ? edit : undefined}
+			className={colName}
 		>
-			{(cellData === false) || saving
+			{(cellData === false)
 				?
 				<Skeleton />
 				:
-				!editMode || (updateable === "withDropdown")
+
+				(moment.isMoment(cellData)
 					?
-					(moment.isMoment(cellData)
-						?
-						cellData.format("YYYY-MM-DD")
-						:
-						temporaryState !== false ? temporaryState
-							:
-							(!cellData || cellData === "0" || omit)
-								?
-								""
-								:
-								Array.isArray(cellData)
-									?
-									updateable === "withDropdown" && isEditable && <DropDown defaultValue={".."} save={save} options={`.., ${dropdownUpdateOptions}`}/> ||
-									<i>..</i>
-									:
-									updateable === "withDropdown" && isEditable && <DropDown defaultValue={cellData} save={save} options={dropdownUpdateOptions}/> ||
-									cellData
-					)
+					cellData.format("YYYY-MM-DD")
 					:
-					(updateable === "withFreeInput" && isEditable && <Input type={valueType} defaultValue={cellData} save={save}/>)
+
+					(!cellData || cellData === "0" || omit)
+						?
+						""
+						:
+						Array.isArray(cellData)
+							?
+							<i>..</i>
+							:
+							cellData
+				)
+
 
 
 			}
@@ -97,7 +44,7 @@ const Cell = ({cellData, omit, rowId, colName, noExpand, allowInputFrom, valueTy
 					grid-column-start: ${colName};
 					cursor: pointer;
 					padding: 2px;
-			 	${(active === rowId) || noExpand ? "" : (`
+			 	${active || noExpand ? "" : (`
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;`)
@@ -106,41 +53,6 @@ const Cell = ({cellData, omit, rowId, colName, noExpand, allowInputFrom, valueTy
         td:nth-last-child(${noExpand ? 1 : 2}) {
           border-width: 0 0 1px 0;
         }
-				.topLevel {
-					background:
-						linear-gradient(to top right,transparent 50%,${primary_light.color} 0) top right/3.5px 3.5px no-repeat;
-				}
-				.editable {
-					cursor: text;
-					background:
-						linear-gradient(to top right,transparent 50%,${primary_light.color} 0) top right/3.5px 3.5px no-repeat,
-						${primary_overlay.color};
-				}
-				.still-saving {
-					animation: saving 3s infinite;
-				}
-
-				@keyframes saving {
-				  0%   {
-						color: black;
-						background:
-							linear-gradient(to top right,transparent 50%,${secondary.color} 0) top right/3.5px 3.5px no-repeat,
-							${primary_overlay.color};
-					}
-				  50% {
-						color: gray;
-						background:
-							linear-gradient(to top right,transparent 50%,${secondary.color} 0) top right/3.5px 3.5px no-repeat,
-							transparent;
-					}
-					100%  {
-						color: black;
-						background:
-							linear-gradient(to top right,transparent 50%,${secondary.color} 0) top right/3.5px 3.5px no-repeat,
-							${primary_overlay.color};
-					}
-				}
-
     `}
 			</style>
 		</td>

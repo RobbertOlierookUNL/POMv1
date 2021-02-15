@@ -43,7 +43,8 @@ const Table = ({data}) => {
 		sortedKeys,
 		requestSort,
 		sortConfig,
-		updateEntry
+		updateEntry,
+		user,
 	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");

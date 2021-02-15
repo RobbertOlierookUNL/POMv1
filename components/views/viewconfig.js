@@ -10,13 +10,21 @@ import SchemaDropdown from "../options/schemadropdown";
 const ViewConfig = ({data: {view_name, config}, close}) => {
 	const [configData, setConfigData] = useState({});
 	const {views} = useViews();
+	// const [init, setInit] = useState(true);
+	// const [initOptions, setInitOptions] = useState(false);
+	// const [initConfig, setInitConfig] = useState(false);
 	const [options, setOptions] = useState([]);
 	useEffect(() => {
 		setOptions(views?.filter(view =>( !view.config || !JSON.parse(view.config).extendable) && view.view_name !== view_name) || []);
 	}, [views]);
+
 	useEffect(() => {
-		setConfigData(JSON.parse(config) || {});
-	}, [config]);
+		const parsedConfig = JSON.parse(config) || {};
+		parsedConfig.extendable = parsedConfig.extendable || false;
+		parsedConfig.extend = parsedConfig.extend || options[0]?.view_name || "";
+		parsedConfig.theme = parsedConfig.theme || 10;
+		setConfigData(parsedConfig);
+	}, [config, options]);
 
 	const handleChange = (state, checkbox=false) => e => {setConfigData({...configData, [state]: checkbox ? e.target.checked : e.target.value});};
 	const handleSubmit = async () =>
@@ -42,6 +50,18 @@ const ViewConfig = ({data: {view_name, config}, close}) => {
 		close();
 	};
 
+	//init
+	// useEffect(() => {
+	// 	const parsedConfig = JSON.parse(config) || {};
+	// 	console.log({fx: "ik zit erin"});
+	// 	console.log({parsedConfig, options});
+	// 	handleChange("extendable", true)({target: {checked: parsedConfig.extendable || false}});
+	// 	console.log(parsedConfig.extend || options[0] || "");
+	// 	handleChange("extend")({target: {value: parsedConfig.extend || options[0]?.view_name || ""}});
+	// 	handleChange("theme")({target: {value: parsedConfig.theme || 10}});
+	// }, [options, config]);
+
+
 	return (
 		<>
 			<h3 style={{marginTop: "5px"}}>Extend</h3>
@@ -62,7 +82,7 @@ const ViewConfig = ({data: {view_name, config}, close}) => {
 				disabled={!configData.extendable}
 				id="extend"
 				name="extend"
-				value={configData.extend || options[0] || ""}
+				value={configData.extend || options[0]?.view_name || ""}
 				onChange={handleChange("extend")}
 			>
 				{options.map((o, i) =>

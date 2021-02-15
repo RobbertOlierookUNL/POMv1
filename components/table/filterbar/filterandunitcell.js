@@ -62,6 +62,7 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, f
           cursor: pointer;
           color: ${gray_dark.color};
           transform: scaleY(1);
+					max-height: 20px;
 
           /* background-color: ${gray_lighter.color};
           box-shadow: 0px 0px 0px ${gray_lighter.color}; */

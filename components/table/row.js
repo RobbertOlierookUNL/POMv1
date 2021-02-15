@@ -1,13 +1,16 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
 import { dataTable_pk } from "../../config/globalvariables";
+import { useGlobalUser } from "../../lib/store-hooks";
 import { useTheme } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import CheckBox from "../checkbox";
+import EditableCell from "./editablecell";
 import Expand from "./expand";
 import useGlobal from "../store";
 import useInViewport from "../../lib/forked-useInViewport";
+
 
 
 
@@ -16,6 +19,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 	// inViewport, forwardedRef,
 	onEnterViewport, updateEntry
 }) => {
+	const [thisRowActive, setThisRowActive] = useState(false);
 	const [active, setActive] = useGlobal(
 		state => state.active,
 		actions => actions.setActive
@@ -39,11 +43,17 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
-			active === id ?
+			thisRowActive ?
 				setActive(false)
 				: setActive(id);
 		}
 	};
+
+	useEffect(() => {
+		if ((active === id) !== thisRowActive) {
+			setThisRowActive(active === id);
+		}
+	}, [active, id, thisRowActive]);
 
 	useEffect(() => {
 		if (order === 4) {
@@ -56,6 +66,9 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 
 	// useEffect(() => () => stopObserver(), []);
 
+	// console.log({opLevel, saLevel});
+	const user = useGlobalUser();
+	const {operationsInputRights, salesInputRights} = user?.roll || {};
 
 
 	return (
@@ -68,40 +81,65 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 				<td>
 					<CheckBox id={id}/>
 				</td>}
-				{keysForTableCols.map((key, i) =>
-					<Cell
+				{keysForTableCols.map((key, i) => {
+					const updateable = meta[key].updateable;
+					const allowInputFrom = meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default;
+					const [elemOpLevel, elemSaLevel] = allowInputFrom.split(", ").map(el => parseInt(el[2]));
+					const isEditable = (updateable === "withDropdown" || updateable === "withFreeInput")
+							&& (
+								(elemOpLevel && (operationsInputRights >= elemOpLevel))
+								|| (elemSaLevel && (salesInputRights >= elemSaLevel))
+							);
+					if (isEditable) {
+						return (
+							<EditableCell
+								cellData={rowData === false ? false : rowData[key]}
+								colName={key}
+								updateable={meta[key].updateable}
+								dropdownUpdateOptions={meta[key].dropdownupdateoptions}
+								valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
+								key={i}
+								rowId={id}
+								active={thisRowActive}
+								primaryKey={rowData[dataTable_pk]}
+								updateEntry={updateEntry}
+								hasBatches={rowData?.addedProps?.merged}
+								omit={
+									(rowData
+										&& rowData.addedProps
+										&& !rowData.addedProps.merged
+										&& meta[key].merge === "count")
+								}
+							/>
+						);
+					}
+					return <Cell
 						cellData={rowData === false ? false : rowData[key]}
 						colName={key}
-						width={meta[key].widthweight || allOptionsWithData.widthweight.default}
-						updateable={meta[key].updateable}
-						dropdownUpdateOptions={meta[key].dropdownupdateoptions}
-						allowInputFrom={meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default}
-						valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 						key={i}
-						rowId={id}
-						primaryKey={rowData[dataTable_pk]}
-						updateEntry={updateEntry}
-						hasBatches={rowData?.addedProps?.merged}
+						active={thisRowActive}
 						omit={
 							(rowData
 								&& rowData.addedProps
 								&& !rowData.addedProps.merged
 								&& meta[key].merge === "count")
 						}
-					/>
-				)}
+					/>;
+				})}
 				<Expand
 					additionalColKeys={additionalColKeys}
 					ref={expandRef}
 					meta={meta}
 					rowData={rowData}
-					active={active === id}
+					active={thisRowActive}
 					mergedFrom={rowData
 						&& rowData.addedProps
 						&& rowData.addedProps.merged
 						&& rowData.addedProps.mergedFrom}
 					keysForMergedRows={keysForTableCols}
 					updateEntry={updateEntry}
+					operationsInputRights={operationsInputRights}
+					salesInputRights={salesInputRights}
 				/>
 			</>
 			<style jsx>{`

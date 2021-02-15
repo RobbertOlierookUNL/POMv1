@@ -10,10 +10,10 @@ import { useUser } from "../../../lib/swr-hooks";
 import Button from "../../../components/button";
 import Header from "../../../components/header";
 import OptionDrawer from "../../../components/header/optiondrawer";
-import SchemaDropdown from "../../../components/schemadropdown";
+import SchemaDropdown from "../../../components/options/schemadropdown";
 import UserMenu from "../../../components/header/usermenu";
 import UserOptions from "../../../components/useroptions";
-import ViewButtons from "../../../components/viewbuttons";
+import ViewButtons from "../../../components/options/viewbuttons";
 import useGlobal from "../../../components/store";
 import AdminRedirectGrid from "../../../components/admin/redirectgrid";
 

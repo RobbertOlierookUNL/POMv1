@@ -81,3 +81,8 @@ export const toggleCheckAll = (store, value) => {
 export const clearBoxes = (store) => {
 	store.setState({checked: {}});
 };
+
+//Storer
+export const storeSomething = (store, something, as) => {
+	store.setState({[as]: something});
+};

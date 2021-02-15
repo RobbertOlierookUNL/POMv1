@@ -1,9 +1,10 @@
 import Head from "next/head";
-import React from "react";
+import React, {useEffect} from "react";
 
 import { isNumeric } from "../lib/custom-hooks";
 import { query } from "../lib/db";
 import { useDataForView } from "../lib/enhanced-swr-hooks";
+import { useGlobalUser } from "../lib/store-hooks";
 import Header from "../components/header";
 import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
@@ -13,6 +14,7 @@ import Table from "../components/table";
 import UserMenu from "../components/header/usermenu";
 import UserOptions from "../components/useroptions";
 import useGlobal from "../components/store";
+
 
 
 
@@ -46,7 +48,11 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		() => null
 	);
 
-	console.log({user});
+	useGlobalUser(user);
+
+
+
+	// console.log({user});
 	return (
 		<>
 			<Head>
@@ -80,7 +86,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 						sortedKeys,
 						requestSort,
 						sortConfig,
-						updateEntry
+						updateEntry,
 					}
 				}
 			/>

@@ -2,6 +2,9 @@
 // max number of tablerows in DOM (for lazyloading)
 export const numberInView = 100;
 
+//number of additionalColKeys in expand block
+export const numberOfColumnsInExpandBlock = 4;
+
 //table padding
 export const horPadding = 6;
 export const verPadding = 6;
