@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 
-import { numberInView } from "../../config/globalvariables";
+import { dataTable_pk, numberInView } from "../../config/globalvariables";
+import { useCheckBox } from "../../lib/custom-hooks";
 import Row from "./row.js";
 import useGlobal from "../store";
 
@@ -11,8 +12,10 @@ import useGlobal from "../store";
 
 
 
-const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop, updateEntry}) => {
 
+
+const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop, updateEntry}) => {
+	const {check, toggle, init} = useCheckBox();
 	const fakedata = new Array(26).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
 	const updateParameters = (i) => {
@@ -35,6 +38,14 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 		}
 	}, [scrollTop]);
 
+	useEffect(() => {
+		if (sortedRowKeys) {
+			console.log({sortedRowKeys});
+			for (const key of sortedRowKeys) {
+				init(key);
+			}
+		}
+	}, [sortedRowKeys]);
 
 
 	return (
@@ -46,7 +57,7 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 							minLoad <= i && i <= maxLoad &&
 							<Row
 								onEnterViewport={() => updateParameters(i)}
-								id={row}
+								id={data[row][dataTable_pk].toString()}
 								order={i}
 								totalRows={sortedRowKeys.length}
 								rowData={data[row]}
@@ -54,7 +65,10 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 								keysForTableCols={keysForTableCols}
 								additionalColKeys={additionalColKeys}
 								updateEntry={updateEntry}
-								key={i}/>
+								key={data[row][dataTable_pk].toString()}
+								check={check(data[row][dataTable_pk].toString())}
+								toggle={toggle(data[row][dataTable_pk].toString())}
+							/>
 						))}
 					</> :
 					hasLoaded ?

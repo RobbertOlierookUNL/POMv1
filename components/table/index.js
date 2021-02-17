@@ -94,7 +94,12 @@ const Table = ({data}) => {
 			</SharedShadowModal>
 			<div className="tableContainer" ref={tableRef}>
 				<FilterBar/>
-				<Toolbar/>
+				<Toolbar
+					data={filteredData}
+					keys={keys.compact.concat(keys.expanded)}
+					sortedRowKeys={sortedKeys}
+					meta={meta}
+				/>
 				{meta && Object.keys(meta)[0] ?
 					<table className="table">
 						<TableHeaders

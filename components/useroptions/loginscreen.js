@@ -36,7 +36,7 @@ const LoginScreen = ({active, initialData, transportData, admin}) => {
 
 	};
 
-	useEffect(async () => {
+	useEffect(() => {(async () => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
@@ -59,6 +59,7 @@ const LoginScreen = ({active, initialData, transportData, admin}) => {
 		return function cleanup() {
 			abortController.abort();
 		};
+	})();
 	}, [submitting, data]);
 
 	useEffect(() => () => {transportData({...initialData, email: getValues("email")});}, []);

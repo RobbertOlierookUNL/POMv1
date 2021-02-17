@@ -1,15 +1,6 @@
-import React, {useEffect} from "react";
-import useGlobal from "./store";
+import React from "react";
 
-const CheckBox = ({id}) => {
-	const [checked, toggleCheckBox] = useGlobal(state => state.checked, actions => actions.toggleCheckBox);
-	const check = !!checked[id];
-	const toggle = () => toggleCheckBox(id, !check);
-
-	useEffect(() => {
-		toggleCheckBox(id, check);
-	}, []);
-
+const CheckBox = ({id, check, toggle}) => {
 
 	return (
 		<input

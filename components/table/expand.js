@@ -26,7 +26,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 	const [height, setHeight] = useState("auto");
 	const [groupedAKs, setGroupedAKs] = useState(null);
 	const {mergeRefs} = useToolkit();
-	const [gray_light, gray_lighter, gray_very_light] = useColors("gray_light", "gray_lighter", "gray_very_light");
+	const [gray_light, gray_lighter, gray_very_light, tertiary] = useColors("gray_light", "gray_lighter", "gray_very_light", "tertiary");
 
 	useEffect(() => {
 		rowData && groupedAKs && setHeight(expandCell.current.scrollHeight + 1.33 + "px");
@@ -61,15 +61,16 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 										return (
 											<EditableCell
 												cellData={rowData === false ? false : row[key]}
+												rowData={row}
+												triggers={meta[key].triggers}
 												colName={key}
 												updateable={meta[key].updateable}
 												dropdownUpdateOptions={meta[key].dropdownupdateoptions}
 												valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 												key={i}
 												active={active}
-												primaryKey={rowData[dataTable_pk]}
+												primaryKey={row[dataTable_pk]}
 												updateEntry={updateEntry}
-												hasBatches={rowData?.addedProps?.merged}
 												omit={
 													(rowData
 														&& rowData.addedProps
@@ -141,7 +142,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
           height: ${height};
         }
 				.container {
-					background-color: ${gray_very_light.color};
+					background-color: ${tertiary.color};
 					padding: 8px;
 					color: black;
 					border: 1px solid ${gray_light.color};
@@ -154,10 +155,23 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 				}
 				.sub-table {
 					width: 100%;
-					background-color: ${gray_lighter.color};
 					color: ${gray_lighter.text};
 					border-collapse: collapse;
 					font-weight: bold;
+					position: relative;
+					border-bottom: 1px solid ${tertiary.color};
+					z-index: 3;
+				}
+				.sub-table::before {
+				  content: "";
+				  position: absolute;
+				  top: 0;
+				  left: 0;
+				  width: 100%;
+				  height: 100%;
+				  opacity: .05;
+				  z-index: 2;
+				  background-color: ${tertiary.color};
 				}
 				.expandCell:not(.active) {
 					font-size: 0.97em;

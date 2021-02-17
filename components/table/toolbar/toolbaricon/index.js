@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare } from "@fortawesome/free-regular-svg-icons";
-import { faSpinner, faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faFilter, faDownload } from "@fortawesome/free-solid-svg-icons";
 import React, {useState, useEffect} from "react";
 
 import { useTheme } from "../../../../lib/custom-hooks";
@@ -17,6 +17,9 @@ const ToolbarIcon = ({type, iconClick}) => {
 			break;
 		case "filter":
 			setIcon(faFilter);
+			break;
+		case "export":
+			setIcon(faDownload);
 			break;
 		default:
 

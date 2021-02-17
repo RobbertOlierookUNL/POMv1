@@ -17,7 +17,7 @@ import useInViewport from "../../lib/forked-useInViewport";
 
 const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys,
 	// inViewport, forwardedRef,
-	onEnterViewport, updateEntry
+	onEnterViewport, updateEntry, toggle, check
 }) => {
 	const [thisRowActive, setThisRowActive] = useState(false);
 	const [active, setActive] = useGlobal(
@@ -70,7 +70,6 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 	const user = useGlobalUser();
 	const {operationsInputRights, salesInputRights} = user?.roll || {};
 
-
 	return (
 		<tr
 			className={`gridded-row ${active === id ? "active" : ""}`}
@@ -79,7 +78,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 			<>
 				{selectMode &&
 				<td>
-					<CheckBox id={id}/>
+					<CheckBox id={id} toggle={toggle} check={check}/>
 				</td>}
 				{keysForTableCols.map((key, i) => {
 					const updateable = meta[key].updateable;
@@ -94,10 +93,12 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 						return (
 							<EditableCell
 								cellData={rowData === false ? false : rowData[key]}
+								rowData={rowData}
 								colName={key}
 								updateable={meta[key].updateable}
 								dropdownUpdateOptions={meta[key].dropdownupdateoptions}
 								valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
+								triggers={meta[key].triggers}
 								key={i}
 								rowId={id}
 								active={thisRowActive}

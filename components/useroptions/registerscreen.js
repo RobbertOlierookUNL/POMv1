@@ -69,7 +69,7 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 		setSubmitting(true);
 		setData(data);
 	};
-	useEffect(async () => {
+	useEffect(() => {(async () => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
@@ -114,7 +114,7 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 		}
 		return function cleanup() {
 			abortController.abort();
-		};
+		};})();
 	}, [submitting, data]);
 
 	return (

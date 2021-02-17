@@ -92,7 +92,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 							boxTitle={meta[col].hovername || meta[col].title || col}
 							filterName={meta[col].title || col}
 							seperation={meta[col].filterseperation || allOptionsWithData.filterseperation.default}
-							parameters={filterParameters[col] || false}
+							parameters={filterParameters?.[col] || false}
 							reference={col}
 							key={i}
 						/>

@@ -5,13 +5,15 @@ import moment from "moment";
 import { useTheme } from "../../lib/custom-hooks";
 import DropDown from "./dropdown";
 import Input from "./input";
+import { dataTable_pk } from "../../config/globalvariables";
 
 
 
 
 
 
-const EditableCell = ({cellData, omit, active, colName, noExpand, valueType, updateable, dropdownUpdateOptions, primaryKey, updateEntry, hasBatches = false}) => {
+
+const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, updateable, dropdownUpdateOptions, primaryKey, updateEntry, hasBatches = false}) => {
 	const [editMode, setEditMode] = useState(false);
 	const [saving, setSaving] = useState(false);
 	const [temporaryState, setTemporaryState] = useState(false);
@@ -22,14 +24,42 @@ const EditableCell = ({cellData, omit, active, colName, noExpand, valueType, upd
 		}
 	}, [cellData]);
 
+
+	const triggerUpdate = (pk, value, hasBatches) => {
+		if (triggers) {
+			const triggerArray = triggers.split(", ");
+			for (var trigger of triggerArray) {
+				const [colToUpdate, math] = trigger.split(" = ");
+				let answer;
+				if (!hasBatches) {
+					answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "rowData."));
+				} else {
+					for (const mergedFrom of rowData.addedProps.mergedFrom) {
+						if (pk === mergedFrom[dataTable_pk]) {
+						 	answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "mergedFrom."));
+						}
+					}
+				}
+				const formattedColToUpdate = colToUpdate.replace("$", "");
+				const correctAnswer = !Number.isNaN(answer);
+				if ((formattedColToUpdate in rowData) && correctAnswer ) {
+					updateEntry(pk, formattedColToUpdate, answer);
+				}
+
+			}
+		}
+	};
+
 	useEffect(() => {
 		if (temporaryState !== false) {
 			if (hasBatches) {
 				for (const pk of primaryKey) {
 					updateEntry(pk, colName, temporaryState);
+					triggerUpdate(pk,temporaryState, hasBatches);
 				}
 			} else {
 				updateEntry(primaryKey, colName, temporaryState);
+				triggerUpdate(primaryKey,temporaryState, hasBatches);
 			}
 			setSaving(false);
 		}
@@ -40,7 +70,7 @@ const EditableCell = ({cellData, omit, active, colName, noExpand, valueType, upd
 	};
 	const save = (e) => {
 		setEditMode(false);
-		if (e.target.value !== cellData) {
+		if (e.target.value != cellData) {
 			setSaving(true);
 			setTemporaryState(e.target.value);
 		}

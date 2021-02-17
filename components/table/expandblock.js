@@ -21,11 +21,20 @@ const ExpandBlock = ({additionalColKeys, rowData, meta, active}) => {
 					</span>
 					<span className="block-row-right">
 						{
-							(moment.isMoment(rowData[key])) ? rowData[key].format("YYYY-MM-DD") :
-  											(!rowData[key] || rowData[key] === "0" || rowData
-              									&& rowData.addedProps
-              									&& !rowData.addedProps.merged
-              									&& meta[key].merge === "count") ? "" : rowData[key]}
+							(moment.isMoment(rowData[key]))
+								? rowData[key].format("YYYY-MM-DD")
+								:
+								(!rowData[key] || rowData[key] === "0" || (rowData
+      									&& rowData.addedProps
+      									&& !rowData.addedProps.merged
+      									&& meta[key].merge === "count"))
+									? ""
+									:
+									Array.isArray(rowData[key])
+										? rowData[key].join(" | ")
+										:
+										rowData[key]
+						}
 					</span>
 				</div>
 			)}
