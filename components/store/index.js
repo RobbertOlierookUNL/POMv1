@@ -8,9 +8,11 @@ import * as actions from "./actions";
 const initialState = {
 	options: false,
 	userMenu: false,
+	filterModal: false,
 	menuButton: {current: null},
 	userButton: {current: null},
 	setShadowRef: {current: null},
+	headerRef: {current: null},
 	// formRefs: {
 	// 	rollRef: {current: null},
 	// 	categoryRef: {current: null},
@@ -18,10 +20,13 @@ const initialState = {
 	active: false,
 	topInView: true,
 	selectMode: false,
+	arrayOfFilters: [],
+	silentFilters: [],
+	checked: {},
 	...staticColors,
 	...colorSchematic(10)
 };
 
-const useGlobal = useGlobalHook(React, initialState, actions);
+export const useGlobal = useGlobalHook(React, initialState, actions);
 
 export default useGlobal;

@@ -8,7 +8,7 @@ import useGlobal from "./store";
 
 
 
-const ToTopButton = ({handleClick, top, left}) => {
+const ToTopButton = ({handleClick, top, right}) => {
 	const [topInView] = useGlobal(
 		state => state.topInView,
 		() => null
@@ -17,7 +17,6 @@ const ToTopButton = ({handleClick, top, left}) => {
 		state => state.tertiary,
 		() => null
 	);
-	console.log("i'm here!");
 	return (
 		<div onClick={handleClick} className="toTopButton">
 			<FontAwesomeIcon icon={faArrowUp} />
@@ -29,7 +28,7 @@ const ToTopButton = ({handleClick, top, left}) => {
           width: 50px;
           border-radius: 50%;
           top: ${top};
-          left: ${left};
+          right: ${right};
           box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
           opacity: ${topInView ? 0 : 0.8};
           background-color: ${tertiary.color};

@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 
+import { useHandleClickOutstide } from "../../lib/custom-hooks";
 import useGlobal from "../store";
+
 
 
 
@@ -11,38 +13,7 @@ const OptionDrawer = ({children}) => {
 		state => state.options,
 		actions => actions.expandOptions
 	);
-	const [shadowRef] = useGlobal(
-		state => state.shadowRef,
-		() => null
-	);
-	const [handleClickOutside, setHandleClickOutside] = useState(false);
-	useEffect(() => {
-		if (handleClickOutside) {
-			document.removeEventListener("click", handleClickOutside, true);
-			setHandleClickOutside(false);
-		}
-
-		if(options) {
-			setHandleClickOutside(() => function (event) {
-				if (event.target === shadowRef.current
-				){
-					expandOptions(false);
-				}
-			});
-		}
-
-		return () => {
-			if(handleClickOutside) {
-				document.removeEventListener("click", handleClickOutside, true);
-			}
-		};
-	}, [shadowRef, options]);
-
-	useEffect(() => {
-		if (handleClickOutside) {
-			document.addEventListener("click", handleClickOutside, true);
-		}
-	}, [handleClickOutside]);
+	useHandleClickOutstide(options, () => expandOptions(false));
 	return (
 
 		<>

@@ -1,15 +1,14 @@
 import React from "react";
 import { useRouter } from "next/router";
 
-import { isNumeric } from "../lib/custom-hooks";
-import { useViews } from "../lib/swr-hooks";
+import { isNumeric } from "../../lib/custom-hooks";
+import { useViews } from "../../lib/swr-hooks";
 
 
 
 const ViewButtons = () => {
-	const {views} = useViews();
+	const {views, isLoading} = useViews();
 	const Router = useRouter();
-
 	const handleClick = (viewName) => {
 		if(Router.query.slug && isNumeric(Router.query.slug[0])){
 			Router.push(`/${Router.query.slug[0]}/${viewName}`);
@@ -19,7 +18,7 @@ const ViewButtons = () => {
 	};
 	return (
 		<div className="view-button-container">
-			{views && views.map((view, i) =>
+			{!isLoading && views.map((view, i) =>
 				<button key={i} className="view-button" onClick={() => handleClick(view.view_name)}>
 					{view.view_name}
 				</button>

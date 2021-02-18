@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from "react";
 
+import { dataTable_pk, numberInView } from "../../config/globalvariables";
+import { useCheckBox } from "../../lib/custom-hooks";
 import Row from "./row.js";
+import useGlobal from "../store";
 
 
 
@@ -8,9 +11,12 @@ import Row from "./row.js";
 
 
 
-const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKeys}) => {
-	const numberInView = 100;
-	const fakedata = new Array(12).fill(".");
+
+
+
+const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop, updateEntry}) => {
+	const {check, toggle, init} = useCheckBox();
+	const fakedata = new Array(26).fill(".");
 	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
 	const updateParameters = (i) => {
 		if (i%(numberInView/2-10) === 0) {
@@ -23,38 +29,68 @@ const TableBody = ({meta, data, keysForTableCols, sortedRowKeys, additionalColKe
 	};
 	useEffect(() => {
 		updateParameters(0);
-	}, []);
+	}, [data]);
 
+	useEffect(() => {
+		if (scrollTop) {
+			setScrollTop(false);
+			updateParameters(0);
+		}
+	}, [scrollTop]);
+
+	useEffect(() => {
+		if (sortedRowKeys) {
+			console.log({sortedRowKeys});
+			for (const key of sortedRowKeys) {
+				init(key);
+			}
+		}
+	}, [sortedRowKeys]);
 
 
 	return (
 		<>
 			<tbody>
-				{data && Object.keys(data)[0] ?
+				{hasLoaded && sortedRowKeys ?
 					<>
 						{sortedRowKeys.map((row, i) => (
 							minLoad <= i && i <= maxLoad &&
 							<Row
 								onEnterViewport={() => updateParameters(i)}
-								id={row}
+								id={data[row][dataTable_pk].toString()}
 								order={i}
+								totalRows={sortedRowKeys.length}
 								rowData={data[row]}
 								meta={meta}
 								keysForTableCols={keysForTableCols}
 								additionalColKeys={additionalColKeys}
-								key={i}/>
+								updateEntry={updateEntry}
+								key={data[row][dataTable_pk].toString()}
+								check={check(data[row][dataTable_pk].toString())}
+								toggle={toggle(data[row][dataTable_pk].toString())}
+							/>
 						))}
-					</> : <>
-						{fakedata.map((row, i) => (
-							<Row
-								id={i}
-								rowData={false}
-								meta={meta}
-								keysForTableCols={keysForTableCols}
-								additionalColKeys={additionalColKeys}
-								key={i}/>
-						))}
-					</>
+					</> :
+					hasLoaded ?
+						<>
+							<tr>
+								<td>
+									Geen resultaat
+								</td>
+							</tr>
+						</>
+						:
+						<>
+							{fakedata.map((row, i) => (
+								<Row
+									id={i}
+									rowData={false}
+									meta={meta}
+									keysForTableCols={keysForTableCols}
+									additionalColKeys={additionalColKeys}
+									key={i}/>
+							))}
+						</>
 				}
 			</tbody>
 		</>

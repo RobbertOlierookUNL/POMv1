@@ -4,24 +4,38 @@ import {useRouter} from "next/router";
 import React, {useState, useEffect, useContext} from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 
-import { allOptions, allOptionsWithData } from "../../../config/viewOptions";
+
+import { allOptionsWithData} from "../../../config/viewOptions";
 import { useSortableData } from "../../../lib/custom-hooks";
 import useGlobal from "../../store";
 
 
-
-
-
-
-
+function Alert(props) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const ViewTable = ({data}) => {
 	const {view_name, created_at, updated_at, config, ...viewdata} = data || {};
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
+	const [allOptions, setAllOptions] = useState(Object.keys(allOptionsWithData));
+
+	useEffect(() => {
+
+		if (config && JSON.parse(config)?.extendable) {
+			setAllOptions(Object.keys(allOptionsWithData).filter(o => !allOptionsWithData[o].extendable));
+		}
+		else {
+			setAllOptions(Object.keys(allOptionsWithData));
+		}
+	}, [config]);
 	const [saving, setSaving] = useState(false);
+	const [saved, setSaved] = useState(false);
+	const [showSaved, setShowSaved] = useState(false);
+	const [init, setInit] = useState(true);
 	const [lastSavedDataState, setLastSavedDataState] = useState({});
 	const [myTimeout, setMyTimeout] = useState(0);
 	const [primary] = useGlobal(
@@ -44,6 +58,7 @@ const ViewTable = ({data}) => {
 	const Router = useRouter();
 	const {pathname, query: {view, v: mode,}} = Router;
 	const fakedata = new Array(50).fill(".");
+
 	useEffect(() => {
 		let _dataState = {};
 		Object.keys(viewdata).map(key => {
@@ -57,6 +72,7 @@ const ViewTable = ({data}) => {
 		});
 		setLastSavedDataState(_dataState);
 		setDataState(_dataState);
+		setInit(true);
 	}, [Object.keys(viewdata)[0]]);
 
 	useEffect(() => {
@@ -69,18 +85,18 @@ const ViewTable = ({data}) => {
 		await Object.keys(dataState).forEach(async item => {
 			await saveData(item);
 		});
-		Router.push({pathname, query: {v: "edit", view}});
+		if (Router.query && Router.query.v !== "edit") {
+			Router.push({pathname, query: {...Router.query, v: "edit"}});
 
-
+		}
+		setSaved(true);
 	};
 
 	const saveData = async (attr) => {
-		console.log(dataState);
-		console.log({attr});
-		console.log(dataState[attr]);
 		const value = JSON.stringify(dataState[attr]);
 		console.log({value});
 		if ((value !== viewdata[attr]) || mode === "duplicated") {
+			setSaving(true);
 			try {
 				console.log("trying..");
 				const res = await fetch("/api/view/edit-view", {
@@ -95,7 +111,6 @@ const ViewTable = ({data}) => {
 					}
 				});
 				const json = await res.json();
-				console.log({json});
 				if (!res.ok) throw Error(json.message);
 			} catch (e) {
 				throw Error(e.message);
@@ -116,21 +131,62 @@ const ViewTable = ({data}) => {
 	// };
 
 	useEffect(() => {
-		if(myTimeout) {
-			clearTimeout(myTimeout);
-		}
-		setMyTimeout(setTimeout(() => {
-			setSaving(true);
-			for (const attr in dataState) {
-				if (dataState[attr] !== lastSavedDataState[attr]) {
-					saveData(attr);
+		if (!init) {
+			if(myTimeout) {
+				clearTimeout(myTimeout);
+				console.log("clear");
+
+			}
+			setMyTimeout(setTimeout(() => {
+				for (const attr in dataState) {
+					if (dataState[attr] !== lastSavedDataState[attr]) {
+						saveData(attr);
+					}
+				// setLastSavedDataState(dataState);
+				// setSaving(false);
 				}
 				setLastSavedDataState(dataState);
-				setSaving(false);
+				setSaved(true);
+			}, 5000));
+		}
+		else {
+			setInit(false);
+		}
+		return function() {
+			if(myTimeout) {
+				clearTimeout(myTimeout);
 			}
-		}, 5000));
-
+		};
 	}, [dataState]);
+
+	useEffect(() => {
+		if (saved) {
+			setTimeout(() => {
+				if (saving) {
+					setShowSaved(true);
+
+				}
+				setSaving(false);
+				setSaved(false);
+			}, 10);
+
+		}
+	}, [saved]);
+
+	useEffect(() => {
+		const onKeyDown = e => {
+			if(e.ctrlKey && e.which === 83){ // Check for the Ctrl key being pressed, and if the key = [S] (83)
+				setSaving(true);
+				saveAllData();
+				e.preventDefault();
+				return false;
+			}
+		};
+		document.addEventListener("keydown", onKeyDown);
+		return () => {
+			document.removeEventListener("keydown", onKeyDown);
+		};
+	}, []);
 
 	useEffect(() => {
 		const option = allOptions[0];
@@ -177,7 +233,7 @@ const ViewTable = ({data}) => {
 															type={allOptionsWithData[option].input}
 															className={"optionInput"}
 															value={dataState[attribute] && dataState[attribute][option] ? dataState[attribute][option] : ""}
-															placeholder={dataState[attribute] && dataState[attribute][option] === null ? "-" : null  }
+															placeholder={dataState[attribute] && dataState[attribute][option] === null ? "" : null  }
 															onChange={(event) => setDataState({...dataState, [attribute]: {...dataState[attribute], [option]: event.target.value}})}
 														// onBlur={() => saveData(attribute)}
 														/>
@@ -191,7 +247,7 @@ const ViewTable = ({data}) => {
 														// onBlur={() => saveData(attribute)}
 														>
 															{allOptionsWithData[option].input.map((optionvalue, k) =>
-																<option value={optionvalue} key={k}>{optionvalue}</option>
+																<option value={optionvalue} key={k}>{optionvalue !== false ? optionvalue :"none"}</option>
 															)}
 														</select>
 													}
@@ -236,10 +292,23 @@ const ViewTable = ({data}) => {
 					horizontal: "left",
 				}}
 				open={saving}
-				// autoHideDuration={6000}
-				// onClose={handleClose}
+				key={"saving"}
 				message="Saving..."
 			/>
+			<Snackbar
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "left",
+				}}
+				open={showSaved}
+				key={"saved"}
+				autoHideDuration={1500}
+				onClose={() => setShowSaved(false)}
+			>
+				<Alert onClose={() => setShowSaved(false)} severity="success">
+					Saved!
+				</Alert>
+			</Snackbar>
 
 
 			<style jsx>{`

@@ -35,6 +35,9 @@ module.exports = {
 			"error",
 			"always"
 		],
+		"no-mixed-spaces-and-tabs": [
+			"off", "smart-tabs"
+		],
 		"react/prop-types": [0],
 		"no-unused-vars": [1],
 	}

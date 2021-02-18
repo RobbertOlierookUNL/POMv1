@@ -7,10 +7,10 @@ import React from "react";
 import Button from "../../components/button";
 import Header from "../../components/header";
 import OptionDrawer from "../../components/header/optiondrawer";
-import SchemaDropdown from "../../components/schemadropdown";
-import UserMenu from "../../components/usermenu";
+import SchemaDropdown from "../../components/options/schemadropdown";
+import UserMenu from "../../components/header/usermenu";
 import UserOptions from "../../components/useroptions";
-import ViewButtons from "../../components/viewbuttons";
+import ViewButtons from "../../components/options/viewbuttons";
 import useGlobal from "../../components/store";
 
 
@@ -44,7 +44,7 @@ const Admin = () => {
 				<ViewButtons/>
 			</OptionDrawer>
 			<UserMenu>
-				<UserOptions loggedIn={false}/>
+				<UserOptions loggedIn={false} admin/>
 			</UserMenu>
 
 			<style jsx global>{`

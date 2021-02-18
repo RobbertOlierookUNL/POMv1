@@ -17,7 +17,7 @@ import useGlobal from "../store";
 // 	},
 // }));
 
-const LoginScreen = ({active, initialData, transportData}) => {
+const LoginScreen = ({active, initialData, transportData, admin}) => {
 	const { register, handleSubmit, getValues, errors } = useForm();
 	// const classes = useStyles();
 	const [submitting, setSubmitting] = useState(false);
@@ -36,7 +36,7 @@ const LoginScreen = ({active, initialData, transportData}) => {
 
 	};
 
-	useEffect(async () => {
+	useEffect(() => {(async () => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
@@ -45,7 +45,7 @@ const LoginScreen = ({active, initialData, transportData}) => {
 				const res = await fetch(`/api/user/get-user-id?email=${data.email.toLowerCase()}`, {signal});
 				const json = await res.json();
 				if (!res.ok) throw Error(json.message);
-				await Router.push(`/${json.userId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
+				await Router.push(`${admin ? "/admin" : ""}/${json.userId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
 				expandUserMenu(false);
 			} catch (e) {
 				setSubmitting(false);
@@ -59,6 +59,7 @@ const LoginScreen = ({active, initialData, transportData}) => {
 		return function cleanup() {
 			abortController.abort();
 		};
+	})();
 	}, [submitting, data]);
 
 	useEffect(() => () => {transportData({...initialData, email: getValues("email")});}, []);

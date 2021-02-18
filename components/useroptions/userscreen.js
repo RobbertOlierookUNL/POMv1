@@ -1,8 +1,11 @@
 import React from "react";
 
-const UserScreen = ({active}) => {
+const UserScreen = ({user}) => {
 	return (
-		<div></div>
+		<div>
+			{user?.roll ?
+				 `${user.roll.hasCategory ? user.category.categoryName : ""} ${user.roll.rollName} ${user.roll.hasChain ? user.chain.chainName : ""}` : ""}
+		</div>
 	);
 };
 

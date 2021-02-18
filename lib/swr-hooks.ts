@@ -6,7 +6,7 @@ function fetcher(url: string) {
 
 
 export function useEntries() {
-  const { data, error } = useSWR(`/api/data/get-entries`, fetcher,)
+  const { data, error } = useSWR(`/api/data/get-entries`, fetcher,  {refreshInterval: 1000 })
 
   return {
     data,
@@ -105,7 +105,7 @@ export function useEntry(id: string) {
 }
 
 export function useView(view: string, initialData: object) {
-  return useSWR(`/api/view/get-view?view=${view}`, fetcher, {initialData})
+  return useSWR(`/api/view/get-view?view=${view}`, fetcher, {initialData, refreshInterval: 1000 })
 }
 
 export function useUser(userId: number) {

@@ -5,7 +5,7 @@ import useGlobal from "./store";
 
 
 
-const Card = ({title, titlefloater, children, bodyPadding=false}) => {
+const Card = ({title, titlefloater, children, bodyPadding=false, bigHeader=false, roundedBorders=false}) => {
 	const {primary} = useTheme();
 	return (
 		<>
@@ -20,17 +20,19 @@ const Card = ({title, titlefloater, children, bodyPadding=false}) => {
         .card-header{
           background-color: ${primary.color};
           color: ${primary.text};
-          padding: 4px;
+          padding: ${bigHeader ? "8px" : "4px"};
+					border-radius: ${roundedBorders ? "6px 6px 0 0" : 0};
           position: sticky;
           top: 0;
 
         }
         .card-body{
           padding: ${bodyPadding ? bodyPadding === "text" ? "2px 4px" : "4px" : 0};
+					border-radius: ${roundedBorders ? "0 0 6px 6px" : 0};
+
         }
         .float-right {
           float: right;
-
         }
       `}</style>
 		</>

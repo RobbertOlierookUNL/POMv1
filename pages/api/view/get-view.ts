@@ -4,6 +4,9 @@ import { query } from '../../../lib/db'
 const handler: NextApiHandler = async (req, res) => {
   const { view } = req.query
   try {
+    if (view === null) {
+      return null;
+    }
     if (!view) {
       return res.status(400).json({ message: '`view` required' })
     }

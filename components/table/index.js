@@ -1,13 +1,18 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
-import { allOptionsWithData } from "../../config/viewOptions";
 import {
-	useEntries,
-	useUserSpecificEntries,
-	useView
-} from "../../lib/swr-hooks";
-import { useSortableData, useToolkit } from "../../lib/custom-hooks";
+	filterAndUnitBarHeight,
+	filterDisplayBarHeight,
+	headerHeight,
+	horPadding,
+	tableHeadersBarHeight,
+	toolBarHeight,
+	verPadding
+} from "../../config/globalvariables";
+import FilterBar from "./filterbar";
+import FilterModal from "./filterbar/filtermodal";
+import SharedShadowModal from "../sharedshadowmodal";
 import TableBody from "./tablebody";
 import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
@@ -16,115 +21,106 @@ import useGlobal from "../store";
 
 
 
-const Table = ({view, initialViewMeta, user}) => {
-	console.log("tablererender");
-	const {data: _meta} = useView(view, initialViewMeta);
-	const {data: preData} = useEntries();
 
 
-	const {view_name, created_at, updated_at, config, ...meta} = _meta;
-	const notUsed = {};
-	notUsed.variables = {view_name, created_at, updated_at, config};
-	// const [meta, setMeta] = useState({});
-	// const [keys, setKeys] = useState({});
-	const [data, setData] = useState({});
-	const { keys: sortedKeys, requestSort, sortConfig } = useSortableData(data);
-	const {mergeBy} = useToolkit();
+
+
+
+
+
+
+
+
+
+const Table = ({data}) => {
+	console.log("rerender");
+	const {
+		filteredData,
+		meta,
+		keys,
+		hasLoaded,
+		filterParameters,
+		sortedKeys,
+		requestSort,
+		sortConfig,
+		updateEntry,
+		user,
+	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
-	const horPadding = 15;
-	const verPadding = 15;
+
 	const [primary_very_light] = useGlobal(
 		state => state.primary_very_light,
 		() => null
 	);
+	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
+	const [filterModal] = useGlobal(
+		state => state.filterModal,
+	);
 
+
+	const [scrollTop, setScrollTop] = useState(false);
 	const handleClick = () => {
+		setScrollTop(true);
 		tableRef.current.scrollTo(0, 0);
 	};
 
-	const cols = Object.keys(meta);
-	const keys = {
-		compact: [],
-		expanded: [],
-	};
-	cols.map((col, i) => {
-		meta[col] = meta[col] ? JSON.parse(meta[col]) : {};
-		if (meta[col].display === "compact") {
-			keys.compact.push(cols[i]);
-		} else if (meta[col].display === "expanded") {
-			keys.expanded.push(cols[i]);
-		}
-	});
-	const onIndex = (a, b) => (
-		(meta[a].indexweight || allOptionsWithData.widthweight.default) - (meta[b].indexweight || allOptionsWithData.widthweight.default)
-	);
-	keys.compact.sort(onIndex);
-	keys.expanded.sort(onIndex);
-	// const {data: preData} = useUserSpecificEntries(keys.compact.concat(keys.expanded), user.roll && user.roll.rollName);
-	// console.log(preData);
-	const _data = preData || [];
-
-
-
-	// useMemo(() => {
-	// 	console.log(2);
-	// 	const cols = Object.keys(metaString);
-	// 	const keys = {
-	// 		compact: [],
-	// 		expanded: [],
-	// 	};
-	// 	let _meta = {};
-	// 	cols.map((col, i) => {
-	// 		_meta[col] = metaString[col] ? JSON.parse(metaString[col]) : {};
-	// 		if (_meta[col].display === "compact") {
-	// 			keys.compact.push(cols[i]);
-	// 		} else if (_meta[col].display === "expanded") {
-	// 			keys.expanded.push(cols[i]);
-	// 		}
-	// 	});
-	// 	const onIndex = (a, b) => (
-	// 		(_meta[a].indexweight || allOptionsWithData.widthweight.default) - (_meta[b].indexweight || allOptionsWithData.widthweight.default)
-	// 	);
-	// 	keys.compact.sort(onIndex);
-	// 	keys.expanded.sort(onIndex);
-	// 	setKeys(keys);
-	// 	setMeta(_meta);
-	// }, [ Object.keys(metaString)[0]]);
-	//
-	useMemo(() => {
-		if (
-			Object.keys(_data)[0]
-			&& Object.keys(meta)[0])
-		{
-			setData(mergeBy(_data, meta, keys.compact, keys.expanded));
-		}
-	}, [Object.keys(_data)[0], Object.keys(meta)[0], Object.keys(keys)[0]]);
-
 
 	return (
+
 		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
-			{data && Object.keys(data)[0] &&
+			{hasLoaded &&
 				<ToTopButton
 					handleClick={handleClick}
-					top={`${38.67 + 25 + (verPadding * 3)}px`}
-					left={`calc(100vw - ${50 + 2*verPadding}px)`}
+					top={
+						`calc(
+							${headerHeight} +
+							${verPadding}px +
+							${arrayOfFilters.length ? filterDisplayBarHeight : "0px"} +
+							${toolBarHeight} +
+							${tableHeadersBarHeight} +
+							${filterAndUnitBarHeight} +
+							${verPadding}px)`
+					}
+					right={`${2*horPadding + 10}px`}
 				/>}
+			<SharedShadowModal open={filterModal}>
+				<FilterModal
+					meta={meta}
+					keys={keys}
+					filterParameters={filterParameters}
+					sortedRowKeys={sortedKeys}
+				/>
+			</SharedShadowModal>
 			<div className="tableContainer" ref={tableRef}>
-				<Toolbar/>
+				<FilterBar/>
+				<Toolbar
+					data={filteredData}
+					keys={keys.compact.concat(keys.expanded)}
+					sortedRowKeys={sortedKeys}
+					meta={meta}
+				/>
 				{meta && Object.keys(meta)[0] ?
 					<table className="table">
 						<TableHeaders
 							requestSort={requestSort}
 							sortConfig={sortConfig}
 							meta={meta}
-							keysForTableCols={keys.compact}/>
+							keysForTableCols={keys.compact}
+							filterParameters={filterParameters}
+							numberOfEntries={sortedKeys && sortedKeys.length}
+						/>
 						<TableBody
 							meta={meta}
-							data={data}
+							data={filteredData}
+							hasLoaded={hasLoaded}
 							keysForTableCols={keys.compact}
 							additionalColKeys={keys.expanded}
-							sortedRowKeys={sortedKeys}/>
+							sortedRowKeys={sortedKeys}
+							scrollTop={scrollTop}
+							setScrollTop={setScrollTop}
+							updateEntry={updateEntry}
+						/>
 					</table>
 					:
 					<table className="table">
@@ -155,13 +151,14 @@ const Table = ({view, initialViewMeta, user}) => {
 			</div>
 			<style jsx>{`
 				.tableContainer {
-					width: calc(100% - ${horPadding *2 - 10}px);
+					width: calc(100% - ${horPadding *2 - 0}px);
 					overflow: auto;
 					height: calc(100vh - 38.67px - ${verPadding * 2}px);
 					position: relative;
-					top: ${horPadding}px;
-					left: ${verPadding}px;
+					top: ${verPadding}px;
+					left: ${horPadding}px;
 					box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
+					border-radius: 6px;
 
 
 				}

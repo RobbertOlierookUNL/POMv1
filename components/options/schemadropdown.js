@@ -1,8 +1,7 @@
 import React from "react";
-import useGlobal from "./store";
+import useGlobal from "../store";
 
-const SchemaDropdown = () => {
-	const [value, setValue] = React.useState(10);
+const SchemaDropdown = ({value, handleChange, name}) => {
 	const [, setSchema] = useGlobal(
 		() => null,
 		actions => actions.setSchema
@@ -10,7 +9,8 @@ const SchemaDropdown = () => {
 	return (
 		<select
 			value={value}
-			onChange={(e)=>{setValue(e.target.value);
+			name={name}
+			onChange={(e)=> {handleChange(e);
 				setSchema(e.target.value);}}
 		>
 			<option value={0}>Geel-Blauw</option>

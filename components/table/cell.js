@@ -2,24 +2,40 @@ import React from "react";
 import Skeleton from "react-loading-skeleton";
 import moment from "moment";
 
-import useGlobal from "../store";
+import { useTheme } from "../../lib/custom-hooks";
 
 
-const Cell = ({cellData, width, rowId, colName, noExpand}) => {
-	const [active] = useGlobal(
-		state => state.active,
-		() => null
-	);
-	const [gray_light] = useGlobal(
-		state => state.gray_light,
-		() => null
-	);
+
+const Cell = ({cellData, omit, active, colName, noExpand}) => {
+	const {gray_light} = useTheme();
+
 	return (
-		<td className={colName}
-		>{cellData === false ?
+		<td
+			className={colName}
+		>
+			{(cellData === false)
+				?
 				<Skeleton />
-				: (moment.isMoment(cellData)) ? cellData.format("YYYY-MM-DD") :
-					(!cellData || cellData === "0") ? "" : cellData
+				:
+
+				(moment.isMoment(cellData)
+					?
+					cellData.format("YYYY-MM-DD")
+					:
+
+					(!cellData || cellData === "0" || omit)
+						?
+						""
+						:
+						Array.isArray(cellData)
+							?
+							<i>..</i>
+							:
+							cellData
+				)
+
+
+
 			}
 			<style jsx>{`
         td {
@@ -28,7 +44,7 @@ const Cell = ({cellData, width, rowId, colName, noExpand}) => {
 					grid-column-start: ${colName};
 					cursor: pointer;
 					padding: 2px;
-			 	${(active === rowId) || noExpand ? "" : (`
+			 	${active || noExpand ? "" : (`
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;`)
@@ -43,4 +59,15 @@ const Cell = ({cellData, width, rowId, colName, noExpand}) => {
 	);
 };
 
+/* .editable:after {
+	content: '';
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 5px 5px 0;
+	border-color: transparent ${secondary.color} transparent transparent;
+	right: 0;
+	top: 0;
+	position: absolute;
+} */
 export default Cell;

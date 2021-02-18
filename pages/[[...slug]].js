@@ -1,35 +1,58 @@
 import Head from "next/head";
-import React from "react";
+import React, {useEffect} from "react";
 
 import { isNumeric } from "../lib/custom-hooks";
 import { query } from "../lib/db";
+import { useDataForView } from "../lib/enhanced-swr-hooks";
+import { useGlobalUser } from "../lib/store-hooks";
 import Header from "../components/header";
 import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
-import SchemaDropdown from "../components/schemadropdown";
+import Options from "../components/options";
+import Shadow from "../components/shadow";
 import Table from "../components/table";
-import UserMenu from "../components/usermenu";
+import UserMenu from "../components/header/usermenu";
 import UserOptions from "../components/useroptions";
-import ViewButtons from "../components/viewbuttons";
 import useGlobal from "../components/store";
 
 
 
 
 
-
-
-// const firstName="John";
-// const lastName="Doe";
-// const userId=true;
-
-
-export default function Home({user, myContext, view, initialViewMeta}) {
+export default function Home({user, view, initialViewMeta, extendedView, initialExtendedView}) {
+	const {
+		filteredData,
+		meta,
+		keys,
+		hasLoaded,
+		filterParameters,
+		sortedKeys,
+		requestSort,
+		sortConfig,
+		updateEntry,
+	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView);
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
 	);
-	console.log({myContext, user, view});
+	const [options] = useGlobal(
+		state => state.options,
+		() => null
+	);
+	const [userMenu] = useGlobal(
+		state => state.userMenu,
+		() => null
+	);
+	const [filterModal] = useGlobal(
+		state => state.filterModal,
+		() => null
+	);
+
+	useGlobalUser(user);
+
+
+
+	// console.log({user});
 	return (
 		<>
 			<Head>
@@ -38,24 +61,39 @@ export default function Home({user, myContext, view, initialViewMeta}) {
 			</Head>
 			<Header fName={user.firstName} lName={user.lastName}>
 				<MenuButton/>
-				POM
+			 <>POM <img style={{height: "120%"}} src="/Logo_voor_kleur_vierkant.png"/></>
 			</Header>
+			<Shadow
+				zIndex={8}
+				trigger={options || userMenu || filterModal}
+				softTrigger={userMenu && !options && !filterModal}
+				clickthrough={false}/>
 			<OptionDrawer>
-				<SchemaDropdown/>
-				<ViewButtons/>
+				<Options user={user} meta={meta}/>
 			</OptionDrawer>
 			<UserMenu>
-				<UserOptions loggedIn={!!user.userId}/>
+				<UserOptions loggedIn={!!user.userId} user={user}/>
 			</UserMenu>
 			<Table
 				// initialData={initialData}
-				view={view}
-				initialViewMeta={initialViewMeta}
-				user={user}
+				data={
+					{
+						filteredData,
+						meta,
+						keys,
+						hasLoaded,
+						filterParameters,
+						sortedKeys,
+						requestSort,
+						sortConfig,
+						updateEntry,
+					}
+				}
 			/>
 			<style jsx global>{`
 				body, html{
 					background-color: ${secondary.color};
+					background: linear-gradient(80deg, ${secondary.color}, white);
 				}
 			`}</style>
 		</>
@@ -74,7 +112,10 @@ export async function getStaticProps(context) {
 						`,
 				context.params.slug[0]
 				);
-				if (!getUser[0]) {return {notFound: true};}
+				if (!getUser[0]) {return {redirect: {
+					destination: "/",
+					permanent: false,
+				},};}
 				user = getUser[0];
 				if (user.roll) {
 					const getRoll = await query(/* sql */`
@@ -124,18 +165,35 @@ export async function getStaticProps(context) {
 	view
 	);
 	if (!getView[0]) {return {notFound: true};}
+
+	let getExtendedView = [null];
+	let extendedView = null;
+	if (getView[0]?.config) {
+		const config = JSON.parse(getView[0].config);
+		if (config?.extendable) {
+			extendedView = config.extend;
+			getExtendedView = await query(/* sql */`
+				SELECT *
+				FROM view_metadata_table_v3test
+				WHERE view_name = ?
+				`,
+			extendedView
+			);
+		}
+	}
+
 	const initialViewMeta = JSON.parse(JSON.stringify(getView[0]));
-
-	const myContext = JSON.parse(JSON.stringify(context));
-
+	const initialExtendedView = JSON.parse(JSON.stringify(getExtendedView[0]));
 
 	return {
 		props: {
 			user,
 			view,
 			initialViewMeta,
-			myContext
+			extendedView,
+			initialExtendedView,
 		},
+		// revalidate: 1,
 	};
 }
 
