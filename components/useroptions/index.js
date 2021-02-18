@@ -9,7 +9,7 @@ import useGlobal from "../store";
 
 
 
-const UserOptions = ({loggedIn, admin}) => {
+const UserOptions = ({loggedIn, admin, user}) => {
 	const [registerMode, setRegisterMode] = useState(false);
 	const [primary] = useGlobal(
 		state => state.primary,
@@ -45,7 +45,7 @@ const UserOptions = ({loggedIn, admin}) => {
 				}
 			</div>
 			{loggedIn ?
-				<UserScreen active={userMenu}/>
+				<UserScreen user={user}/>
 				: registerMode ?
 					<RegisterScreen
 						active={userMenu}

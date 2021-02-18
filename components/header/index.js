@@ -72,17 +72,24 @@ const Header = ({children, fName, lName, admin=false}) => {
 					box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
         }
 				.mid {
-					font-size: 1.3em;
+					font-size: 1.4em;
 					font-weight: 400;
 					left: 50%;
 					position: absolute;
 					top: 50%;
-					transform: translate(calc(-50% - 1.5px), calc(-50% - 1.5px));
+					transform: translate(calc(-50%), calc(-50%));
 					cursor: default;
 					pointer-events: none;
 					user-select: none;
-					color: ${tertiary.color === "#005eef" ? tertiary.text : tertiary.color};
-					text-shadow: 3px 3px 5px rgba(0, 0, 0, 1);
+					color: white;
+					height: ${headerHeight};
+					display: flex;
+					justify-content: center;
+					align-items: center;
+
+
+					/* color: ${tertiary.color === "#005eef" ? tertiary.text : tertiary.color};
+					text-shadow: 3px 3px 5px rgba(255, 255, 255, 1); */
 
 
 				}

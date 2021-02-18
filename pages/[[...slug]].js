@@ -61,7 +61,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 			</Head>
 			<Header fName={user.firstName} lName={user.lastName}>
 				<MenuButton/>
-				{user?.roll ? `${user.roll.hasCategory ? user.category.categoryName : ""} ${user.roll.rollName} ${user.roll.hasChain ? user.chain.chainName : ""}` : "POM"}
+			 <>POM <img style={{height: "120%"}} src="/Logo_voor_kleur_vierkant.png"/></>
 			</Header>
 			<Shadow
 				zIndex={8}
@@ -72,7 +72,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 				<Options user={user} meta={meta}/>
 			</OptionDrawer>
 			<UserMenu>
-				<UserOptions loggedIn={!!user.userId}/>
+				<UserOptions loggedIn={!!user.userId} user={user}/>
 			</UserMenu>
 			<Table
 				// initialData={initialData}

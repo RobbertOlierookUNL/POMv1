@@ -29,7 +29,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 	const [gray_light, gray_lighter, gray_very_light, tertiary] = useColors("gray_light", "gray_lighter", "gray_very_light", "tertiary");
 
 	useEffect(() => {
-		rowData && groupedAKs && setHeight(expandCell.current.scrollHeight + 1.33 + "px");
+		rowData && groupedAKs && setHeight(expandCell.current.scrollHeight + "px");
 	}, [rowData, groupedAKs]);
 
 	useEffect(() => {
