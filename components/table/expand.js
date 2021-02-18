@@ -156,13 +156,12 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 				.sub-table {
 					width: 100%;
 					color: ${gray_lighter.text};
+					background-color: white;
 					border-collapse: collapse;
 					font-weight: bold;
-					position: relative;
 					border-bottom: 1px solid ${tertiary.color};
-					z-index: 3;
 				}
-				.sub-table::before {
+				/* .sub-table::before {
 				  content: "";
 				  position: absolute;
 				  top: 0;
@@ -170,9 +169,9 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 				  width: 100%;
 				  height: 100%;
 				  opacity: .05;
-				  z-index: 2;
+				  z-index: 0;
 				  background-color: ${tertiary.color};
-				}
+				} */
 				.expandCell:not(.active) {
 					font-size: 0.97em;
 				}

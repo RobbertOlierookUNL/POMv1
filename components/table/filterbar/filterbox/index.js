@@ -89,7 +89,7 @@ const FilterBox = ({active, filtertype, filterName, valuetype, seperation, title
           position: absolute;
           top: 0;
           left: 0;
-          z-index: 2;
+          z-index: 4;
           height: ${active ? "auto" : 0};
           min-height: ${active ? "150px" : 0};
           width: ${active ? "200px" : 0};

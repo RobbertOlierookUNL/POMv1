@@ -76,6 +76,7 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, f
           color: ${primary.color};
         }
       `}</style>
+
 		</th>
 	);
 };

@@ -130,6 +130,10 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 					display: grid;
 		    	grid-template-columns: ${colString};
 				}
+				.blas {
+					width: 11.2px;
+				}
+
 			`}</style>
 		</thead>
 	);
