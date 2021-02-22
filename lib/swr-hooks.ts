@@ -15,14 +15,10 @@ export function useEntries() {
   }
 }
 
-export function useUserSpecificEntries(keys: Array<any>, category: any ) {
-  if (!keys || !category) {
-    return useEntries();
-  }
-  const keyString = `(${keys.join(", ")})`;
-  console.log({keys, category, keyString})
-
-  const { data, error } = useSWR(`/api/data/get-user-view-entries?keys=${keyString}&category=${category}`, fetcher,)
+export function useUserSpecificEntries(columns: Array<any>, conditions: Object ) {
+  const colString = columns ? JSON.stringify(columns) : undefined;
+  const conString = conditions ? JSON.stringify(conditions) : undefined;
+  const { data, error } = useSWR(`/api/data/get-entries?columns=${colString}&conditions=${conString}`, fetcher, {refreshInterval: 1000 })
 
   return {
     data,
@@ -105,7 +101,7 @@ export function useEntry(id: string) {
 }
 
 export function useView(view: string, initialData: object) {
-  return useSWR(`/api/view/get-view?view=${view}`, fetcher, {initialData, refreshInterval: 1000 })
+  return useSWR(`/api/view/get-view?view=${view}`, fetcher, {initialData, /*refreshInterval: 1000*/ })
 }
 
 export function useUser(userId: number) {

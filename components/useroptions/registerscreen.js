@@ -79,6 +79,13 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 			const firstName = titleCase(fName);
 			const lastName = titleCase(lName);
 			const roll = data.roll.rollName;
+			const sf = {};
+			if (data.category !== "all" ) {
+				sf.category = data.category;
+			}
+			if (data.mrp) {
+				sf.mrpc = data.mrp.split(" ");
+			}
 
 			try {
 				const res = await fetch("/api/user/create-user", {
@@ -86,7 +93,7 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({...data, roll, firstName, lastName}),
+					body: JSON.stringify({...data, roll, firstName, lastName, sf: JSON.stringify(sf)}),
 				}, {signal});
 				console.log(2);
 				const json = await res.json();
@@ -242,6 +249,27 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 						/>
 						{errors.chain && <div className="error-message">Kies een chain</div>}
 					</FormControl>
+				}
+				{watchRoll && watchRoll.hasMrp === 1 &&
+					<>
+						<div className={classes.root}>
+							<TextField
+								id="mrp"
+								name="mrp"
+								label="MRP's"
+								type="text"
+								inputRef={
+									register()
+								}
+								className="disable-on-inactive"
+								tabIndex={active ? 0 : -1}
+								defaultValue={initialData.mrp || ""}
+								error={!!errors.mrp}
+								margin="dense"
+							/>
+						</div>
+						<p><small>Scheid verschillende MRPs met een spatie</small></p>
+					</>
 				}
 
 				<Button

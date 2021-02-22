@@ -14,6 +14,23 @@ import ViewButtons from "../../components/options/viewbuttons";
 import useGlobal from "../../components/store";
 
 
+const columns = ["mrpc", "mrdr_id", "category", "maktx"];
+const conditions = {mrpc: ["z01", "z013"], category: "FOOD"};
+
+console.log(`
+	SELECT (${columns.toString()}) FROM website_output_table_v3test
+	${conditions &&
+		`WHERE ${Object.entries(conditions).map(([key, value]) => {
+			const connector = Array.isArray(value) ? "IN" : "=";
+			const processedValue = Array.isArray(value) ? `(${value.map(() => "?").toString()})` : "?";
+			return `(${key} ${connector} ${processedValue})`;
+		}).join(" AND ")}`
+}
+`,
+conditions ?
+	Object.values(conditions).flat()
+	: undefined);
+
 
 const Admin = () => {
 	const [secondary] = useGlobal(

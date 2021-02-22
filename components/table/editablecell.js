@@ -67,7 +67,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 
 	const edit = () => {
 		setEditMode(true);
-		console.log("hiya");
+
 	};
 	const save = (e) => {
 		setEditMode(false);

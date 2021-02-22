@@ -30,9 +30,13 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		requestSort,
 		sortConfig,
 		updateEntry,
-	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView);
+	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, user?.silentFilters);
 	const [secondary] = useGlobal(
 		state => state.secondary,
+		() => null
+	);
+	const [gray_dark] = useGlobal(
+		state => state.gray_dark,
 		() => null
 	);
 	const [options] = useGlobal(
@@ -92,8 +96,9 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 			/>
 			<style jsx global>{`
 				body, html{
-					background-color: ${secondary.color};
-					background: linear-gradient(80deg, ${secondary.color}, white);
+					/* background-color: ${secondary.color};
+					background: linear-gradient(80deg, ${gray_dark.color}, ${secondary.color}); */
+					background-color: ${gray_dark.color};
 				}
 			`}</style>
 		</>
@@ -193,7 +198,7 @@ export async function getStaticProps(context) {
 			extendedView,
 			initialExtendedView,
 		},
-		// revalidate: 1,
+		revalidate: 1,
 	};
 }
 

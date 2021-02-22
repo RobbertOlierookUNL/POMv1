@@ -11,7 +11,7 @@ const Options = ({user, meta}) => {
 		<div>
 			{/* <SchemaDropdown/> */}
 			<ViewButtons/>
-			<SilentFilters user={user} meta={meta}/>
+			{/* <SilentFilters user={user} meta={meta}/> */}
 		</div>
 	);
 };

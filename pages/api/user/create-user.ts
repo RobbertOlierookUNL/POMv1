@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-  const { email, roll, category, chain=null, firstName, lastName } = req.body
+  const { email, roll, category, chain=null, firstName, lastName, sf } = req.body
   try {
     if (!email) {
       return res
@@ -12,9 +12,9 @@ const handler: NextApiHandler = async (req, res) => {
 
     const results = await query(`
     INSERT INTO user_table_v3test
-      (email, roll, category, chain, firstName, lastName)
-      VALUES (?, ?, ?, ?, ?, ?)
-      `, [email, roll, category, chain, firstName, lastName]
+      (email, roll, category, chain, firstName, lastName, silentFilters)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      `, [email, roll, category, chain, firstName, lastName, sf]
     )
 
     return res.json(results)

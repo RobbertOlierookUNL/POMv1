@@ -49,11 +49,11 @@ const ExpandBlock = ({additionalColKeys, rowData, meta, active}) => {
           border-bottom: 1px solid ${gray_light.color}
         }
         .block-row-left {
-          font-weight: bolder;
-          color: ${primary.color};
         }
         .block-row-right {
           float: right;
+					font-weight: bolder;
+					color: ${primary.color};
         }
       `}</style>
 		</div>

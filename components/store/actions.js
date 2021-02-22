@@ -61,9 +61,6 @@ export const removeFromFilters = (store, filter) => {
 	store.setState({arrayOfFilters: [...store.state.arrayOfFilters.filter(item => item != filter)]});
 };
 
-export const setSilentFilters = (store, silentFilters) => {
-	store.setState({silentFilters});
-};
 
 //Checkboxes
 export const toggleCheckBox = (store, boxId, value) => {
