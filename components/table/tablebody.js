@@ -40,9 +40,8 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 
 	useEffect(() => {
 		if (sortedRowKeys) {
-			console.log({sortedRowKeys});
-			for (const key of sortedRowKeys) {
-				init(key);
+			for (const [pk] of sortedRowKeys) {
+				init(pk);
 			}
 		}
 	}, [sortedRowKeys]);
@@ -53,11 +52,11 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 			<tbody>
 				{hasLoaded && sortedRowKeys ?
 					<>
-						{sortedRowKeys.map((row, i) => (
+						{sortedRowKeys.map(([pk, row], i) => (
 							minLoad <= i && i <= maxLoad &&
 							<Row
 								onEnterViewport={() => updateParameters(i)}
-								id={data[row][dataTable_pk].toString()}
+								id={pk}
 								order={i}
 								totalRows={sortedRowKeys.length}
 								rowData={data[row]}
@@ -65,9 +64,9 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 								keysForTableCols={keysForTableCols}
 								additionalColKeys={additionalColKeys}
 								updateEntry={updateEntry}
-								key={data[row][dataTable_pk].toString()}
-								check={check(data[row][dataTable_pk].toString())}
-								toggle={toggle(data[row][dataTable_pk].toString())}
+								key={pk}
+								check={check(pk)}
+								toggle={toggle(pk)}
 							/>
 						))}
 					</> :

@@ -25,11 +25,12 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.2.10",
+    "@zeit/next-workers": "^1.0.0",
     "dotenv": "^8.2.0",
     "file-saver": "^2.0.5",
     "json-fn": "^1.1.1",
     "moment": "^2.29.1",
-    "next": "10.0.1",
+    "next": "^10.0.1",
     "os": "^0.1.1",
     "react": "17.0.1",
     "react-content-loader": "^5.1.4",
@@ -46,6 +47,8 @@
     "swr": "^0.3.9",
     "use-global-hook": "^0.2.1",
     "webpack-merge": "^5.7.3",
+    "worker-loader": "^3.0.8",
+    "worker-plugin": "^5.0.0",
     "xlsx": "^0.16.9"
   },
   "devDependencies": {

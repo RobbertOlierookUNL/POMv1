@@ -119,6 +119,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 						colName={key}
 						key={i}
 						active={thisRowActive}
+						valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 						omit={
 							(rowData
 								&& rowData.addedProps

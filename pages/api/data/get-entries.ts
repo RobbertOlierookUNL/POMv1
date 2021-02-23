@@ -18,6 +18,7 @@ const handler: NextApiHandler = async (req, res) => {
             return `(${key} ${connector} ${processedValue})`;
           }).join(' AND ')}`
         : ""}
+        ORDER BY maktx
     `,
       parsedConditions ?
        Object.values(parsedConditions).flat()

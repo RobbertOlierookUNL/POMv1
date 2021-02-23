@@ -6,9 +6,8 @@ import { useTheme } from "../../lib/custom-hooks";
 
 
 
-const Cell = ({cellData, omit, active, colName, noExpand}) => {
+const Cell = ({cellData, omit, active, colName, noExpand, valueType}) => {
 	const {gray_light} = useTheme();
-
 	return (
 		<td
 			className={colName}
@@ -18,21 +17,21 @@ const Cell = ({cellData, omit, active, colName, noExpand}) => {
 				<Skeleton />
 				:
 
-				(moment.isMoment(cellData)
+				(!cellData || cellData === "0" || omit)
 					?
-					cellData.format("YYYY-MM-DD")
+					""
 					:
-
-					(!cellData || cellData === "0" || omit)
+					(valueType === "date"
 						?
-						""
+						moment(cellData).format("YYYY-MM-DD")
 						:
+
 						Array.isArray(cellData)
 							?
 							<i>..</i>
 							:
 							cellData
-				)
+					)
 
 
 

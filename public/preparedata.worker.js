@@ -1,4 +1,7 @@
-importScripts("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js");
+
+// import moment from "moment";
+// importScripts("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js");
+importScripts("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js");
 
 const countDecimals = function (value) {
 	if(Math.floor(value) === value) return 0;
@@ -49,7 +52,7 @@ const getDropDownParameters = (processedObj, myMeta, key, parameters, level, arr
 	return parameters;
 };
 
-const mapOverData = (allKeys, myMeta, obj, parameters, level, moment) => {
+const mapOverData = (allKeys, myMeta, obj, parameters, level) => {
 	const processedObj = {};
 	allKeys.map(key => {
 		if ((level === "toplevel" && Array.isArray(obj[key]))) {
@@ -82,7 +85,7 @@ const mapOverData = (allKeys, myMeta, obj, parameters, level, moment) => {
 };
 
 
-const prepareData = (myData, myMeta, moment, allOptionsWithData) => {
+const prepareData = (myData, myMeta, allOptionsWithData) => {
 	//wordt gevuld met filter parameters
 	let parameters = {};
 	//alle kolomnamen
@@ -104,7 +107,7 @@ const prepareData = (myData, myMeta, moment, allOptionsWithData) => {
 			// geeft de processed entry terug, en een nieuwe versie van het parameter object
 			// (filterparameters zijn hier op toplevel,
 			// maar gezien er niet gemerged wordt, is er ook geen batchlevel)
-			const {processedObj, updatedParameters} = mapOverData(allKeys, myMeta, obj, parameters, "toplevel", moment);
+			const {processedObj, updatedParameters} = mapOverData(allKeys, myMeta, obj, parameters, "toplevel");
 			//update het paramater object
 			parameters = updatedParameters;
 			//voeg de bewerkte entry toe aan de processedData
@@ -129,7 +132,7 @@ const prepareData = (myData, myMeta, moment, allOptionsWithData) => {
 		// geef alle kolommen, de metadata, de entry en het huidige parameter object mee
 		// geeft de processed entry terug, en een nieuwe versie van het parameter object
 		// (filterparameters zijn hier op batchlevel)
-		const {processedObj, updatedParameters} = mapOverData(allKeys, myMeta, obj, parameters, "batchlevel", moment);
+		const {processedObj, updatedParameters} = mapOverData(allKeys, myMeta, obj, parameters, "batchlevel");
 		//update het paramater object
 		parameters = updatedParameters;
 		//voeg de bewerkte entry toe aan het nieuwe object onder de key met de waarde van de mergepop
@@ -152,7 +155,7 @@ const prepareData = (myData, myMeta, moment, allOptionsWithData) => {
 				//voeg een prop 'addedprops' toe dat er niet gemerged is
 				onlyChild["addedProps"] = {...onlyChild["addedProps"], merged: false};
 				//geef de toplevel filter parameters mee
-				const {updatedParameters} = mapOverData(allKeys, myMeta, onlyChild, parameters, "toplevel", moment);
+				const {updatedParameters} = mapOverData(allKeys, myMeta, onlyChild, parameters, "toplevel");
 				parameters = updatedParameters;
 				//voeg de entry toe aan onze nieuwe array
 				mergedData.push(onlyChild);
@@ -235,7 +238,7 @@ const prepareData = (myData, myMeta, moment, allOptionsWithData) => {
 					return acc;
 				}, {});
 				//Map nog een keer over het resultaat om de toplevel parameters te krijgen
-				const {updatedParameters} = mapOverData(allKeys, myMeta, internalMerge, parameters, "toplevel", moment);
+				const {updatedParameters} = mapOverData(allKeys, myMeta, internalMerge, parameters, "toplevel");
 				parameters = updatedParameters;
 				mergedData.push(internalMerge);
 
@@ -248,10 +251,12 @@ const prepareData = (myData, myMeta, moment, allOptionsWithData) => {
 
 
 onmessage = function(e) {
-	const {isLoading, preData, meta, moment, allOptionsWithData} = e.data;
-	console.log({isLoading, preData, meta, moment, allOptionsWithData});
+	const {isLoading, preData, meta, allOptionsWithData} = e.data;
+	console.log({isLoading, preData, meta, allOptionsWithData});
   	if (!isLoading)
   	{
-  		return {res: prepareData(preData, meta, moment, allOptionsWithData)};
+		const res = JSON.parse(JSON.stringify(prepareData(preData, meta, allOptionsWithData)));
+		console.log({res});
+		postMessage({res});
   	}
 };

@@ -144,9 +144,9 @@ const filter = (data, [filter, level, reference], values) => {
 };
 
 onmessage = function(e) {
-	const {dataSet, mergedFilters} = e.data;
+	const {dataSet, mergedFilters, done} = e.data;
 	console.log({dataSet, mergedFilters});
-	if (Array.isArray(dataSet)) {
+	if (Array.isArray(dataSet) && done) {
 		let iteratingData = [...dataSet];
   	for (var filterKey in mergedFilters) {
   		iteratingData = filter(iteratingData, filterKey.split(",,>"), mergedFilters[filterKey] );
