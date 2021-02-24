@@ -8,10 +8,12 @@ import Button from "../../components/button";
 import Header from "../../components/header";
 import OptionDrawer from "../../components/header/optiondrawer";
 import SchemaDropdown from "../../components/options/schemadropdown";
+import Test from "../../components/test";
 import UserMenu from "../../components/header/usermenu";
 import UserOptions from "../../components/useroptions";
 import ViewButtons from "../../components/options/viewbuttons";
 import useGlobal from "../../components/store";
+
 
 
 const columns = ["mrpc", "mrdr_id", "category", "maktx"];
@@ -63,6 +65,7 @@ const Admin = () => {
 			<UserMenu>
 				<UserOptions loggedIn={false} admin/>
 			</UserMenu>
+			<Test/>
 
 			<style jsx global>{`
 				body, html{

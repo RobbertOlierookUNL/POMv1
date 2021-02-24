@@ -1,7 +1,7 @@
-import { CSVLink } from "react-csv";
+// import { CSVLink } from "react-csv";
 import * as FileSaver from "file-saver";
 import React, {useMemo} from "react";
-import * as XLSX from "xlsx";
+// import * as XLSX from "xlsx";
 import moment from "moment";
 
 import {
@@ -68,8 +68,8 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta}) => {
 		return formattedEntry;
 	};
 
-	const exportToCSV = () => {
-
+	const exportToCSV = async () => {
+		const XLSX = await import("xlsx");
 		const batchLevel = [];
 		const topLevel = sortedRowKeys.map(idx => {
 			const formattedEntry = getRightCells(data[idx]);
@@ -117,6 +117,7 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta}) => {
 				align-items: center;
 				grid-template-columns: [start] 1fr [midLeft] 1fr [midRight] 1fr [end];
         top: ${arrayOfFilters.length ? filterDisplayBarHeight : "0px"};
+				left:0;
 				transition: top 100ms ease-in;
         background-color: ${primary_dark.color};
         color: ${primary_very_light.color};

@@ -83,3 +83,16 @@ export const clearBoxes = (store) => {
 export const storeSomething = (store, something, as) => {
 	store.setState({[as]: something});
 };
+
+//errors
+export const addError = (store, pk_col) => {
+	const errors =  new Set(store.state.errors);
+	errors.add(pk_col);
+	store.setState({errors});
+};
+
+export const removeError = (store, pk_col) => {
+	const errors =  new Set(store.state.errors);
+	errors.delete(pk_col);
+	store.setState({errors});
+};

@@ -26,3 +26,11 @@ export const userTable = "user_table_v3test";
 
 //primary keys
 export const dataTable_pk = "tkey";
+
+//error
+export const errorRGB = "187, 33, 29";
+export const warningRGB = "255, 96, 79";
+export const background = "#7070a0";
+
+//categories
+export const categories = ["FOOD", "BPC", "HC", "ICE", "TEA"];

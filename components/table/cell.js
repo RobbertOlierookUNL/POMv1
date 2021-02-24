@@ -1,18 +1,18 @@
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import moment from "moment";
-
+import NumberFormat from "react-number-format";
 import { useTheme } from "../../lib/custom-hooks";
 
 
 
-const Cell = ({cellData, omit, active, colName, noExpand, valueType}) => {
-	const {gray_light} = useTheme();
+const Cell = ({cellData, omit, active, colName, noExpand, valueType, inEuro, rowInViewPort}) => {
+	const {gray_light, tertiary} = useTheme();
 	return (
 		<td
 			className={colName}
 		>
-			{(cellData === false)
+			{(cellData === false || cellData == "undefined") || !rowInViewPort
 				?
 				<Skeleton />
 				:
@@ -25,12 +25,23 @@ const Cell = ({cellData, omit, active, colName, noExpand, valueType}) => {
 						?
 						moment(cellData).format("YYYY-MM-DD")
 						:
-
-						Array.isArray(cellData)
-							?
-							<i>..</i>
+						(valueType === "number")
+						  ?
+							<NumberFormat
+								value={cellData}
+								decimalScale={2}
+								thousandSeparator={"."}
+								decimalSeparator={","}
+								fixedDecimalScale={inEuro}
+								prefix={inEuro ? "€" : ""}
+								displayType={"text"}
+							 />
 							:
-							cellData
+							Array.isArray(cellData)
+								?
+								<i>..</i>
+								:
+								cellData
 					)
 
 
@@ -46,7 +57,8 @@ const Cell = ({cellData, omit, active, colName, noExpand, valueType}) => {
 			 	${active || noExpand ? "" : (`
 					text-overflow: ellipsis;
 					white-space: nowrap;
-					overflow: hidden;`)
+					overflow: hidden;
+					`)
 		}
         }
         td:nth-last-child(${noExpand ? 1 : 2}) {

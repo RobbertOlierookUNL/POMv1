@@ -1,10 +1,12 @@
 import Head from "next/head";
-import React, {useEffect} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 
+import { background, categories } from "../config/globalvariables";
 import { isNumeric } from "../lib/custom-hooks";
 import { query } from "../lib/db";
 import { useDataForView } from "../lib/enhanced-swr-hooks";
 import { useGlobalUser } from "../lib/store-hooks";
+import CategoryDropdown from "../components/header/categorydropdown";
 import Header from "../components/header";
 import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
@@ -19,7 +21,16 @@ import useGlobal from "../components/store";
 
 
 
+
+
+
+
 export default function Home({user, view, initialViewMeta, extendedView, initialExtendedView}) {
+	const silentFilters = useMemo(() => user?.silentFilters ? JSON.parse(user.silentFilters) : {}, [user]);
+	const [category, setCategory] = useState(silentFilters.category || categories[0]);
+	useEffect(() => {setCategory(silentFilters.category || category);}, [silentFilters]);
+	const updatedFilters = useMemo(() => ({...silentFilters, category}), [silentFilters, category]);
+	
 	const {
 		filteredData,
 		meta,
@@ -30,7 +41,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		requestSort,
 		sortConfig,
 		updateEntry,
-	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, user?.silentFilters);
+	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, updatedFilters);
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -65,7 +76,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 			</Head>
 			<Header fName={user.firstName} lName={user.lastName}>
 				<MenuButton/>
-			 <>POM <img style={{height: "120%"}} src="/Logo_voor_kleur_vierkant.png"/></>
+			 <>POM<img style={{height: "120%"}} src="/Logo_voor_kleur_vierkant.png"/><CategoryDropdown getter={category} setter={setCategory}/></>
 			</Header>
 			<Shadow
 				zIndex={8}
@@ -98,7 +109,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 				body, html{
 					/* background-color: ${secondary.color};
 					background: linear-gradient(80deg, ${gray_dark.color}, ${secondary.color}); */
-					background-color: ${gray_dark.color};
+					background-color: ${background};
 				}
 			`}</style>
 		</>

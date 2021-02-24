@@ -129,6 +129,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 				.gridded-row {
 					display: grid;
 		    	grid-template-columns: ${colString};
+					grid-template-rows: min-content;
 				}
 				.blas {
 					width: 11.2px;

@@ -18,6 +18,8 @@ import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
 import Toolbar from "./toolbar";
 import useGlobal from "../store";
+import {useRouter} from "next/router";
+
 
 
 
@@ -53,10 +55,15 @@ const Table = ({data}) => {
 		state => state.primary_very_light,
 		() => null
 	);
+	const [gray_light] = useGlobal(
+		state => state.gray_light,
+		() => null
+	);
 	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
 	const [filterModal] = useGlobal(
 		state => state.filterModal,
 	);
+	const { isFallback } = useRouter();
 
 
 	const [scrollTop, setScrollTop] = useState(false);
@@ -69,7 +76,7 @@ const Table = ({data}) => {
 	return (
 
 		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
-			{hasLoaded &&
+			{hasLoaded && !isFallback &&
 				<ToTopButton
 					handleClick={handleClick}
 					top={
@@ -84,14 +91,16 @@ const Table = ({data}) => {
 					}
 					right={`${2*horPadding + 10}px`}
 				/>}
-			<SharedShadowModal open={filterModal}>
-				<FilterModal
-					meta={meta}
-					keys={keys}
-					filterParameters={filterParameters}
-					sortedRowKeys={sortedKeys}
-				/>
-			</SharedShadowModal>
+			{!isFallback &&
+				<SharedShadowModal open={filterModal}>
+					<FilterModal
+						meta={meta}
+						keys={keys}
+						filterParameters={filterParameters}
+						sortedRowKeys={sortedKeys}
+					/>
+				</SharedShadowModal>
+			}
 			<div className="tableContainer" ref={tableRef}>
 				<FilterBar/>
 				<Toolbar
@@ -100,7 +109,7 @@ const Table = ({data}) => {
 					sortedRowKeys={sortedKeys}
 					meta={meta}
 				/>
-				{meta && Object.keys(meta)[0] ?
+				{!isFallback ?
 					<table className="table">
 						<TableHeaders
 							requestSort={requestSort}
@@ -159,12 +168,13 @@ const Table = ({data}) => {
 					left: ${horPadding}px;
 					box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
 					border-radius: 6px;
+					background-color: ${gray_light.color};
 
 
 				}
 				.table {
 					border-collapse: collapse;
-					background-color: white;
+					background-color: ${isFallback ? "red" : "white"};
 					width: 100%;
 					font-size: 0.7em
 				}

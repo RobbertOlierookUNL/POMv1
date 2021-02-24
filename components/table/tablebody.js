@@ -2,10 +2,13 @@ import React, {useState, useEffect} from "react";
 
 import { dataTable_pk, numberInView } from "../../config/globalvariables";
 import { useCheckBox } from "../../lib/custom-hooks";
-import Row from "./row.js";
+import Row from "./row";
 import useGlobal from "../store";
 
 
+
+
+// const Row = React.lazy(() => import("./row"));
 
 
 

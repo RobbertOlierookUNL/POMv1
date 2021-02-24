@@ -26,8 +26,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 	const [height, setHeight] = useState("auto");
 	const [groupedAKs, setGroupedAKs] = useState(null);
 	const {mergeRefs} = useToolkit();
-	const [gray_light, gray_lighter, gray_very_light, tertiary] = useColors("gray_light", "gray_lighter", "gray_very_light", "tertiary");
-
+	const [gray_light, gray_lighter, gray, tertiary] = useColors("gray_light", "gray_lighter", "gray", "tertiary");
 	useEffect(() => {
 		rowData && groupedAKs && setHeight(expandCell.current.scrollHeight + "px");
 	}, [rowData, groupedAKs]);
@@ -63,11 +62,13 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 												cellData={rowData === false ? false : row[key]}
 												rowData={row}
 												triggers={meta[key].triggers}
+												inRangeOf={meta[key].inrangeof}
 												colName={key}
 												updateable={meta[key].updateable}
 												dropdownUpdateOptions={meta[key].dropdownupdateoptions}
 												valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 												key={i}
+												inEuro={meta[key].unit === "€"}
 												active={active}
 												primaryKey={row[dataTable_pk]}
 												updateEntry={updateEntry}
@@ -84,7 +85,9 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 										cellData={rowData === false ? false : row[key]}
 										colName={key}
 										noExpand
+										valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 										key={i}
+										inEuro={meta[key].unit === "€"}
 										active={active}
 										omit={
 											(rowData
@@ -141,8 +144,11 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
         td.active{
           height: ${height};
         }
+				tr {
+					border
+				}
 				.container {
-					background-color: ${tertiary.color};
+					background-color: ${gray.color};
 					padding: 8px;
 					color: black;
 					border: 1px solid ${gray_light.color};
@@ -159,7 +165,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 					background-color: white;
 					border-collapse: collapse;
 					font-weight: bold;
-					border-bottom: 1px solid ${tertiary.color};
+					/* border-bottom: 1px solid ${tertiary.color}; */
 				}
 				/* .sub-table::before {
 				  content: "";

@@ -23,6 +23,7 @@ const Input = ({type, defaultValue, save}) => {
             outline: none !important;
             padding: 0;
             font: inherit;
+						color: inherit;
         }
         /* Chrome, Safari, Edge, Opera */
         input::-webkit-outer-spin-button,

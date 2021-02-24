@@ -70,6 +70,11 @@ export const allOptionsWithData = {
 		input: "text",
 		extendable: true,
 	},
+	inrangeof: {
+		default: "",
+		input: "text",
+		extendable: true,
+	},
 	allowinputfrom: {
 		default: "op1, sa1",
 		input: [

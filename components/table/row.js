@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
 import { dataTable_pk } from "../../config/globalvariables";
@@ -12,18 +12,37 @@ import useGlobal from "../store";
 import useInViewport from "../../lib/forked-useInViewport";
 
 
+function equal(a, b) {
+	if (a === b) return true;
+	if (!(Array.isArray(a) || Array.isArray(b))) {
+		return false;
+	}
+	if (a == null || b == null) return false;
+	if (a.length !== b.length) return false;
 
+	// If you don't care about the order of the elements inside
+	// the array, you should sort both arrays here.
+	// Please note that calling sort on an array will modify that array.
+	// you might want to clone your array first.
+
+	for (var i = 0; i < a.length; ++i) {
+		if (a[i] !== b[i]) return false;
+	}
+	return true;
+}
 
 
 const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys,
 	// inViewport, forwardedRef,
 	onEnterViewport, updateEntry, toggle, check
 }) => {
-	const [thisRowActive, setThisRowActive] = useState(false);
+	// const [thisRowActive, setThisRowActive] = useState(active === id);
 	const [active, setActive] = useGlobal(
 		state => state.active,
 		actions => actions.setActive
 	);
+	const thisRowActive = useMemo(() => equal(active, id), [active, id]);
+
 	const [, setTopInView] = useGlobal(
 		() => null,
 		actions => actions.setTopInView
@@ -39,7 +58,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 	} = useTheme();
 
 	const expandRef = useRef(null);
-	const {inViewport, getNode} = useInViewport({onEnterViewport}, undefined, { disconnectOnLeave: true });
+	const {inViewport, getNode} = useInViewport({onEnterViewport}, {rootMargin: "300px"}, { disconnectOnLeave: true });
 
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
@@ -49,11 +68,12 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 		}
 	};
 
-	useEffect(() => {
-		if ((active === id) !== thisRowActive) {
-			setThisRowActive(active === id);
-		}
-	}, [active, id, thisRowActive]);
+	// useEffect(() => {
+	//
+	// 	if ((active === id) !== thisRowActive) {
+	// 		setThisRowActive(active === id);
+	// 	}
+	// }, [active, id, thisRowActive]);
 
 	useEffect(() => {
 		if (order === 4) {
@@ -72,7 +92,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 
 	return (
 		<tr
-			className={`gridded-row ${active === id ? "active" : ""}`}
+			className={`gridded-row ${thisRowActive ? "active" : ""}`}
 			onDoubleClick={handleClick}
 			ref={getNode}>
 			<>
@@ -99,7 +119,10 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 								dropdownUpdateOptions={meta[key].dropdownupdateoptions}
 								valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 								triggers={meta[key].triggers}
+								inRangeOf={meta[key].inrangeof}
+								inEuro={meta[key].unit === "€"}
 								key={i}
+								rowInViewPort={inViewport}
 								rowId={id}
 								active={thisRowActive}
 								primaryKey={rowData[dataTable_pk]}
@@ -118,6 +141,8 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 						cellData={rowData === false ? false : rowData[key]}
 						colName={key}
 						key={i}
+						rowInViewPort={inViewport}
+						inEuro={meta[key].unit === "€"}
 						active={thisRowActive}
 						valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 						omit={
@@ -142,11 +167,15 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 					updateEntry={updateEntry}
 					operationsInputRights={operationsInputRights}
 					salesInputRights={salesInputRights}
+					rowInViewPort={inViewport}
 				/>
 			</>
 			<style jsx>{`
         tr:nth-child(even){background-color: ${gray_very_light.color};}
         tr:hover {background-color: ${gray_light.color};}
+				tr {
+					min-height: 18px;
+				}
 				.active, .active:hover {
 					background-color: ${tertiary.color} !important;
 					color: ${tertiary.text};

@@ -19,6 +19,7 @@ function Alert(props) {
 
 const ViewTable = ({data}) => {
 	const {view_name, created_at, updated_at, config, ...viewdata} = data || {};
+	console.log({viewdata});
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
 	const [allOptions, setAllOptions] = useState(Object.keys(allOptionsWithData));
@@ -54,7 +55,7 @@ const ViewTable = ({data}) => {
 		state => state.gray_very_light,
 		() => null
 	);
-	const { keys, requestSort, sortConfig } = useSortableData(dataState);
+	const { keys, requestSort, sortConfig } = useSortableData(dataState, null, false);
 	const Router = useRouter();
 	const {pathname, query: {view, v: mode,}} = Router;
 	const fakedata = new Array(50).fill(".");

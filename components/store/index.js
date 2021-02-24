@@ -22,6 +22,8 @@ const initialState = {
 	selectMode: false,
 	arrayOfFilters: [],
 	checked: {},
+	errors: new Set(),
+	warnings: new Set(),
 	...staticColors,
 	...colorSchematic(10)
 };

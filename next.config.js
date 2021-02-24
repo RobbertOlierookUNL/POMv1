@@ -23,6 +23,8 @@
 // const withWorkers = require("@zeit/next-workers");
 // module.exports = withWorkers();
 
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+
 
 // next.config.js
 module.exports = {
@@ -37,6 +39,15 @@ module.exports = {
 					}
 				}]
 		});
+		if (process.env.ANALYZE) {
+			config.plugins.push(
+				new BundleAnalyzerPlugin({
+					analyzerMode: "server",
+					analyzerPort: options.isServer ? 8888 : 8889,
+					openAnalyzer: true,
+				})
+			);
+	 }
 		return config;
 	}
 };

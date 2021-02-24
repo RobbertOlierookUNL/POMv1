@@ -1,11 +1,11 @@
 import React, {useState,useEffect} from "react";
 
-const DropDown = ({defaultValue, save, options}) => {
-	const [value, setValue] = useState(defaultValue);
-
-	useEffect(() => {
-		setValue(defaultValue);
-	}, [defaultValue]);
+const DropDown = ({defaultValue, save, options, formattedFirstOption}) => {
+	// const [value, setValue] = useState(defaultValue);
+	//
+	// useEffect(() => {
+	// 	setValue(defaultValue);
+	// }, [defaultValue]);
 
 
 	return (
@@ -14,7 +14,12 @@ const DropDown = ({defaultValue, save, options}) => {
 				value={(!defaultValue || defaultValue === "0") ? "" : defaultValue}
 				onChange={save}
 			>
-				{options.split(", ").map((o, i) => <option key={i} value={o}>{o}</option>)}
+				{options === 0 ?
+					<>
+						{formattedFirstOption}
+						<option value={0}>0</option>
+					</>
+					: options.split(", ").map((o, i) => <option key={i} value={o}>{o}</option>)}
 			</select>
 
 			<style jsx>{`
@@ -23,6 +28,8 @@ const DropDown = ({defaultValue, save, options}) => {
             background: transparent;
             border: none !important;
             outline: none !important;
+						color: inherit;
+						text-align-last: right;
             padding: 0;
             margin: 0;
             font: inherit;
@@ -31,6 +38,9 @@ const DropDown = ({defaultValue, save, options}) => {
             text-indent: 0px;
             text-overflow: '';
         }
+				option {
+					color: black;
+				}
         /* Chrome, Safari, Edge, Opera */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {

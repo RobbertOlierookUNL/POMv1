@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from "react";
 import Skeleton from "react-loading-skeleton";
 import moment from "moment";
+import NumberFormat from "react-number-format";
 
-import { useTheme } from "../../lib/custom-hooks";
+import { dataTable_pk, errorRGB } from "../../config/globalvariables";
+import { useError, useTheme } from "../../lib/custom-hooks";
 import DropDown from "./dropdown";
 import Input from "./input";
-import { dataTable_pk } from "../../config/globalvariables";
 
 
 
@@ -13,10 +14,14 @@ import { dataTable_pk } from "../../config/globalvariables";
 
 
 
-const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, updateable, dropdownUpdateOptions, primaryKey, updateEntry, hasBatches = false}) => {
+
+
+const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, inEuro, hasBatches = false}) => {
 	const [editMode, setEditMode] = useState(false);
 	const [saving, setSaving] = useState(false);
 	const [temporaryState, setTemporaryState] = useState(false);
+	const [error, setError] = useError(primaryKey, colName);
+	const [limitOptions, setLimitOptions] = useState([]);
 
 	useEffect(() => {
 		if (temporaryState !== false) {
@@ -24,28 +29,64 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 		}
 	}, [cellData]);
 
+	// useEffect(() => {
+	// 	if (inRangeOf && hasBatches) {
+	// 		const arr = inRangeOf.split(", ");
+	// 		const limits = [];
+	// 		for (const a of arr) {
+	// 			const identifier = a.replace("$", "");
+	// 			limits.push(identifier);
+	// 		}
+	// 		limits.push("0")
+	// 		setLimitOptions(limits);
+	// 	}
+	// }, [inRangeOf, rowData])
+
+	useEffect(() => {
+	  if (inRangeOf) {
+			if ((cellData > rowData[inRangeOf]) && !error) {
+				setError(true);
+				console.log({cellData});
+			} else if ((cellData <= rowData[inRangeOf]) && error) {
+				setError(false);
+			}
+	  }
+	}, [inRangeOf, cellData, rowData]);
+
 
 	const triggerUpdate = (pk, value, hasBatches) => {
 		if (triggers) {
 			const triggerArray = triggers.split(", ");
 			for (var trigger of triggerArray) {
-				const [colToUpdate, math] = trigger.split(" = ");
-				let answer;
-				if (!hasBatches) {
-					answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "rowData."));
-				} else {
-					for (const mergedFrom of rowData.addedProps.mergedFrom) {
-						if (pk === mergedFrom[dataTable_pk]) {
+				const [conditionsAndcolToUpdate, math] = trigger.split(" = ");
+				const arr = conditionsAndcolToUpdate.split(" | ");
+				const colToUpdate = arr.length === 1 ? arr[0] : arr[1];
+				const conditions = arr.length === 1 ? [] : arr[0].split(", ");
+				let conditionsPassed = true;
+				for (const condition of conditions) {
+					if (value === condition) {
+						conditionsPassed = true;
+						break;
+					}
+					conditionsPassed = false;
+				}
+				if (conditionsPassed) {
+					let answer;
+					if (!hasBatches) {
+						answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "rowData."));
+					} else {
+						for (const mergedFrom of rowData.addedProps.mergedFrom) {
+							if (pk === mergedFrom[dataTable_pk]) {
 						 	answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "mergedFrom."));
+							}
 						}
 					}
+					const formattedColToUpdate = colToUpdate.replace("$", "");
+					const correctAnswer = !Number.isNaN(answer);
+					if ((formattedColToUpdate in rowData) && correctAnswer ) {
+						updateEntry(pk, formattedColToUpdate, answer);
+					}
 				}
-				const formattedColToUpdate = colToUpdate.replace("$", "");
-				const correctAnswer = !Number.isNaN(answer);
-				if ((formattedColToUpdate in rowData) && correctAnswer ) {
-					updateEntry(pk, formattedColToUpdate, answer);
-				}
-
 			}
 		}
 	};
@@ -79,20 +120,26 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 		setTimeout(() => setSaving(false), 2000);
 	};
 
-	const {gray_light, primary_light, primary_overlay, secondary} = useTheme();
+	const {gray_light, primary_light, primary_overlay, secondary, tertiary} = useTheme();
 
 
 
 	return (
 		<td
-			className={colName + " editable" + (hasBatches ? " topLevel" : "") +(temporaryState !== false ? " still-saving" : "")}
+			className={
+				colName +
+				" editable" +
+				(hasBatches ? " topLevel" : "") +
+				(temporaryState !== false ? " still-saving" : "") +
+				(error ? " error" : "")
+			}
 			onClick={edit}
 		>
-			{(cellData === false) || saving
+			{(cellData === false) || saving || typeof cellData == "undefined"
 				?
 				<Skeleton />
 				:
-				!editMode || (updateable === "withDropdown")
+			  (!editMode || (updateable === "withDropdown") || ((valueType === "number") && (hasBatches)))
 					?
 					(moment.isMoment(cellData)
 						?
@@ -106,31 +153,62 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 								:
 								Array.isArray(cellData)
 									?
-									updateable === "withDropdown"
+									(updateable === "withDropdown"
 									&& <DropDown
 										defaultValue={".."}
 										save={save}
 										options={`.., ${dropdownUpdateOptions}`}
-									/> ||
+									/>) ||
 									<i>..</i>
 									:
 									updateable === "withDropdown"
-									&& <DropDown
-										defaultValue={cellData}
+										? <DropDown
+											defaultValue={cellData}
 									  save={save}
-										options={dropdownUpdateOptions}
-									/> ||
-									cellData
+											options={dropdownUpdateOptions}
+										/>
+										:
+										(updateable === "withFreeInput" && valueType ==="number" && hasBatches)
+									 ?
+											<DropDown
+												defaultValue={cellData}
+												formattedFirstOption={
+													<NumberFormat
+														value={cellData}
+														decimalScale={2}
+														thousandSeparator={"."}
+														decimalSeparator={","}
+														fixedDecimalScale={inEuro}
+														prefix={inEuro ? "€" : ""}
+														displayType={"text"}
+														renderText={value => <option value={cellData}>{value}</option>}
+											 />
+												}
+												save={save}
+												options={0}
+											/>
+											:
+											(valueType === "number")
+												?
+												<NumberFormat
+													value={cellData}
+													decimalScale={2}
+													thousandSeparator={"."}
+													decimalSeparator={","}
+													fixedDecimalScale={inEuro}
+													prefix={inEuro ? "€" : ""}
+													displayType={"text"}
+										 />
+												:
+												cellData
 					)
 					:
-					(updateable === "withFreeInput"
-					&& <Input
+
+					<Input
 						type={valueType}
 						defaultValue={cellData}
 						save={save}
-					/>)
-
-
+					/>
 			}
 			<style jsx>{`
         td {
@@ -160,6 +238,13 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 				}
 				.still-saving {
 					animation: saving 3s infinite;
+				}
+				.error.editable {
+					cursor: text;
+					color: white;
+					background:
+						linear-gradient(to top right,transparent 50%,${primary_light.color} 0) top right/3.5px 3.5px no-repeat,
+						rgb(${errorRGB});
 				}
 
 				@keyframes saving {
