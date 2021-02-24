@@ -49,10 +49,16 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 		}
 	}, [sortedRowKeys]);
 
+	const [expandedHeight, setExpandedHeight] = useState({});
+
+	console.log({expandedHeight});
+
+	const getItemSize = index => expandedHeight.id === index ? expandedHeight + 20 : 20;
+
 
 	return (
 		<>
-			<tbody>
+			<div>
 				{hasLoaded && sortedRowKeys ?
 					<>
 						{sortedRowKeys.map(([pk, row], i) => (
@@ -70,16 +76,17 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 								key={pk}
 								check={check(pk)}
 								toggle={toggle(pk)}
+								setExpandedHeight={setExpandedHeight}
 							/>
 						))}
 					</> :
 					hasLoaded ?
 						<>
-							<tr>
-								<td>
+							<div>
+								<div>
 									Geen resultaat
-								</td>
-							</tr>
+								</div>
+							</div>
 						</>
 						:
 						<>
@@ -94,7 +101,7 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 							))}
 						</>
 				}
-			</tbody>
+			</div>
 		</>
 	);
 };

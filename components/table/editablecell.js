@@ -125,10 +125,10 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 
 
 	return (
-		<td
+		<div
 			className={
 				colName +
-				" editable" +
+				" editable td" +
 				(hasBatches ? " topLevel" : "") +
 				(temporaryState !== false ? " still-saving" : "") +
 				(error ? " error" : "")
@@ -211,7 +211,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 					/>
 			}
 			<style jsx>{`
-        td {
+        .td {
           border: 1px solid ${gray_light.color};
           border-width: 0 1px 1px 0;
 					grid-column-start: ${colName};
@@ -223,7 +223,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 					overflow: hidden;`)
 		}
         }
-        td:nth-last-child(${noExpand ? 1 : 2}) {
+        .td:nth-last-child(${noExpand ? 1 : 2}) {
           border-width: 0 0 1px 0;
         }
 				.editable {
@@ -270,7 +270,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 
     `}
 			</style>
-		</td>
+		</div>
 	);
 };
 

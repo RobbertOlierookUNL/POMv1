@@ -110,7 +110,7 @@ const Table = ({data}) => {
 					meta={meta}
 				/>
 				{!isFallback ?
-					<table className="table">
+					<div className="table">
 						<TableHeaders
 							requestSort={requestSort}
 							sortConfig={sortConfig}
@@ -130,7 +130,7 @@ const Table = ({data}) => {
 							setScrollTop={setScrollTop}
 							updateEntry={updateEntry}
 						/>
-					</table>
+					</div>
 					:
 					<table className="table">
 						<tbody>

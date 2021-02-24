@@ -34,7 +34,7 @@ function equal(a, b) {
 
 const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys,
 	// inViewport, forwardedRef,
-	onEnterViewport, updateEntry, toggle, check
+	onEnterViewport, updateEntry, toggle, check, setExpandedHeight
 }) => {
 	// const [thisRowActive, setThisRowActive] = useState(active === id);
 	const [active, setActive] = useGlobal(
@@ -62,9 +62,12 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
-			thisRowActive ?
-				setActive(false)
-				: setActive(id);
+			if (thisRowActive) {
+				setActive(false);
+				setExpandedHeight({});
+			} else {
+				setActive(id);
+			}
 		}
 	};
 
@@ -90,16 +93,17 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 	const user = useGlobalUser();
 	const {operationsInputRights, salesInputRights} = user?.roll || {};
 
+
 	return (
-		<tr
-			className={`gridded-row ${thisRowActive ? "active" : ""}`}
+		<div
+			className={`tr gridded-row ${thisRowActive ? "active" : ""}`}
 			onDoubleClick={handleClick}
 			ref={getNode}>
 			<>
 				{selectMode &&
-				<td>
+				<div className="td">
 					<CheckBox id={id} toggle={toggle} check={check}/>
-				</td>}
+				</div>}
 				{keysForTableCols.map((key, i) => {
 					const updateable = meta[key].updateable;
 					const allowInputFrom = meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default;
@@ -168,12 +172,14 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 					operationsInputRights={operationsInputRights}
 					salesInputRights={salesInputRights}
 					rowInViewPort={inViewport}
+					orderId={order}
+					setExpandedHeight={setExpandedHeight}
 				/>
 			</>
 			<style jsx>{`
-        tr:nth-child(even){background-color: ${gray_very_light.color};}
-        tr:hover {background-color: ${gray_light.color};}
-				tr {
+        .tr:nth-child(even){background-color: ${gray_very_light.color};}
+        .tr:hover {background-color: ${gray_light.color};}
+				.tr {
 					min-height: 18px;
 				}
 				.active, .active:hover {
@@ -183,13 +189,13 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 					font-size: 0.97em;
 					border: none;
 				}
-				td {
+				.td {
 					border: 1px solid ${gray_light.color};
           border-width: 0 1px 1px 0;
 					padding: 0;
 				}
       `}</style>
-		</tr>
+		</div>
 	);
 };
 

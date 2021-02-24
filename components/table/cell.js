@@ -9,8 +9,8 @@ import { useTheme } from "../../lib/custom-hooks";
 const Cell = ({cellData, omit, active, colName, noExpand, valueType, inEuro, rowInViewPort}) => {
 	const {gray_light, tertiary} = useTheme();
 	return (
-		<td
-			className={colName}
+		<div
+			className={"td " + colName}
 		>
 			{(cellData === false || cellData == "undefined") || !rowInViewPort
 				?
@@ -48,7 +48,7 @@ const Cell = ({cellData, omit, active, colName, noExpand, valueType, inEuro, row
 
 			}
 			<style jsx>{`
-        td {
+        .td {
           border: 1px solid ${gray_light.color};
           border-width: 0 1px 1px 0;
 					grid-column-start: ${colName};
@@ -61,12 +61,12 @@ const Cell = ({cellData, omit, active, colName, noExpand, valueType, inEuro, row
 					`)
 		}
         }
-        td:nth-last-child(${noExpand ? 1 : 2}) {
+        .td:nth-last-child(${noExpand ? 1 : 2}) {
           border-width: 0 0 1px 0;
         }
     `}
 			</style>
-		</td>
+		</div>
 	);
 };
 

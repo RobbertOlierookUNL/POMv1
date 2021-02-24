@@ -11,7 +11,7 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, f
 	const {primary, tertiary, gray, gray_dark, gray_lighter} = useTheme();
 	const [boxActive, setBoxActive] = useState(false);
 	return (
-		<th>
+		<div className="th">
 			{unit && <div className="unit">{unit}</div>}
 			{filtertype &&
         <>
@@ -32,19 +32,22 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, f
         </>
 			}
 			<style jsx>{`
-        th {
+        .th {
           border: 1px solid ${gray.color};
           border-width: 0 1px 0px 0;
           border-bottom-color: ${primary.color};
           display: flex;
 					position: relative;;
           padding: 1px 1px 2px;
+					vertical-align: middle;
+					font-weight: bold;
+					text-align: center;
 					/* text-overflow: clip;
 					white-space: nowrap;
 					overflow: hidden; */
 					/* grid-column-start: ${reference}; */
         }
-        th:last-child{
+        .th:last-child{
           border-width: 0 0 0px 0;
         }
         .unit {
@@ -77,7 +80,7 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, f
         }
       `}</style>
 
-		</th>
+		</div>
 	);
 };
 

@@ -21,14 +21,14 @@ import ExpandBlock from "./expandblock";
 
 
 
-const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, salesInputRights}, ref) => {
+const Expand = ({additionalColKeys, rowData, meta, setExpandedHeight, orderId, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, salesInputRights}, ref) => {
 	const expandCell = useRef(null);
 	const [height, setHeight] = useState("auto");
 	const [groupedAKs, setGroupedAKs] = useState(null);
 	const {mergeRefs} = useToolkit();
 	const [gray_light, gray_lighter, gray, tertiary] = useColors("gray_light", "gray_lighter", "gray", "tertiary");
 	useEffect(() => {
-		rowData && groupedAKs && setHeight(expandCell.current.scrollHeight + "px");
+		rowData && groupedAKs && setHeight(expandCell.current.scrollHeight);
 	}, [rowData, groupedAKs]);
 
 	useEffect(() => {
@@ -40,13 +40,19 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 	  setGroupedAKs(grouped);
 	}, [additionalColKeys]);
 
+	useEffect(() => {
+	  if (active) {
+			setExpandedHeight({id: orderId, height});
+	  }
+	}, [active, height, orderId]);
+
 	return (
-		<td ref={mergeRefs(expandCell, ref)} className={`expandCell ${active && "active"}`}>
+		<div ref={mergeRefs(expandCell, ref)} className={`td expandCell ${active && "active"}`}>
 			{mergedFrom && (
-				<table className={"sub-table"}>
-					<tbody>
+				<div className={"sub-table"}>
+					<div>
 						{mergedFrom.map((row, idx) =>
-							<tr className="gridded-row" key={idx}>
+							<div className="tr gridded-row" key={idx}>
 								{keysForMergedRows.map((key, i) => {
 									const updateable = meta[key].updateable;
 									const allowInputFrom = meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default;
@@ -99,10 +105,10 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 								}
 
 								)}
-							</tr>
+							</div>
 						)}
-					</tbody>
-				</table>
+					</div>
+				</div>
 			)}
 			<div className={"container"}>
 				{groupedAKs &&
@@ -132,7 +138,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 			</div>
 
 			<style jsx>{`
-        td {
+        .td {
           transition: height 100ms linear;
           height: 0;
 					padding: 0;
@@ -141,10 +147,10 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 					overflow: hidden;
 					display: grid;
         }
-        td.active{
-          height: ${height};
+        .td.active{
+          height: ${height === "auto" ? "auto" : height + "px"};
         }
-				tr {
+				.tr {
 					border
 				}
 				.container {
@@ -185,7 +191,7 @@ const Expand = ({additionalColKeys, rowData, meta, active, mergedFrom, keysForMe
 
 
       `}</style>
-		</td>
+		</div>
 	);
 };
 
