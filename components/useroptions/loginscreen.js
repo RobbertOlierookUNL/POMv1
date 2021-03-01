@@ -24,7 +24,6 @@ const LoginScreen = ({active, initialData, transportData, admin}) => {
 	const [error, setError] = useState(false);
 	const [data, setData] = useState(false);
 	const Router = useRouter();
-	console.log(Router);
 	const [, expandUserMenu] = useGlobal(
 		() => null,
 		actions => actions.expandUserMenu

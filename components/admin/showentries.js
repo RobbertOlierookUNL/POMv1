@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useColors } from "../../lib/custom-hooks";
-import moment from "moment";
+import moment from "moment-timezone";
 
 function isJsonArray(str) {
 	try {

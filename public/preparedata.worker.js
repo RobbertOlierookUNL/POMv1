@@ -1,5 +1,5 @@
 
-// import moment from "moment";
+// import moment from "moment-timezone";
 // importScripts("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js");
 importScripts("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js");
 
@@ -85,11 +85,9 @@ const mapOverData = (allKeys, myMeta, obj, parameters, level) => {
 };
 
 
-const prepareData = (myData, myMeta, allOptionsWithData) => {
+const prepareData = (myData, myMeta, allOptionsWithData, allKeys) => {
 	//wordt gevuld met filter parameters
 	let parameters = {};
-	//alle kolomnamen
-	const allKeys = Object.keys(myMeta);
 	//zoek de eerste kolom waarbij de metadata aangeeft het een `mergeBy` kolom is
 	const propToMergeBy = allKeys.find(key => myMeta[key].merge === "mergeBy") || false;
 	//als er een propToMergeBy gevonden is, is mergeMode true, anders false
@@ -251,11 +249,11 @@ const prepareData = (myData, myMeta, allOptionsWithData) => {
 
 
 onmessage = function(e) {
-	const {isLoading, preData, meta, allOptionsWithData} = e.data;
-	console.log({isLoading, preData, meta, allOptionsWithData});
-  	if (!isLoading)
+	const {isLoading, preData, meta, allOptionsWithData, allKeys} = e.data;
+	console.log({isLoading, preData, meta, allOptionsWithData, allKeys});
+  	if (!isLoading && preData && meta && allOptionsWithData && allKeys)
   	{
-		const res = JSON.parse(JSON.stringify(prepareData(preData, meta, allOptionsWithData)));
+		const res = JSON.parse(JSON.stringify(prepareData(preData, meta, allOptionsWithData, allKeys)));
 		console.log({res});
 		postMessage({res});
   	}

@@ -9,7 +9,7 @@ import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import MomentUtils from "@date-io/moment";
 import React, {useState, useEffect} from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 
 import { staticColors } from "../../../../config/colors";
 import Button from "../../../button";

@@ -1,6 +1,6 @@
 
 // max number of tablerows in DOM (for lazyloading)
-export const numberInView = 100;
+export const numberInView = 80;
 
 //number of additionalColKeys in expand block
 export const numberOfColumnsInExpandBlock = 4;
@@ -34,3 +34,10 @@ export const background = "#7070a0";
 
 //categories
 export const categories = ["FOOD", "BPC", "HC", "ICE", "TEA"];
+
+
+//Hard coded columns: 
+//category
+//mprc
+//n_step
+//tkey

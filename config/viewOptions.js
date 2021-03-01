@@ -87,7 +87,18 @@ export const allOptionsWithData = {
 		default: null,
 		input: "text",
 		extendable: true,
-	}
+	},
+	dateerroronweeks: {
+		default: null,
+		input: "number",
+		extendable: true,
+	},
+	datewarnonweeks: {
+		default: null,
+		input: "number",
+		extendable: true,
+	},
+
 
 
 

@@ -2,7 +2,7 @@
 import * as FileSaver from "file-saver";
 import React, {useMemo} from "react";
 // import * as XLSX from "xlsx";
-import moment from "moment";
+import moment from "moment-timezone";
 
 import {
 	filterDisplayBarHeight,

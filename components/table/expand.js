@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState, forwardRef} from "react";
+import React, {useRef, useMemo, forwardRef} from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
 import {
@@ -21,30 +21,15 @@ import ExpandBlock from "./expandblock";
 
 
 
-const Expand = ({additionalColKeys, rowData, meta, setExpandedHeight, orderId, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, salesInputRights}, ref) => {
+const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, triggerUpdate, salesInputRights, theme}, ref) => {
 	const expandCell = useRef(null);
-	const [height, setHeight] = useState("auto");
-	const [groupedAKs, setGroupedAKs] = useState(null);
 	const {mergeRefs} = useToolkit();
-	const [gray_light, gray_lighter, gray, tertiary] = useColors("gray_light", "gray_lighter", "gray", "tertiary");
-	useEffect(() => {
-		rowData && groupedAKs && setHeight(expandCell.current.scrollHeight);
-	}, [rowData, groupedAKs]);
+	const {gray_light, gray_lighter, gray, tertiary} = theme;
 
-	useEffect(() => {
-		const grouped = [];
-		const perGroup = Math.ceil(additionalColKeys.length / numberOfColumnsInExpandBlock);
-		for (let i = 0; i < additionalColKeys.length; i += perGroup) {
-			grouped.push(additionalColKeys.slice(i, i+perGroup));
-		}
-	  setGroupedAKs(grouped);
-	}, [additionalColKeys]);
 
-	useEffect(() => {
-	  if (active) {
-			setExpandedHeight({id: orderId, height});
-	  }
-	}, [active, height, orderId]);
+
+	const height = useMemo(() => (rowData && groupedAdditionalColKeys && expandCell.current?.scrollHeight) ? expandCell.current.scrollHeight : "auto", [rowData, groupedAdditionalColKeys, expandCell.current]);
+
 
 	return (
 		<div ref={mergeRefs(expandCell, ref)} className={`td expandCell ${active && "active"}`}>
@@ -69,15 +54,18 @@ const Expand = ({additionalColKeys, rowData, meta, setExpandedHeight, orderId, a
 												rowData={row}
 												triggers={meta[key].triggers}
 												inRangeOf={meta[key].inrangeof}
+												noExpand
 												colName={key}
 												updateable={meta[key].updateable}
 												dropdownUpdateOptions={meta[key].dropdownupdateoptions}
 												valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 												key={i}
+												theme={theme}
 												inEuro={meta[key].unit === "€"}
 												active={active}
 												primaryKey={row[dataTable_pk]}
 												updateEntry={updateEntry}
+												triggerUpdate={triggerUpdate}
 												omit={
 													(rowData
 														&& rowData.addedProps
@@ -90,7 +78,13 @@ const Expand = ({additionalColKeys, rowData, meta, setExpandedHeight, orderId, a
 									return <Cell
 										cellData={rowData === false ? false : row[key]}
 										colName={key}
+										rowData={rowData}
+										inRangeOf={meta[key].inrangeof}
+										dateErrorOn={meta[key].dateerroronweeks}
+										dateWarnOn={meta[key].datewarnonweeks}
 										noExpand
+										compare={rowData[key]}
+										theme={theme}
 										valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 										key={i}
 										inEuro={meta[key].unit === "€"}
@@ -111,8 +105,8 @@ const Expand = ({additionalColKeys, rowData, meta, setExpandedHeight, orderId, a
 				</div>
 			)}
 			<div className={"container"}>
-				{groupedAKs &&
-					groupedAKs.map((group, i) =>{
+				{groupedAdditionalColKeys &&
+					groupedAdditionalColKeys.map((group, i) =>{
 						return <ExpandBlock key={i} additionalColKeys={group} rowData={rowData} meta={meta} active={active}/>;
 					}
 					)

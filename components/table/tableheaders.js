@@ -63,7 +63,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 	});
 	colString += "[end]";
 	return (
-		<div>
+		<>
 			<div className="headers gridded-row">
 				{selectMode && <th/>}
 				{
@@ -130,13 +130,14 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 					display: grid;
 		    	grid-template-columns: ${colString};
 					grid-template-rows: min-content;
+					width: 100%;
 				}
 				.blas {
 					width: 11.2px;
 				}
 
 			`}</style>
-		</div>
+		</>
 	);
 };
 

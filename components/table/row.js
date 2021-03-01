@@ -3,68 +3,27 @@ import React, { useRef, useEffect, useMemo } from "react";
 import { allOptionsWithData } from "../../config/viewOptions";
 import { dataTable_pk } from "../../config/globalvariables";
 import { useGlobalUser } from "../../lib/store-hooks";
-import { useTheme } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import CheckBox from "../checkbox";
 import EditableCell from "./editablecell";
 import Expand from "./expand";
-import useGlobal from "../store";
 import useInViewport from "../../lib/forked-useInViewport";
 
 
-function equal(a, b) {
-	if (a === b) return true;
-	if (!(Array.isArray(a) || Array.isArray(b))) {
-		return false;
-	}
-	if (a == null || b == null) return false;
-	if (a.length !== b.length) return false;
 
-	// If you don't care about the order of the elements inside
-	// the array, you should sort both arrays here.
-	// Please note that calling sort on an array will modify that array.
-	// you might want to clone your array first.
-
-	for (var i = 0; i < a.length; ++i) {
-		if (a[i] !== b[i]) return false;
-	}
-	return true;
-}
-
-
-const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalColKeys,
+const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAdditionalColKeys,
 	// inViewport, forwardedRef,
-	onEnterViewport, updateEntry, toggle, check, setExpandedHeight
+	onEnterViewport, hasViewportListener, updateEntry, triggerUpdate, toggle, check, theme, selectMode, setTopInView, setActive, thisRowActive,
 }) => {
 	// const [thisRowActive, setThisRowActive] = useState(active === id);
-	const [active, setActive] = useGlobal(
-		state => state.active,
-		actions => actions.setActive
-	);
-	const thisRowActive = useMemo(() => equal(active, id), [active, id]);
-
-	const [, setTopInView] = useGlobal(
-		() => null,
-		actions => actions.setTopInView
-	);
-	const [selectMode] = useGlobal(
-		state => state.selectMode,
-		() => null
-	);
-	const {
-		gray_very_light,
-		gray_light,
-		tertiary
-	} = useTheme();
-
+	const {tertiary, gray_light, gray_very_light} = theme;
 	const expandRef = useRef(null);
-	const {inViewport, getNode} = useInViewport({onEnterViewport}, {rootMargin: "300px"}, { disconnectOnLeave: true });
+	const {inViewport, getNode} = useInViewport({onEnterViewport}, {rootMargin: "300px"}, { disconnectOnLeave: true }, hasViewportListener);
 
 	const handleClick = (event) => {
 		if (!expandRef.current.contains(event.target)) {
 			if (thisRowActive) {
 				setActive(false);
-				setExpandedHeight({});
 			} else {
 				setActive(id);
 			}
@@ -98,7 +57,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 		<div
 			className={`tr gridded-row ${thisRowActive ? "active" : ""}`}
 			onDoubleClick={handleClick}
-			ref={getNode}>
+			ref={hasViewportListener ? getNode : undefined}>
 			<>
 				{selectMode &&
 				<div className="td">
@@ -126,11 +85,13 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 								inRangeOf={meta[key].inrangeof}
 								inEuro={meta[key].unit === "€"}
 								key={i}
+								theme={theme}
 								rowInViewPort={inViewport}
 								rowId={id}
 								active={thisRowActive}
 								primaryKey={rowData[dataTable_pk]}
 								updateEntry={updateEntry}
+								triggerUpdate={triggerUpdate}
 								hasBatches={rowData?.addedProps?.merged}
 								omit={
 									(rowData
@@ -144,11 +105,16 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 					return <Cell
 						cellData={rowData === false ? false : rowData[key]}
 						colName={key}
+						rowData={rowData}
+						valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
+						inRangeOf={meta[key].inrangeof}
+						dateErrorOn={meta[key].dateerroronweeks}
+						dateWarnOn={meta[key].datewarnonweeks}
 						key={i}
 						rowInViewPort={inViewport}
 						inEuro={meta[key].unit === "€"}
+						theme={theme}
 						active={thisRowActive}
-						valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 						omit={
 							(rowData
 								&& rowData.addedProps
@@ -158,10 +124,11 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 					/>;
 				})}
 				<Expand
-					additionalColKeys={additionalColKeys}
+					groupedAdditionalColKeys={groupedAdditionalColKeys}
 					ref={expandRef}
 					meta={meta}
 					rowData={rowData}
+					theme={theme}
 					active={thisRowActive}
 					mergedFrom={rowData
 						&& rowData.addedProps
@@ -169,11 +136,10 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, additionalC
 						&& rowData.addedProps.mergedFrom}
 					keysForMergedRows={keysForTableCols}
 					updateEntry={updateEntry}
+					triggerUpdate={triggerUpdate}
 					operationsInputRights={operationsInputRights}
 					salesInputRights={salesInputRights}
 					rowInViewPort={inViewport}
-					orderId={order}
-					setExpandedHeight={setExpandedHeight}
 				/>
 			</>
 			<style jsx>{`

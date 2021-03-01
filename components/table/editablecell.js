@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import Skeleton from "react-loading-skeleton";
-import moment from "moment";
+import moment from "moment-timezone";
 import NumberFormat from "react-number-format";
 
 import { dataTable_pk, errorRGB } from "../../config/globalvariables";
@@ -16,12 +16,11 @@ import Input from "./input";
 
 
 
-const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, inEuro, hasBatches = false}) => {
+const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, triggerUpdate, inEuro, hasBatches = false, theme}) => {
 	const [editMode, setEditMode] = useState(false);
-	const [saving, setSaving] = useState(false);
 	const [temporaryState, setTemporaryState] = useState(false);
-	const [error, setError] = useError(primaryKey, colName);
-	const [limitOptions, setLimitOptions] = useState([]);
+	const {gray_light, primary_light, primary_overlay, secondary} = theme;
+	const error = useMemo(() => cellData > rowData[inRangeOf], [inRangeOf, cellData, rowData]);
 
 	useEffect(() => {
 		if (temporaryState !== false) {
@@ -29,99 +28,57 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 		}
 	}, [cellData]);
 
-	// useEffect(() => {
-	// 	if (inRangeOf && hasBatches) {
-	// 		const arr = inRangeOf.split(", ");
-	// 		const limits = [];
-	// 		for (const a of arr) {
-	// 			const identifier = a.replace("$", "");
-	// 			limits.push(identifier);
-	// 		}
-	// 		limits.push("0")
-	// 		setLimitOptions(limits);
-	// 	}
-	// }, [inRangeOf, rowData])
-
-	useEffect(() => {
-	  if (inRangeOf) {
-			if ((cellData > rowData[inRangeOf]) && !error) {
-				setError(true);
-				console.log({cellData});
-			} else if ((cellData <= rowData[inRangeOf]) && error) {
-				setError(false);
-			}
-	  }
-	}, [inRangeOf, cellData, rowData]);
-
-
-	const triggerUpdate = (pk, value, hasBatches) => {
-		if (triggers) {
-			const triggerArray = triggers.split(", ");
-			for (var trigger of triggerArray) {
-				const [conditionsAndcolToUpdate, math] = trigger.split(" = ");
-				const arr = conditionsAndcolToUpdate.split(" | ");
-				const colToUpdate = arr.length === 1 ? arr[0] : arr[1];
-				const conditions = arr.length === 1 ? [] : arr[0].split(", ");
-				let conditionsPassed = true;
-				for (const condition of conditions) {
-					if (value === condition) {
-						conditionsPassed = true;
-						break;
-					}
-					conditionsPassed = false;
-				}
-				if (conditionsPassed) {
-					let answer;
-					if (!hasBatches) {
-						answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "rowData."));
-					} else {
-						for (const mergedFrom of rowData.addedProps.mergedFrom) {
-							if (pk === mergedFrom[dataTable_pk]) {
-						 	answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "mergedFrom."));
-							}
-						}
-					}
-					const formattedColToUpdate = colToUpdate.replace("$", "");
-					const correctAnswer = !Number.isNaN(answer);
-					if ((formattedColToUpdate in rowData) && correctAnswer ) {
-						updateEntry(pk, formattedColToUpdate, answer);
-					}
-				}
-			}
-		}
-	};
 
 	useEffect(() => {
 		if (temporaryState !== false) {
 			if (hasBatches) {
 				for (const pk of primaryKey) {
 					updateEntry(pk, colName, temporaryState);
-					triggerUpdate(pk,temporaryState, hasBatches);
+					triggerUpdate(pk,temporaryState, hasBatches, colName, triggers, rowData);
 				}
 			} else {
 				updateEntry(primaryKey, colName, temporaryState);
-				triggerUpdate(primaryKey,temporaryState, hasBatches);
+				triggerUpdate(primaryKey,temporaryState, hasBatches, colName, triggers, rowData);
 			}
-			setSaving(false);
 		}
 	}, [temporaryState, hasBatches]);
 
 	const edit = () => {
 		setEditMode(true);
-
 	};
+
 	const save = (e) => {
 		setEditMode(false);
 		if (e.target.value != cellData) {
-			setSaving(true);
 			setTemporaryState(e.target.value);
 		}
-
-		setTimeout(() => setSaving(false), 2000);
 	};
 
-	const {gray_light, primary_light, primary_overlay, secondary, tertiary} = useTheme();
-
+	const formatDisplay = useMemo(() => {
+		if (cellData === false || cellData == "undefined") {
+			return "loading";
+		} else if (temporaryState !== false) {
+			return "temp";
+		} else if (!(!editMode || (updateable === "withDropdown") || ((valueType === "number") && (hasBatches)))) {
+			return "freeInput";
+		} else if (!cellData || cellData === "0" || omit) {
+			return "empty";
+		} else if (valueType === "date") {
+			return "date";
+		} else if (Array.isArray(cellData) && updateable === "withDropdown") {
+			return "multiWithDropDown";
+		} else if (Array.isArray(cellData)) {
+			return "multi";
+		} else if (updateable === "withDropdown") {
+			return "dropdown";
+		} else if (updateable === "withFreeInput" && valueType ==="number" && hasBatches) {
+			return "allOrNothing";
+		} else if (valueType === "number") {
+			return "number";
+		} else {
+			return false;
+		}
+	}, [cellData, temporaryState, editMode, omit, valueType, hasBatches, updateable]);
 
 
 	return (
@@ -135,80 +92,138 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 			}
 			onClick={edit}
 		>
-			{(cellData === false) || saving || typeof cellData == "undefined"
-				?
-				<Skeleton />
-				:
-			  (!editMode || (updateable === "withDropdown") || ((valueType === "number") && (hasBatches)))
-					?
-					(moment.isMoment(cellData)
-						?
-						cellData.format("YYYY-MM-DD")
-						:
-						temporaryState !== false ? temporaryState
-							:
-							(!cellData || cellData === "0" || omit)
-								?
-								""
-								:
-								Array.isArray(cellData)
-									?
-									(updateable === "withDropdown"
-									&& <DropDown
-										defaultValue={".."}
-										save={save}
-										options={`.., ${dropdownUpdateOptions}`}
-									/>) ||
-									<i>..</i>
-									:
-									updateable === "withDropdown"
-										? <DropDown
-											defaultValue={cellData}
-									  save={save}
-											options={dropdownUpdateOptions}
-										/>
-										:
-										(updateable === "withFreeInput" && valueType ==="number" && hasBatches)
-									 ?
-											<DropDown
-												defaultValue={cellData}
-												formattedFirstOption={
-													<NumberFormat
-														value={cellData}
-														decimalScale={2}
-														thousandSeparator={"."}
-														decimalSeparator={","}
-														fixedDecimalScale={inEuro}
-														prefix={inEuro ? "€" : ""}
-														displayType={"text"}
-														renderText={value => <option value={cellData}>{value}</option>}
-											 />
-												}
-												save={save}
-												options={0}
-											/>
-											:
-											(valueType === "number")
-												?
-												<NumberFormat
-													value={cellData}
-													decimalScale={2}
-													thousandSeparator={"."}
-													decimalSeparator={","}
-													fixedDecimalScale={inEuro}
-													prefix={inEuro ? "€" : ""}
-													displayType={"text"}
-										 />
-												:
-												cellData
-					)
-					:
-
-					<Input
-						type={valueType}
-						defaultValue={cellData}
-						save={save}
-					/>
+			{
+				(formatDisplay === "loading" && <Skeleton />)
+				||
+				(formatDisplay === "empty" &&  "")
+				||
+				(formatDisplay === "date" && moment(cellData).format("YYYY-MM-DD"))
+				||
+				(formatDisplay === "number" && <NumberFormat
+					value={cellData}
+					decimalScale={2}
+					thousandSeparator={"."}
+					decimalSeparator={","}
+					fixedDecimalScale={inEuro}
+					prefix={inEuro ? "€" : ""}
+					displayType={"text"}
+				/>)
+				||
+				(formatDisplay === "multi" && <i>..</i>)
+				||
+				(formatDisplay === "multiWithDropDown" && <DropDown
+					defaultValue={".."}
+					save={save}
+					options={`.., ${dropdownUpdateOptions}`}
+				/>)
+				||
+				(formatDisplay === "dropdown" && <DropDown
+					defaultValue={cellData}
+					save={save}
+					options={dropdownUpdateOptions}
+				/>)
+				||
+				(formatDisplay === "allOrNothing" && <DropDown
+					defaultValue={cellData}
+					formattedFirstOption={
+						<NumberFormat
+							value={cellData}
+							decimalScale={2}
+							thousandSeparator={"."}
+							decimalSeparator={","}
+							fixedDecimalScale={inEuro}
+							prefix={inEuro ? "€" : ""}
+							displayType={"text"}
+							renderText={value => <option value={cellData}>{value}</option>}
+						/>
+					}
+					save={save}
+					options={0}
+				/>)
+				||
+				(formatDisplay === "temp" && temporaryState)
+				||
+				(formatDisplay === "freeInput" && <Input
+					type={valueType}
+					defaultValue={cellData}
+					save={save}
+				/>)
+				||
+				(!formatDisplay && cellData)
+				// (cellData === false) || typeof cellData == "undefined"
+				// ?
+				// <Skeleton />
+				// :
+			  // (!editMode || (updateable === "withDropdown") || ((valueType === "number") && (hasBatches)))
+				// 	?
+				// 	(moment.isMoment(cellData)
+				// 		?
+				// 		cellData.format("YYYY-MM-DD")
+				// 		:
+				// 		temporaryState !== false ? temporaryState
+				// 			:
+				// 			(!cellData || cellData === "0" || omit)
+				// 				?
+				// 				""
+				// 				:
+				// 				Array.isArray(cellData)
+				// 					?
+				// 					(updateable === "withDropdown"
+				// 					&& <DropDown
+				// 						defaultValue={".."}
+				// 						save={save}
+				// 						options={`.., ${dropdownUpdateOptions}`}
+				// 					/>) ||
+				// 					<i>..</i>
+				// 					:
+				// 					updateable === "withDropdown"
+				// 						? <DropDown
+				// 							defaultValue={cellData}
+				// 					  save={save}
+				// 							options={dropdownUpdateOptions}
+				// 						/>
+				// 						:
+				// 						(updateable === "withFreeInput" && valueType ==="number" && hasBatches)
+				// 					 ?
+				// 							<DropDown
+				// 								defaultValue={cellData}
+				// 								formattedFirstOption={
+				// 									<NumberFormat
+				// 										value={cellData}
+				// 										decimalScale={2}
+				// 										thousandSeparator={"."}
+				// 										decimalSeparator={","}
+				// 										fixedDecimalScale={inEuro}
+				// 										prefix={inEuro ? "€" : ""}
+				// 										displayType={"text"}
+				// 										renderText={value => <option value={cellData}>{value}</option>}
+				// 							 />
+				// 								}
+				// 								save={save}
+				// 								options={0}
+				// 							/>
+				// 							:
+				// 							(valueType === "number")
+				// 								?
+				// 								<NumberFormat
+				// 									value={cellData}
+				// 									decimalScale={2}
+				// 									thousandSeparator={"."}
+				// 									decimalSeparator={","}
+				// 									fixedDecimalScale={inEuro}
+				// 									prefix={inEuro ? "€" : ""}
+				// 									displayType={"text"}
+				// 						 />
+				// 								:
+				// 								cellData
+				// 	)
+				// 	:
+				//
+				// 	<Input
+				// 		type={valueType}
+				// 		defaultValue={cellData}
+				// 		save={save}
+				// 	/>
 			}
 			<style jsx>{`
         .td {

@@ -1,7 +1,7 @@
 import {mutate} from "swr";
 import Link from "next/link";
 import React, {useState, useEffect, useContext} from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import { useRouter } from "next/router";
 
 import useGlobal from "../store";

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
 import {
@@ -8,7 +8,8 @@ import {
 	horPadding,
 	tableHeadersBarHeight,
 	toolBarHeight,
-	verPadding
+	verPadding,
+	numberInView
 } from "../../config/globalvariables";
 import FilterBar from "./filterbar";
 import FilterModal from "./filterbar/filtermodal";
@@ -65,10 +66,36 @@ const Table = ({data}) => {
 	);
 	const { isFallback } = useRouter();
 
+	const [parameters, setParameters] = useState({minLoad: 0, maxLoad: 30});
 
-	const [scrollTop, setScrollTop] = useState(false);
+	const updateParameters = (i) => {
+		let min = i - (numberInView/2) + 10;
+		if (min < 0) {
+			min = 0;
+		}
+		let max = min+numberInView;
+		if (sortedKeys.length && (max > (sortedKeys.length - 1))) {
+			max = sortedKeys.length - 1;
+			min = max-numberInView;
+			if (min < 0) {
+				min = 0;
+			}
+		}
+
+		console.log({i, min, max, numberInView});
+
+		setParameters({minLoad: min, maxLoad: max});
+	};
+
+	const shouldUpdateParameters = i => i%(numberInView/2-10) === 0;
+
+	useEffect(() => {
+		updateParameters(0);
+	}, [data.length]);
+
+
 	const handleClick = () => {
-		setScrollTop(true);
+		updateParameters(0);
 		tableRef.current.scrollTo(0, 0);
 	};
 
@@ -126,8 +153,9 @@ const Table = ({data}) => {
 							keysForTableCols={keys.compact}
 							additionalColKeys={keys.expanded}
 							sortedRowKeys={sortedKeys}
-							scrollTop={scrollTop}
-							setScrollTop={setScrollTop}
+							parameters={parameters}
+							updateParameters={updateParameters}
+							shouldUpdateParameters={shouldUpdateParameters}
 							updateEntry={updateEntry}
 						/>
 					</div>
@@ -171,12 +199,13 @@ const Table = ({data}) => {
 					background-color: ${gray_light.color};
 
 
+
 				}
 				.table {
 					border-collapse: collapse;
 					background-color: ${isFallback ? "red" : "white"};
-					width: 100%;
-					font-size: 0.7em
+					font-size: 0.7em;
+					display: grid;
 				}
 			`}
 			</style>

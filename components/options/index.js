@@ -1,17 +1,26 @@
 import React from "react";
 
-import SchemaDropdown from "./schemadropdown";
-import SilentFilters from "./silentfilters";
-import ViewButtons from "./viewbuttons";
+import { useTheme } from "../../lib/custom-hooks";
+import ModeSelector from "./modeselector";
 
 
 
-const Options = ({user, meta}) => {
+
+
+const Options = ({user, meta, ...modeProps}) => {
+	const {secondary} = useTheme();
 	return (
 		<div>
-			{/* <SchemaDropdown/> */}
-			<ViewButtons/>
-			{/* <SilentFilters user={user} meta={meta}/> */}
+			<h2>View bijstellen</h2>
+			<ModeSelector {...modeProps}/>
+			<style jsx>{`
+				h2{
+					margin: 0;
+					padding: 7px 15px;
+					color: ${secondary.text};
+					background-color: ${secondary.color};
+				}
+			`}</style>
 		</div>
 	);
 };

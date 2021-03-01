@@ -12,10 +12,13 @@ import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
 import Options from "../components/options";
 import Shadow from "../components/shadow";
-import Table from "../components/table";
+// import Table from "../components/table";
 import UserMenu from "../components/header/usermenu";
 import UserOptions from "../components/useroptions";
 import useGlobal from "../components/store";
+import dynamic from "next/dynamic";
+
+const Table = dynamic(() => import("../components/table"));
 
 
 
@@ -27,10 +30,32 @@ import useGlobal from "../components/store";
 
 export default function Home({user, view, initialViewMeta, extendedView, initialExtendedView}) {
 	const silentFilters = useMemo(() => user?.silentFilters ? JSON.parse(user.silentFilters) : {}, [user]);
+
 	const [category, setCategory] = useState(silentFilters.category || categories[0]);
 	useEffect(() => {setCategory(silentFilters.category || category);}, [silentFilters]);
-	const updatedFilters = useMemo(() => ({...silentFilters, category}), [silentFilters, category]);
-	
+
+	const [salesMode, setSalesMode] = useState(!!silentFilters.n_step);
+
+	const hasMrp = useMemo(() => user.roll?.hasMrp, [user]);
+	const [mrpcMode, setMrpcMode] = useState(!!silentFilters.mrpc && !!hasMrp);
+
+
+	const updatedFilters = useMemo(() => {
+		const obj = {...silentFilters, category};
+		if (salesMode) {
+			obj.n_step = "Offer2Sales";
+		} else {
+			delete obj.n_step;
+		}
+		if (mrpcMode) {
+			obj.mrpc = silentFilters.mrpc;
+		} else {
+			delete obj.mrpc;
+		}
+		console.log({silentFilters, category, salesMode, mrpcMode, obj});
+		return obj;
+	}, [silentFilters, category, salesMode, mrpcMode, hasMrp]);
+
 	const {
 		filteredData,
 		meta,
@@ -41,7 +66,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		requestSort,
 		sortConfig,
 		updateEntry,
-	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, updatedFilters);
+	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, updatedFilters, user?.userId, user?.totalLogins, user?.allLogins);
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -84,7 +109,15 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 				softTrigger={userMenu && !options && !filterModal}
 				clickthrough={false}/>
 			<OptionDrawer>
-				<Options user={user} meta={meta}/>
+				<Options
+					user={user}
+					meta={meta}
+					hasMrp={hasMrp}
+					mrpcMode={mrpcMode}
+					setMrpcMode={setMrpcMode}
+					salesMode={salesMode}
+					setSalesMode={setSalesMode}
+				/>
 			</OptionDrawer>
 			<UserMenu>
 				<UserOptions loggedIn={!!user.userId} user={user}/>
