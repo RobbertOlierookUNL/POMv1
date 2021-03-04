@@ -46,20 +46,13 @@ function equal(a, b) {
 
 
 
-const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, parameters, updateParameters, shouldUpdateParameters, updateEntry}) => {
+const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, parameters, updateParameters, shouldUpdateParameters, conversionMode, updateEntry, check, toggle, checked, selectMode, salesMode}) => {
 
 
-	const {check, toggle, init} = useCheckBox();
 	const fakedata = new Array(26).fill(".");
 	const {minLoad, maxLoad} = parameters;
 
-	useEffect(() => {
-		if (sortedRowKeys) {
-			for (const [pk] of sortedRowKeys) {
-				init(pk);
-			}
-		}
-	}, [sortedRowKeys]);
+
 
 	const [active, setActive] = useGlobal(
 		state => state.active,
@@ -70,20 +63,18 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 		() => null,
 		actions => actions.setTopInView
 	);
-	const [selectMode] = useGlobal(
-		state => state.selectMode,
-		() => null
-	);
+
 	const theme = useTheme() || {};
+
 
 	const groupedAKs = useMemo(() => {
 		const grouped = [];
-		const perGroup = Math.ceil(additionalColKeys.length / numberOfColumnsInExpandBlock);
+		const perGroup = Math.ceil(additionalColKeys.length / (salesMode ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock));
 		for (let i = 0; i < additionalColKeys.length; i += perGroup) {
 			grouped.push(additionalColKeys.slice(i, i+perGroup));
 		}
 		return grouped;
-	}, [additionalColKeys]);
+	}, [additionalColKeys, salesMode]);
 
 	const triggerUpdate = (pk, value, hasBatches, colName, triggers, rowData) => {
 		if (triggers) {
@@ -122,6 +113,7 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 		}
 	};
 
+
 	console.log({tablebody: {hasLoaded, sortedRowKeys, data, minLoad, maxLoad}});
 	return (
 		<>
@@ -143,13 +135,16 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 								updateEntry={updateEntry}
 								triggerUpdate={triggerUpdate}
 								key={pk}
-								check={check(pk)}
-								toggle={toggle(pk)}
+								check={check(pk, i)}
+								toggle={toggle(pk, i)}
+								checked={checked}
 								theme={theme}
 								selectMode={selectMode}
 								setTopInView={setTopInView}
 								setActive={setActive}
 								thisRowActive={equal(active, pk)}
+								conversionMode={conversionMode}
+								salesMode={salesMode}
 							/>
 						))}
 					</>

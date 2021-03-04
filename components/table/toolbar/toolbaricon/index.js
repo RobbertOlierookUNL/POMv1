@@ -7,7 +7,7 @@ import { useTheme } from "../../../../lib/custom-hooks";
 
 
 
-const ToolbarIcon = ({type, iconClick}) => {
+const ToolbarIcon = ({type, iconClick, button}) => {
 	const [icon, setIcon] = useState(faSpinner);
 	const {primary_light, primary_dark} = useTheme();
 	useEffect(() => {
@@ -22,12 +22,13 @@ const ToolbarIcon = ({type, iconClick}) => {
 			setIcon(faDownload);
 			break;
 		default:
-
+			setIcon(faSpinner);
 		}
-	}, []);
+	}, [type]);
 
 	return (
-		<div className="icon-button" onClick={iconClick}>
+		<div className={`icon-button ${button ? "button" : ""}`} onClick={iconClick}>
+			{typeof button === "string" && <span className="text">{button}</span>}
 			<FontAwesomeIcon icon={icon} />
 			<style jsx>{`
 				.icon-button {
@@ -41,6 +42,14 @@ const ToolbarIcon = ({type, iconClick}) => {
 					transform: scale(1.1);
 					filter: drop-shadow(1px 1px 5px ${primary_light.color});
 
+				}
+				.button {
+					background-color: ${primary_light.color};
+					padding: 0px 7px;
+					border-radius: 7px;
+				}
+				.text {
+					margin-right: 6px;
 				}
       `}</style>
 		</div>

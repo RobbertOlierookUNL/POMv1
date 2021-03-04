@@ -63,8 +63,8 @@ export const removeFromFilters = (store, filter) => {
 
 
 //Checkboxes
-export const toggleCheckBox = (store, boxId, value) => {
-	store.setState({checked: {...store.state.checked, [boxId]: value}});
+export const toggleCheckBox = (store, boxId, checked) => {
+	store.setState({checked: {...store.state.checked, [boxId]: checked}});
 };
 export const toggleCheckAll = (store, value) => {
 	const newChecked = {...store.state.checked};
@@ -77,6 +77,24 @@ export const toggleCheckAll = (store, value) => {
 };
 export const clearBoxes = (store) => {
 	store.setState({checked: {}});
+};
+export const setLastChecked = (store, order, checked) => {
+	store.setState({lastChecked: {order, checked}});
+	console.log({lastChecked: {order, checked}});
+};
+export const checkRange = (store, end, boxId, fallBack) => {
+	const	{order: start, checked} = store.state.lastChecked;
+	if (start) {
+		console.log("found a start");
+		store.setState({rangeChecked: {rangeFound: true, start, end, checked}});
+	} else {
+		store.setState({checked: {...store.state.checked, [boxId]: fallBack}});
+	}
+	console.log({range: store.state.rangeChecked});
+
+};
+export const clearRange = (store) => {
+	store.setState({rangeChecked: {rangeFound: false, start: null, end: null, checked: null}});
 };
 
 //Storer

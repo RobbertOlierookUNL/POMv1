@@ -7,12 +7,13 @@ import FilterBox from "./filterbox";
 
 
 
-const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, filterName, parameters, reference}) => {
+const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, filterName, parameters, reference, conversionMode, convertable}) => {
 	const {primary, tertiary, gray, gray_dark, gray_lighter} = useTheme();
 	const [boxActive, setBoxActive] = useState(false);
+	const parsedUnit = (unit === "HE" && (convertable === "divide" || convertable === "multiply")) ? conversionMode : unit;
 	return (
 		<div className="th">
-			{unit && <div className="unit">{unit}</div>}
+		  {unit && <div className="unit">{parsedUnit}</div>}
 			{filtertype &&
         <>
         	<div className="filter" onClick={() => setBoxActive(!boxActive)}>

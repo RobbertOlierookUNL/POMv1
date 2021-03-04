@@ -1,43 +1,60 @@
-import React from "react";
+import React, {useMemo} from "react";
 import moment from "moment-timezone";
+import NumberFormat from "react-number-format";
+
 
 import { useTheme } from "../../lib/custom-hooks";
 
 
 
 
-const ExpandBlock = ({additionalColKeys, rowData, meta, active}) => {
+const ExpandBlock = ({additionalColKeys, rowData, meta, conversionRate}) => {
 	const {primary, gray_light} = useTheme();
 	return (
 		<div className="block">
-			{additionalColKeys.map((key, i) =>
-				<div key={i} className={"block-row"}>
+			{additionalColKeys.map((key, i) => {
+				const {valuetype, convertable, hovername, title, merge, specialnumberformat} = meta[key];
+				const cellData = rowData[key];
+				const convertedData = (valuetype === "number" && (convertable === "multiply" || convertable === "divide") && cellData) ? (convertable === "multiply" ? (cellData * conversionRate) : (cellData / conversionRate)) : cellData;
+				return <div key={i} className={"block-row"}>
 					<span className="block-row-left">
 						{
-							meta[key].hovername
-            || meta[key].title
+							hovername
+            || title
             || key
 						}
 					</span>
 					<span className="block-row-right">
 						{
-							(moment.isMoment(rowData[key]))
-								? rowData[key].format("YYYY-MM-DD")
+							(valuetype === "date" && cellData)
+								? moment(cellData).tz("Europe/Amsterdam").format("LL")
 								:
-								(!rowData[key] || rowData[key] === "0" || (rowData
+								(valuetype === "number" && cellData)
+									? <NumberFormat
+										value={convertedData}
+										decimalScale={2}
+										thousandSeparator={"."}
+										decimalSeparator={","}
+										fixedDecimalScale={specialnumberformat === "money"}
+										prefix={specialnumberformat === "money" ? "€" : ""}
+										suffix={specialnumberformat === "percentage" ? "%" : ""}
+										displayType={"text"}
+									/>
+									:
+									(!cellData || cellData === "0" || (rowData
       									&& rowData.addedProps
       									&& !rowData.addedProps.merged
-      									&& meta[key].merge === "count"))
-									? ""
-									:
-									Array.isArray(rowData[key])
-										? rowData[key].join(" | ")
+      									&& merge === "count"))
+										? ""
 										:
-										rowData[key]
+										Array.isArray(cellData)
+											? cellData.join(" | ")
+											:
+											cellData
 						}
 					</span>
-				</div>
-			)}
+				</div>;
+			})}
 			<style jsx>{`
         .block {
           background-color: white;
@@ -48,6 +65,9 @@ const ExpandBlock = ({additionalColKeys, rowData, meta, active}) => {
           padding: 3px;
           border-bottom: 1px solid ${gray_light.color}
         }
+				.block-row:last-child {
+					border-bottom: none;
+				}
         .block-row-left {
         }
         .block-row-right {

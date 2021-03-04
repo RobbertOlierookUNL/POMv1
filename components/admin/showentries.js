@@ -17,7 +17,7 @@ const ShowEntries = ({data, loading, error, hasRead, hasWrite, loggedIn, columns
 	if (!loggedIn) {
 		return <div>Je bent niet ingelogd</div>;
 	}
-	if (!hasRead) {
+	if (!(hasRead || hasWrite)) {
 		return <div>Je bent geen admin</div>;
 	}
 	if (error) {
@@ -29,7 +29,10 @@ const ShowEntries = ({data, loading, error, hasRead, hasWrite, loggedIn, columns
 	const cols = columns.split(" ");
 	const [quadiary] = useColors("quadiary");
 
-	const format = string => {
+	const format = (string, col) => {
+		if (col === "totalLogins") {
+			return string;
+		}
 		if (string === 0) {
 			return "false";
 		}
@@ -57,7 +60,7 @@ const ShowEntries = ({data, loading, error, hasRead, hasWrite, loggedIn, columns
 			{data.map((entry, i) => (
 				cols.map((col, j) => (
 					<div className="entry-cell" key={`${i}.${j}`}>
-						{format(entry[col])}
+						{format(entry[col], col)}
 					</div>
 				))
 			))

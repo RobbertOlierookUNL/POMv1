@@ -1,12 +1,10 @@
 import React, {useRef, useMemo, forwardRef} from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
-import {
-	dataTable_pk,
-	numberOfColumnsInExpandBlock
-} from "../../config/globalvariables";
-import { useColors, useToolkit } from "../../lib/custom-hooks";
+import { numberOfColumnsInExpandBlock, dataTable_pk } from "../../config/globalvariables";
+import { useToolkit } from "../../lib/custom-hooks";
 import Cell from "./cell";
+import CustomerDeals from "./customerdeals";
 import EditableCell from "./editablecell";
 import ExpandBlock from "./expandblock";
 
@@ -21,7 +19,8 @@ import ExpandBlock from "./expandblock";
 
 
 
-const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, triggerUpdate, salesInputRights, theme}, ref) => {
+
+const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, triggerUpdate, salesInputRights, theme, conversionRate, conversionMode, salesMode}, ref) => {
 	const expandCell = useRef(null);
 	const {mergeRefs} = useToolkit();
 	const {gray_light, gray_lighter, gray, tertiary} = theme;
@@ -61,9 +60,12 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 												valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 												key={i}
 												theme={theme}
-												inEuro={meta[key].unit === "€"}
+												inEuro={meta[key].specialnumberformat === "money"}
+												isPercentage={meta[key].specialnumberformat === "percentage"}
 												active={active}
 												primaryKey={row[dataTable_pk]}
+												convertable={meta[key].convertable}
+												conversionRate={conversionRate}
 												updateEntry={updateEntry}
 												triggerUpdate={triggerUpdate}
 												omit={
@@ -85,10 +87,14 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 										noExpand
 										compare={rowData[key]}
 										theme={theme}
+										convertable={meta[key].convertable}
+										conversionRate={conversionRate}
 										valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 										key={i}
-										inEuro={meta[key].unit === "€"}
+										inEuro={meta[key].specialnumberformat === "money"}
+										isPercentage={meta[key].specialnumberformat === "percentage"}
 										active={active}
+										count={meta[key].merge === "count" && idx+1}
 										omit={
 											(rowData
 												&& rowData.addedProps
@@ -107,7 +113,13 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 			<div className={"container"}>
 				{groupedAdditionalColKeys &&
 					groupedAdditionalColKeys.map((group, i) =>{
-						return <ExpandBlock key={i} additionalColKeys={group} rowData={rowData} meta={meta} active={active}/>;
+						return <ExpandBlock
+							key={i}
+							additionalColKeys={group}
+							rowData={rowData}
+							meta={meta}
+							conversionRate={conversionRate}
+							active={active}/>;
 					}
 					)
 					// <div>
@@ -129,6 +141,15 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 					//
 					// 	</dl></div>
 				}
+				{salesMode &&
+					<CustomerDeals
+						theme={theme}
+						active={active}
+						conversionRate={conversionRate}
+						conversionMode={conversionMode}
+						mergedFrom={mergedFrom}
+						rowData={rowData}
+					/>}
 			</div>
 
 			<style jsx>{`
@@ -155,8 +176,8 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 					border-width: 0 0 1px 0;
 					font-weight: normal;
 					display: grid;
-					grid-template-columns: repeat(${numberOfColumnsInExpandBlock}, 1fr);
-					grid-template-rows: repeat(auto-fit, min-content);
+					grid-template-columns: repeat(${salesMode ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock}, 1fr) ${salesMode ? "710px" : ""};
+					grid-template-rows: repeat(1, fit-content);
 					gap: 8px;
 				}
 				.sub-table {

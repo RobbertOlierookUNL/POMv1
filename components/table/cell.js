@@ -9,9 +9,9 @@ import { errorRGB, warningRGB } from "../../config/globalvariables";
 
 
 
-const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, inEuro, theme, rowData, inRangeOf, dateErrorOn, dateWarnOn}) => {
+const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, inEuro, isPercentage, theme, rowData, inRangeOf, dateErrorOn, dateWarnOn, convertable, conversionRate, count}) => {
 	const {gray_light, gray_very_light, gray_dark} = theme;
-	const rangeError = useMemo(() => inRangeOf && (cellData > rowData[inRangeOf]), [inRangeOf, cellData, rowData]);
+	const rangeError = useMemo(() => (inRangeOf && (cellData > rowData[inRangeOf]) || (Math.sign(cellData) === -1)), [inRangeOf, cellData, rowData]);
 	const formatDisplay = useMemo(() => {
 		if (cellData === false || cellData == "undefined") {
 			return "loading";
@@ -19,6 +19,8 @@ const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, in
 			return "empty";
 		} else if (valueType === "date") {
 			return "date";
+		} else if (count) {
+			return "count";
 		} else if (valueType === "number") {
 			return "number";
 		} else if (Array.isArray(cellData)) {
@@ -28,8 +30,19 @@ const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, in
 		}
 	}, [cellData, valueType, omit]);
 
+	const convertedData = useMemo(() => {
+		if (formatDisplay === "number" && (convertable === "multiply" || convertable === "divide")) {
+			if (convertable === "multiply") {
+				console.log({cellData});
+				return cellData * conversionRate;
+			}
+			return cellData / (conversionRate || 1);
+		}
+		return cellData;
+	}, [formatDisplay, cellData, convertable, conversionRate]);
+
 	const monthDiff = useMemo(() => {
-		if ((valueType === "date") && cellData) {
+		if ((formatDisplay === "date") && cellData) {
 			const today = moment();
 			const thisDay = moment(cellData);
 			if (thisDay.isBefore(today)) {
@@ -38,7 +51,7 @@ const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, in
 			return thisDay.diff(today, "weeks", true);
 		}
 		return false;
-	}, [valueType, cellData]
+	}, [formatDisplay, cellData]
 	);
 	const dateError = useMemo(() => ((monthDiff === 0 || monthDiff) && dateErrorOn) && (monthDiff <= dateErrorOn), [monthDiff, dateErrorOn]);
 	const dateWarningNumber = useMemo(() => {
@@ -62,15 +75,18 @@ const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, in
 				||
 				(formatDisplay === "empty" &&  "")
 				||
+				(formatDisplay === "count" && count)
+				||
 				(formatDisplay === "date" && moment(cellData).format("YYYY-MM-DD"))
 				||
 				(formatDisplay === "number" && <NumberFormat
-					value={cellData}
+					value={convertedData}
 					decimalScale={2}
 					thousandSeparator={"."}
 					decimalSeparator={","}
 					fixedDecimalScale={inEuro}
 					prefix={inEuro ? "€" : ""}
+					suffix={isPercentage ? "%" : ""}
 					displayType={"text"}
 				/>)
 				||

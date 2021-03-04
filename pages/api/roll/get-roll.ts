@@ -1,26 +1,26 @@
 import { NextApiHandler } from 'next'
 
 import { query } from '../../../lib/db'
-import { userTable } from '../../../config/globalvariables';
+import { rollTable } from '../../../config/globalvariables';
 
 
 const handler: NextApiHandler = async (req, res) => {
-  const { email } = req.query
+  const { roll } = req.query
   try {
-    if (!email ) {
-      return res.status(400).json({ message: '`email` required' })
+    if (!roll ) {
+      return res.status(400).json({ message: '`userId` required' })
     }
 
     const results = await query(
       `
-      SELECT userId
-      FROM ${userTable}
-      WHERE email = ?
+      SELECT *
+      FROM ${rollTable}
+      WHERE rollName = ?
       `,
-      email
+      roll
     )
 
-    return res.json(results[0])
+    return res.json(results[0] || false)
   } catch (e) {
     res.status(500).json({ message: e.message })
   }

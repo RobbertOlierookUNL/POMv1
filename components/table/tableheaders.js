@@ -23,11 +23,8 @@ import useGlobal from "../store";
 
 
 
-const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterParameters, numberOfEntries}) => {
-	const [selectMode] = useGlobal(
-		state => state.selectMode,
-		() => null
-	);
+const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterParameters, conversionMode, selectMode}) => {
+
 	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
 
 	const {primary, gray_light, gray_lighter} = useTheme();
@@ -95,6 +92,8 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 							parameters={filterParameters?.[col] || false}
 							reference={col}
 							key={i}
+							conversionMode={conversionMode}
+							convertable={meta[col].convertable}
 						/>
 					))
 				}

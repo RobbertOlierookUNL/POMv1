@@ -1,5 +1,7 @@
 import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
+import { viewTable } from '../../../config/globalvariables';
+
 
 const handler: NextApiHandler = async (req, res) => {
   const { view } = req.query
@@ -16,7 +18,7 @@ const handler: NextApiHandler = async (req, res) => {
     const results = await query(
       `
       SELECT *
-      FROM view_metadata_table_v3test
+      FROM ${viewTable}
       WHERE view_name = ?
     `,
       view

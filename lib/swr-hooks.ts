@@ -6,7 +6,7 @@ function fetcher(url: string) {
 
 
 export function useEntries() {
-  const { data, error } = useSWR(`/api/data/get-entries`, fetcher,  {refreshInterval: 1000 })
+  const { data, error } = useSWR(`/api/data/get-all-entries`, fetcher)
 
   return {
     data,
@@ -100,8 +100,19 @@ export function useEntry(id: string) {
   return useSWR(`/api/data/get-entry?id=${id}`, fetcher)
 }
 
+export function useDeal(customer: number, pk: string) {
+  return useSWR(`/api/data/get-deals?customer=${customer}&pk=${pk}`, fetcher)
+}
+export function useReserveLogic(pk: string) {
+  return useSWR(`/api/data/get-reserved-cols?pk=${pk}`, fetcher)
+}
+
 export function useView(view: string, initialData: object) {
   return useSWR(`/api/view/get-view?view=${view}`, fetcher, {initialData, /*refreshInterval: 1000*/ })
+}
+
+export function useRoll(roll: string) {
+  return useSWR(`/api/roll/get-roll?roll=${roll}`, fetcher)
 }
 
 export function useUser(userId: number) {

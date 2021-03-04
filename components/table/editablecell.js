@@ -16,7 +16,7 @@ import Input from "./input";
 
 
 
-const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, triggerUpdate, inEuro, hasBatches = false, theme}) => {
+const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, triggerUpdate, inEuro, isPercentage, hasBatches = false, theme, selectMode, checked, convertable, conversionRate}) => {
 	const [editMode, setEditMode] = useState(false);
 	const [temporaryState, setTemporaryState] = useState(false);
 	const {gray_light, primary_light, primary_overlay, secondary} = theme;
@@ -31,17 +31,42 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 
 	useEffect(() => {
 		if (temporaryState !== false) {
+			let newValue = temporaryState;
+			if (cellData !== convertedData) {
+				if (convertable === "multiply") {
+					newValue = temporaryState / conversionRate;
+				} else {
+					newValue = temporaryState * conversionRate;
+				}
+			}
+			if (selectMode) {
+				let checkedPks = [];
+				for (const pk in checked) {
+					if (checked[pk]) {
+						console.log({pk});
+						checkedPks.push(pk.split(","));
+					}
+				}
+				console.log({checkedPks});
+				checkedPks = checkedPks.flat();
+				console.log({checkedPks});
+				for (const pk of checkedPks) {
+					console.log({pk});
+					updateEntry(pk, colName, newValue);
+					triggerUpdate(pk,newValue, hasBatches, colName, triggers, rowData);
+				}
+			}
 			if (hasBatches) {
 				for (const pk of primaryKey) {
-					updateEntry(pk, colName, temporaryState);
-					triggerUpdate(pk,temporaryState, hasBatches, colName, triggers, rowData);
+					updateEntry(pk, colName, newValue);
+					triggerUpdate(pk,newValue, hasBatches, colName, triggers, rowData);
 				}
 			} else {
-				updateEntry(primaryKey, colName, temporaryState);
-				triggerUpdate(primaryKey,temporaryState, hasBatches, colName, triggers, rowData);
+				updateEntry(primaryKey, colName, newValue);
+				triggerUpdate(primaryKey,newValue, hasBatches, colName, triggers, rowData);
 			}
 		}
-	}, [temporaryState, hasBatches]);
+	}, [temporaryState, hasBatches, selectMode, convertable, convertedData]);
 
 	const edit = () => {
 		setEditMode(true);
@@ -49,7 +74,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 
 	const save = (e) => {
 		setEditMode(false);
-		if (e.target.value != cellData) {
+		if (e.target.value != convertedData) {
 			setTemporaryState(e.target.value);
 		}
 	};
@@ -59,7 +84,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 			return "loading";
 		} else if (temporaryState !== false) {
 			return "temp";
-		} else if (!(!editMode || (updateable === "withDropdown") || ((valueType === "number") && (hasBatches)))) {
+		} else if (!(!editMode || (updateable === "withDropdown") || ((valueType === "number") && (hasBatches || selectMode)))) {
 			return "freeInput";
 		} else if (!cellData || cellData === "0" || omit) {
 			return "empty";
@@ -71,14 +96,24 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 			return "multi";
 		} else if (updateable === "withDropdown") {
 			return "dropdown";
-		} else if (updateable === "withFreeInput" && valueType ==="number" && hasBatches) {
+		} else if (updateable === "withFreeInput" && valueType ==="number" && (hasBatches || selectMode)) {
 			return "allOrNothing";
 		} else if (valueType === "number") {
 			return "number";
 		} else {
 			return false;
 		}
-	}, [cellData, temporaryState, editMode, omit, valueType, hasBatches, updateable]);
+	}, [cellData, temporaryState, editMode, omit, valueType, hasBatches, updateable, selectMode]);
+
+	const convertedData = useMemo(() => {
+		if (cellData && (valueType === "number") && (convertable === "multiply" || convertable === "divide")) {
+			if (convertable === "multiply") {
+				return cellData * conversionRate;
+			}
+			return cellData / (conversionRate || 1);
+		} else {
+			return cellData;
+		}}, [formatDisplay, valueType, cellData, convertable, conversionRate]);
 
 
 	return (
@@ -100,12 +135,13 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 				(formatDisplay === "date" && moment(cellData).format("YYYY-MM-DD"))
 				||
 				(formatDisplay === "number" && <NumberFormat
-					value={cellData}
+					value={convertedData}
 					decimalScale={2}
 					thousandSeparator={"."}
 					decimalSeparator={","}
 					fixedDecimalScale={inEuro}
 					prefix={inEuro ? "€" : ""}
+					suffix={isPercentage ? "%" : ""}
 					displayType={"text"}
 				/>)
 				||
@@ -133,6 +169,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 							decimalSeparator={","}
 							fixedDecimalScale={inEuro}
 							prefix={inEuro ? "€" : ""}
+							suffix={isPercentage ? "%" : ""}
 							displayType={"text"}
 							renderText={value => <option value={cellData}>{value}</option>}
 						/>
@@ -145,85 +182,11 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 				||
 				(formatDisplay === "freeInput" && <Input
 					type={valueType}
-					defaultValue={cellData}
+					defaultValue={convertedData}
 					save={save}
 				/>)
 				||
 				(!formatDisplay && cellData)
-				// (cellData === false) || typeof cellData == "undefined"
-				// ?
-				// <Skeleton />
-				// :
-			  // (!editMode || (updateable === "withDropdown") || ((valueType === "number") && (hasBatches)))
-				// 	?
-				// 	(moment.isMoment(cellData)
-				// 		?
-				// 		cellData.format("YYYY-MM-DD")
-				// 		:
-				// 		temporaryState !== false ? temporaryState
-				// 			:
-				// 			(!cellData || cellData === "0" || omit)
-				// 				?
-				// 				""
-				// 				:
-				// 				Array.isArray(cellData)
-				// 					?
-				// 					(updateable === "withDropdown"
-				// 					&& <DropDown
-				// 						defaultValue={".."}
-				// 						save={save}
-				// 						options={`.., ${dropdownUpdateOptions}`}
-				// 					/>) ||
-				// 					<i>..</i>
-				// 					:
-				// 					updateable === "withDropdown"
-				// 						? <DropDown
-				// 							defaultValue={cellData}
-				// 					  save={save}
-				// 							options={dropdownUpdateOptions}
-				// 						/>
-				// 						:
-				// 						(updateable === "withFreeInput" && valueType ==="number" && hasBatches)
-				// 					 ?
-				// 							<DropDown
-				// 								defaultValue={cellData}
-				// 								formattedFirstOption={
-				// 									<NumberFormat
-				// 										value={cellData}
-				// 										decimalScale={2}
-				// 										thousandSeparator={"."}
-				// 										decimalSeparator={","}
-				// 										fixedDecimalScale={inEuro}
-				// 										prefix={inEuro ? "€" : ""}
-				// 										displayType={"text"}
-				// 										renderText={value => <option value={cellData}>{value}</option>}
-				// 							 />
-				// 								}
-				// 								save={save}
-				// 								options={0}
-				// 							/>
-				// 							:
-				// 							(valueType === "number")
-				// 								?
-				// 								<NumberFormat
-				// 									value={cellData}
-				// 									decimalScale={2}
-				// 									thousandSeparator={"."}
-				// 									decimalSeparator={","}
-				// 									fixedDecimalScale={inEuro}
-				// 									prefix={inEuro ? "€" : ""}
-				// 									displayType={"text"}
-				// 						 />
-				// 								:
-				// 								cellData
-				// 	)
-				// 	:
-				//
-				// 	<Input
-				// 		type={valueType}
-				// 		defaultValue={cellData}
-				// 		save={save}
-				// 	/>
 			}
 			<style jsx>{`
         .td {

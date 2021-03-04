@@ -1,11 +1,14 @@
 import { NextApiHandler } from 'next'
+
 import { query } from '../../../lib/db'
+import { rollTable } from '../../../config/globalvariables';
+
 
 const handler: NextApiHandler = async (req, res) => {
   try {
     if (req.method === "GET") {
       const results = await query(/* sql */`
-        SELECT * FROM roll_metadata_table_v3test
+        SELECT * FROM ${rollTable}
     `)
 
       return res.json(results)

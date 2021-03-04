@@ -8,7 +8,7 @@ import ModeSelector from "./modeselector";
 
 
 const Options = ({user, meta, ...modeProps}) => {
-	const {secondary} = useTheme();
+	const {primary_light} = useTheme();
 	return (
 		<div>
 			<h2>View bijstellen</h2>
@@ -17,8 +17,8 @@ const Options = ({user, meta, ...modeProps}) => {
 				h2{
 					margin: 0;
 					padding: 7px 15px;
-					color: ${secondary.text};
-					background-color: ${secondary.color};
+					color: ${primary_light.text};
+					background-color: ${primary_light.color};
 				}
 			`}</style>
 		</div>

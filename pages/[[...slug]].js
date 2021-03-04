@@ -1,22 +1,32 @@
 import Head from "next/head";
 import React, {useEffect, useState, useMemo} from "react";
+import dynamic from "next/dynamic";
 
-import { background, categories } from "../config/globalvariables";
+import {
+	background,
+	categories,
+	categoryTable,
+	rollTable,
+	userTable,
+	viewTable
+} from "../config/globalvariables";
 import { isNumeric } from "../lib/custom-hooks";
 import { query } from "../lib/db";
 import { useDataForView } from "../lib/enhanced-swr-hooks";
 import { useGlobalUser } from "../lib/store-hooks";
+import AdminButton from "../components/header/adminbutton";
 import CategoryDropdown from "../components/header/categorydropdown";
 import Header from "../components/header";
 import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
 import Options from "../components/options";
 import Shadow from "../components/shadow";
-// import Table from "../components/table";
 import UserMenu from "../components/header/usermenu";
 import UserOptions from "../components/useroptions";
 import useGlobal from "../components/store";
-import dynamic from "next/dynamic";
+
+
+
 
 const Table = dynamic(() => import("../components/table"));
 
@@ -34,7 +44,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 	const [category, setCategory] = useState(silentFilters.category || categories[0]);
 	useEffect(() => {setCategory(silentFilters.category || category);}, [silentFilters]);
 
-	const [salesMode, setSalesMode] = useState(!!silentFilters.n_step);
+	const [salesMode, setSalesMode] = useState(!!user?.roll?.isSales);
 
 	const hasMrp = useMemo(() => user.roll?.hasMrp, [user]);
 	const [mrpcMode, setMrpcMode] = useState(!!silentFilters.mrpc && !!hasMrp);
@@ -45,7 +55,9 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		if (salesMode) {
 			obj.n_step = "Offer2Sales";
 		} else {
-			delete obj.n_step;
+			if (obj.n_step) {
+				delete obj.n_step;
+			}
 		}
 		if (mrpcMode) {
 			obj.mrpc = silentFilters.mrpc;
@@ -100,13 +112,16 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
 			<Header fName={user.firstName} lName={user.lastName}>
-				<MenuButton/>
+				<>
+					<MenuButton/>
+					{(user.roll?.adminRights === "read" || user.roll?.adminRights === "write") && <AdminButton/>}
+				</>
 			 <>POM<img style={{height: "120%"}} src="/Logo_voor_kleur_vierkant.png"/><CategoryDropdown getter={category} setter={setCategory}/></>
 			</Header>
 			<Shadow
 				zIndex={8}
-				trigger={options || userMenu || filterModal}
 				softTrigger={userMenu && !options && !filterModal}
+				trigger={options || userMenu || filterModal}
 				clickthrough={false}/>
 			<OptionDrawer>
 				<Options
@@ -135,6 +150,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 						requestSort,
 						sortConfig,
 						updateEntry,
+						salesMode
 					}
 				}
 			/>
@@ -144,6 +160,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 					background: linear-gradient(80deg, ${gray_dark.color}, ${secondary.color}); */
 					background-color: ${background};
 				}
+
 			`}</style>
 		</>
 	);
@@ -156,7 +173,7 @@ export async function getStaticProps(context) {
 		if (context.params.slug[0]) {
 			if (isNumeric(context.params.slug[0])) {
 				const getUser = await query(/* sql */`
-						SELECT * FROM user_table_v3test
+						SELECT * FROM ${userTable}
 						WHERE userId = ?
 						`,
 				context.params.slug[0]
@@ -168,7 +185,7 @@ export async function getStaticProps(context) {
 				user = getUser[0];
 				if (user.roll) {
 					const getRoll = await query(/* sql */`
-						 SELECT * FROM roll_metadata_table_v3test
+						 SELECT * FROM ${rollTable}
 						 WHERE rollName = ?
 						 `,
 					user.roll
@@ -176,18 +193,18 @@ export async function getStaticProps(context) {
 					user.roll = getRoll[0];
 					view = getRoll[0].defaultView;
 				}
-				if (user.chain) {
-					const getChain = await query(/* sql */`
-						 SELECT * FROM chain_metadata_table_v3test
-						 WHERE chainName = ?
-						 `,
-					user.chain
-					);
-					user.chain = getChain[0];
-				}
+				// if (user.chain) {
+				// 	const getChain = await query(/* sql */`
+				// 		 SELECT * FROM ${chainTable}
+				// 		 WHERE chainName = ?
+				// 		 `,
+				// 	user.chain
+				// 	);
+				// 	user.chain = getChain[0];
+				// }
 				if (user.category) {
 					const getCategory = await query(/* sql */`
-						 SELECT * FROM category_metadata_table_v3test
+						 SELECT * FROM ${categoryTable}
 						 WHERE categoryName = ?
 						 `,
 					user.category
@@ -208,7 +225,7 @@ export async function getStaticProps(context) {
 
 	const getView = await query(/* sql */`
 		SELECT *
-		FROM view_metadata_table_v3test
+		FROM ${viewTable}
 		WHERE view_name = ?
 		`,
 	view
@@ -223,7 +240,7 @@ export async function getStaticProps(context) {
 			extendedView = config.extend;
 			getExtendedView = await query(/* sql */`
 				SELECT *
-				FROM view_metadata_table_v3test
+				FROM ${viewTable}
 				WHERE view_name = ?
 				`,
 			extendedView
@@ -248,10 +265,10 @@ export async function getStaticProps(context) {
 
 export async function getStaticPaths() {
 	const userIds = await query(/* sql */`
-	      SELECT userId FROM user_table_v3test
+	      SELECT userId FROM ${userTable}
 	  `);
 	const viewNames = await query(/* sql */`
-				SELECT view_name FROM view_metadata_table_v3test
+				SELECT view_name FROM ${viewTable}
 		`);
 
 	// const mappedIds = [];

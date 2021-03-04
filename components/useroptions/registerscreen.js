@@ -60,7 +60,7 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 	const Router = useRouter();
 	const watchRoll = watch("roll");
 	const {rolls, isLoading: rollsAreLoading, isError: rollsGiveError} = useRolls();
-	const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
+	// const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
 	const {categories, isLoading: categoriesAreLoading, isError: categoriesGiveError} = useCategories();
 	const [, expandUserMenu] = useGlobal(
 		() => null,
@@ -106,7 +106,8 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 			if (data.mrp) {
 				sf.mrpc = data.mrp.split(" ");
 			}
-			if (data.roll === "Account Manager" || data.roll === "Catman") {
+			const thisRoll = rolls.find(r => r.rollName === data.roll);
+			if (thisRoll?.isSales) {
 				sf.n_step = "Offer2Sales";
 			}
 
@@ -265,8 +266,8 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 					/>
 					{errors.category && <div className="error-message">Kies een categorie</div>}
 				</FormControl>
-				{console.log({watchRoll, chains, chainsAreLoading, chainsGiveError})}
-				{watchRoll && rollObj.hasChain === 1 &&
+				{/* {console.log({watchRoll, chains, chainsAreLoading, chainsGiveError})} */}
+				{/* {watchRoll && rollObj.hasChain === 1 &&
 					<FormControl
 						className={classes.formControl}
 						error={!!errors.chain}
@@ -292,7 +293,7 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 						/>
 						{errors.chain && <div className="error-message">Kies een chain</div>}
 					</FormControl>
-				}
+				} */}
 				{watchRoll && rollObj.hasMrp === 1 &&
 					<>
 						<div className={classes.root}>

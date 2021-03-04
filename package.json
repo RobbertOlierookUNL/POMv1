@@ -5,14 +5,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 8000",
     "migrate-view": "node scripts/migrate-db_view-table.js",
     "migrate-user": "node scripts/migrate-db_user-table.js",
     "migrate-roll": "node scripts/migrate-db_roll-table.js",
     "migrate-category": "node scripts/migrate-db_category-table.js",
     "migrate-chain": "node scripts/migrate-db_chain-table.js",
     "seed": "node scripts/create-template-view.js",
-    "analyze": "cross-env ANALYZE=true next build"
+    "analyze": "cross-env ANALYZE=true next build",
+    "pom": "next build && pm2 start \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js\" --name \"POM\" -- start",
+    "new": "git pull && npm i"
   },
   "dependencies": {
     "@date-io/moment": "^1.3.13",

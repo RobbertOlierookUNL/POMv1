@@ -6,7 +6,8 @@ import Link from "next/link";
 import React from "react";
 
 import { isNumeric } from "../../../lib/custom-hooks";
-import { useUser } from "../../../lib/swr-hooks";
+import { useRoll, useUser } from "../../../lib/swr-hooks";
+import AdminRedirectGrid from "../../../components/admin/redirectgrid";
 import Button from "../../../components/button";
 import Header from "../../../components/header";
 import OptionDrawer from "../../../components/header/optiondrawer";
@@ -15,7 +16,7 @@ import UserMenu from "../../../components/header/usermenu";
 import UserOptions from "../../../components/useroptions";
 import ViewButtons from "../../../components/options/viewbuttons";
 import useGlobal from "../../../components/store";
-import AdminRedirectGrid from "../../../components/admin/redirectgrid";
+
 
 
 
@@ -27,7 +28,17 @@ const Admin = () => {
 	console.log(userId);
 	// const user = useUser(isNumeric(userId) ? parseInt(userId) : userId);
 	const {data: user} = useUser(userId || 0);
-	console.log(user);
+	const {data: roll} = useRoll(user?.roll || "Visitor");
+	const hasRead = roll?.adminRights === "read";
+	const hasWrite = roll?.adminRights === "write";
+	// React.useEffect(() => {
+	// 	if (user && roll) {
+	// 	  if (!(hasRead || hasWrite)) {
+	// 	  	Router.push("/admin");
+	// 	  }
+	// 	}
+	// }, [hasRead, hasWrite, user, roll]);
+	console.log({roll, user, hasRead, hasWrite});
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -59,8 +70,8 @@ const Admin = () => {
 				<UserOptions loggedIn={user && !!user.userId} admin/>
 			</UserMenu>
 			<AdminRedirectGrid
-				hasRead={true}
-				hasWrite={true}
+				hasRead={hasRead}
+				hasWrite={hasWrite}
 				loggedIn
 			/>
 			<style jsx global>{`

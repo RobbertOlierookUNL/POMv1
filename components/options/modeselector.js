@@ -38,7 +38,7 @@ const ModeSelector = ({hasMrp, mrpcMode, setMrpcMode, salesMode, setSalesMode}) 
 
 					</Select>
 				</div>
-				{hasMrp &&
+				{!!hasMrp &&
           <div className="content">
         	<InputLabel id="MRPs">MRP</InputLabel>
         	<Select
@@ -64,7 +64,7 @@ const ModeSelector = ({hasMrp, mrpcMode, setMrpcMode, salesMode, setSalesMode}) 
 						id="view"
 						className="disable-on-inactive"
 						name="view"
-						defaultValue={"non"}
+						defaultValue={""}
 						onChange={reroute}
 					>
 						<MenuItem value={"non"}>Mijn standaard view</MenuItem>
@@ -80,7 +80,7 @@ const ModeSelector = ({hasMrp, mrpcMode, setMrpcMode, salesMode, setSalesMode}) 
 			<style jsx>{`
         .container {
           display: inline-grid;
-          grid-template-columns: [start] 15px [start-content] auto [end-content] 1fr [end];
+          grid-template-columns: [start] 15px [start-content] auto [end-content] 15px [end];
           width: 100%;
         }
         .contentbox {

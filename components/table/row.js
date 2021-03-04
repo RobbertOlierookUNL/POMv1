@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useMemo } from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
-import { dataTable_pk } from "../../config/globalvariables";
+import { cePerHe, dataTable_pk } from "../../config/globalvariables";
 import { useGlobalUser } from "../../lib/store-hooks";
 import Cell from "./cell";
 import CheckBox from "../checkbox";
@@ -11,12 +11,13 @@ import useInViewport from "../../lib/forked-useInViewport";
 
 
 
+
 const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAdditionalColKeys,
 	// inViewport, forwardedRef,
-	onEnterViewport, hasViewportListener, updateEntry, triggerUpdate, toggle, check, theme, selectMode, setTopInView, setActive, thisRowActive,
+	onEnterViewport, hasViewportListener, updateEntry, triggerUpdate, toggle, check, checked, theme, selectMode, setTopInView, setActive, thisRowActive, conversionMode, salesMode
 }) => {
 	// const [thisRowActive, setThisRowActive] = useState(active === id);
-	const {tertiary, gray_light, gray_very_light} = theme;
+	const {tertiary, gray_light, gray_very_light, gray_dark} = theme;
 	const expandRef = useRef(null);
 	const {inViewport, getNode} = useInViewport({onEnterViewport}, {rootMargin: "300px"}, { disconnectOnLeave: true }, hasViewportListener);
 
@@ -52,10 +53,17 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 	const user = useGlobalUser();
 	const {operationsInputRights, salesInputRights} = user?.roll || {};
 
+	const conversionRate = useMemo(() => {
+		if (conversionMode === "CE" && rowData) {
+			return rowData[cePerHe];
+		}
+ 		return 1;
+	}, [conversionMode, rowData]);
+
 
 	return (
 		<div
-			className={`tr gridded-row ${thisRowActive ? "active" : ""}`}
+			className={`tr gridded-row ${thisRowActive ? "active" : ""} ${(selectMode && !check) ? "disabled" : ""}`}
 			onDoubleClick={handleClick}
 			ref={hasViewportListener ? getNode : undefined}>
 			<>
@@ -71,27 +79,32 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 							&& (
 								(elemOpLevel && (operationsInputRights >= elemOpLevel))
 								|| (elemSaLevel && (salesInputRights >= elemSaLevel))
-							);
+							) && (!selectMode || check);
 					if (isEditable) {
 						return (
 							<EditableCell
 								cellData={rowData === false ? false : rowData[key]}
 								rowData={rowData}
 								colName={key}
+								checked={checked}
 								updateable={meta[key].updateable}
 								dropdownUpdateOptions={meta[key].dropdownupdateoptions}
 								valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 								triggers={meta[key].triggers}
 								inRangeOf={meta[key].inrangeof}
-								inEuro={meta[key].unit === "€"}
+								inEuro={meta[key].specialnumberformat === "money"}
+								isPercentage={meta[key].specialnumberformat === "percentage"}
 								key={i}
 								theme={theme}
+								convertable={meta[key].convertable}
+								conversionRate={conversionRate}
 								rowInViewPort={inViewport}
 								rowId={id}
 								active={thisRowActive}
-								primaryKey={rowData[dataTable_pk]}
+								primaryKey={rowData && rowData[dataTable_pk]}
 								updateEntry={updateEntry}
 								triggerUpdate={triggerUpdate}
+								selectMode={selectMode}
 								hasBatches={rowData?.addedProps?.merged}
 								omit={
 									(rowData
@@ -111,8 +124,11 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 						dateErrorOn={meta[key].dateerroronweeks}
 						dateWarnOn={meta[key].datewarnonweeks}
 						key={i}
+						convertable={meta[key].convertable}
+						conversionRate={conversionRate}
 						rowInViewPort={inViewport}
-						inEuro={meta[key].unit === "€"}
+						inEuro={meta[key].specialnumberformat === "money"}
+						isPercentage={meta[key].specialnumberformat === "percentage"}
 						theme={theme}
 						active={thisRowActive}
 						omit={
@@ -140,6 +156,9 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 					operationsInputRights={operationsInputRights}
 					salesInputRights={salesInputRights}
 					rowInViewPort={inViewport}
+					conversionRate={conversionRate}
+					conversionMode={conversionMode}
+					salesMode={salesMode}
 				/>
 			</>
 			<style jsx>{`
@@ -147,6 +166,9 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
         .tr:hover {background-color: ${gray_light.color};}
 				.tr {
 					min-height: 18px;
+				}
+				.disabled {
+					color: ${gray_dark.color} !important;
 				}
 				.active, .active:hover {
 					background-color: ${tertiary.color} !important;

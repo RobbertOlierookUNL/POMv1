@@ -22,6 +22,8 @@ const initialState = {
 	selectMode: false,
 	arrayOfFilters: [],
 	checked: {},
+	lastChecked: {order: null, checked: null},
+	rangeChecked: {rangeFound: false, start: null, end: null, checked: null},
 	errors: new Set(),
 	warnings: new Set(),
 	...staticColors,

@@ -1,3 +1,4 @@
+import {useRouter} from "next/router";
 import React, { useState, useRef, useEffect } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
@@ -11,6 +12,7 @@ import {
 	verPadding,
 	numberInView
 } from "../../config/globalvariables";
+import { useCheckBox } from "../../lib/custom-hooks";
 import FilterBar from "./filterbar";
 import FilterModal from "./filterbar/filtermodal";
 import SharedShadowModal from "../sharedshadowmodal";
@@ -19,7 +21,7 @@ import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
 import Toolbar from "./toolbar";
 import useGlobal from "../store";
-import {useRouter} from "next/router";
+
 
 
 
@@ -47,7 +49,7 @@ const Table = ({data}) => {
 		requestSort,
 		sortConfig,
 		updateEntry,
-		user,
+		salesMode,
 	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
@@ -66,7 +68,13 @@ const Table = ({data}) => {
 	);
 	const { isFallback } = useRouter();
 
+	const [conversionMode, setConversionMode] = useState("HE");
+
 	const [parameters, setParameters] = useState({minLoad: 0, maxLoad: 30});
+
+	const {check, toggle, checked} = useCheckBox(sortedKeys);
+	const [selectMode, setSelectMode] = useState(false);
+
 
 	const updateParameters = (i) => {
 		let min = i - (numberInView/2) + 10;
@@ -135,6 +143,11 @@ const Table = ({data}) => {
 					keys={keys.compact.concat(keys.expanded)}
 					sortedRowKeys={sortedKeys}
 					meta={meta}
+					conversionMode={conversionMode}
+					setConversionMode={setConversionMode}
+					toggleSelectMode={() => setSelectMode(!selectMode)}
+					checked={checked}
+					selectMode={selectMode}
 				/>
 				{!isFallback ?
 					<div className="table">
@@ -145,6 +158,8 @@ const Table = ({data}) => {
 							keysForTableCols={keys.compact}
 							filterParameters={filterParameters}
 							numberOfEntries={sortedKeys && sortedKeys.length}
+							conversionMode={conversionMode}
+							selectMode={selectMode}
 						/>
 						<TableBody
 							meta={meta}
@@ -157,6 +172,12 @@ const Table = ({data}) => {
 							updateParameters={updateParameters}
 							shouldUpdateParameters={shouldUpdateParameters}
 							updateEntry={updateEntry}
+							conversionMode={conversionMode}
+							toggle={toggle}
+							check={check}
+							checked={checked}
+							selectMode={selectMode}
+							salesMode={salesMode}
 						/>
 					</div>
 					:
