@@ -30,7 +30,7 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 	const {users, isLoading: usersAreLoading, isError: usersGiveError} = useUsers();
 	const {views, isLoading: viewsAreLoading, isError: viewsGiveError} = useViews();
 	const {rolls, isLoading: rollsAreLoading, isError: rollsGiveError} = useRolls();
-	const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
+	// const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
 	const {categories, isLoading: categoriesAreLoading, isError: categoriesGiveError} = useCategories();
 
 
@@ -62,10 +62,11 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 				<Card
 					title="Gebruikersaccounts"
 					bodyPadding
-					titlefloater={hasWrite &&
-          <Link href={`/admin/${userId}/edit/users`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
-          </Link>
-					}>
+					// titlefloater={hasWrite &&
+					// <Link href={`/admin/${userId}/edit/users`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+					// </Link>
+					// }
+				>
 					<ShowEntries
 						data={users}
 						loading={usersAreLoading}
@@ -73,7 +74,7 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 						hasRead={hasRead}
 						hasWrite={hasWrite}
 						loggedIn={loggedIn}
-						columns="firstName lastName roll category chain lastLogin"
+						columns="firstName lastName roll category totalLogins lastLogin"
 						height="30px"
 						width="4fr 4fr 4fr 2fr 3fr 3fr"
 					/>
@@ -82,9 +83,9 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 			<div className="grid-item rolls" onMouseOver={expandSecondCol} onMouseLeave={resetCols}>
 				<Card
 					title="Rollen"
-					titlefloater={hasWrite &&
-          <Link href={`/admin/${userId}/edit/rolls`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
-          </Link>}
+					// titlefloater={hasWrite &&
+					// <Link href={`/admin/${userId}/edit/rolls`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+					// </Link>}
 					bodyPadding>
 					<ShowEntries
 						data={rolls}
@@ -93,7 +94,7 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 						hasRead={hasRead}
 						hasWrite={hasWrite}
 						loggedIn={loggedIn}
-						columns="rollName defaultView hasChain adminRights"
+						columns="rollName defaultView isSales adminRights"
 						height="30px"
 						width="3fr 3fr 2fr 2fr"
 					/>
@@ -102,9 +103,9 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 			<div className="grid-item categories" onMouseOver={expandSecondCol} onMouseLeave={resetCols}>
 				<Card
 					title="Categorieën"
-					titlefloater={hasWrite &&
-          <Link href={`/admin/${userId}/edit/categories`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
-          </Link>}
+					// titlefloater={hasWrite &&
+					// <Link href={`/admin/${userId}/edit/categories`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+					// </Link>}
 					bodyPadding>
 					<ShowEntries
 						data={categories}
@@ -122,11 +123,12 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 			<div className="grid-item chains" onMouseOver={expandThirdCol} onMouseLeave={resetCols}>
 				<Card
 					title="Chains"
-					titlefloater={hasWrite &&
-          <Link href={`/admin/${userId}/edit/chains`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
-          </Link>}
+					// titlefloater={hasWrite &&
+					// <Link href={`/admin/${userId}/edit/chains`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
+					// </Link>}
 					bodyPadding>
-					<ShowEntries
+					Deprecated
+					{/* <ShowEntries
 						data={chains}
 						loading={chainsAreLoading}
 						error={chainsGiveError}
@@ -136,7 +138,7 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 						columns="chainName stores"
 						height="30px"
 						width="1fr 3fr"
-					/>
+					/> */}
 				</Card>
 			</div>
 			<div className="grid-item views" onMouseOver={expandThirdCol} onMouseLeave={resetCols}>
@@ -166,17 +168,17 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
         .grid-container{
           width: 100%;
           height: 100%;
-          padding: 68.67px 30px 30px;
+          padding: 53.67px 15px 15px;
           top: 0;
           position: fixed;
           display: grid;
-          grid-gap: 30px 30px;
+          grid-gap: 15px 15px;
           grid-template:
               "users rolls categories"  2fr
               "users rolls categories"  2fr
               "users rolls views"       4fr
               "users chains views"      2.5fr
-              "users chains button"     1.5fr
+              "users chains button"     50px
               / ${colWidths[0]}fr ${colWidths[1]}fr ${colWidths[2]}fr
         }
         .grid-item {

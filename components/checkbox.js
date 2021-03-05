@@ -8,7 +8,7 @@ const CheckBox = ({id, check, toggle}) => {
 			id={id}
 			name={id}
 			checked={check}
-			onChange={toggle}
+			onClick={toggle}
 		/>
 	);
 };

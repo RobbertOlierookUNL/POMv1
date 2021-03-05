@@ -1,8 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 
-import { dataTable_pk, numberInView } from "../../config/globalvariables";
-import { useCheckBox } from "../../lib/custom-hooks";
-import Row from "./row.js";
+import {
+	dataTable_pk,
+	numberOfColumnsInExpandBlock
+} from "../../config/globalvariables";
+import { useCheckBox, useTheme } from "../../lib/custom-hooks";
+import DummyRow from "./dummyrow";
+import Row from "./row";
+import moment from "moment-timezone";
 import useGlobal from "../store";
 
 
@@ -14,85 +19,164 @@ import useGlobal from "../store";
 
 
 
-const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, scrollTop, setScrollTop, updateEntry}) => {
-	const {check, toggle, init} = useCheckBox();
+
+// const Row = React.lazy(() => import("./row"));
+
+
+
+
+
+function equal(a, b) {
+	if (a === b) return true;
+	if (!(Array.isArray(a) || Array.isArray(b))) {
+		return false;
+	}
+	if (a == null || b == null) return false;
+	if (a.length !== b.length) return false;
+
+	// If you don't care about the order of the elements inside
+	// the array, you should sort both arrays here.
+	// Please note that calling sort on an array will modify that array.
+	// you might want to clone your array first.
+
+	for (var i = 0; i < a.length; ++i) {
+		if (a[i] !== b[i]) return false;
+	}
+	return true;
+}
+
+
+
+const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, parameters, updateParameters, shouldUpdateParameters, conversionMode, updateEntry, check, toggle, checked, selectMode, salesMode}) => {
+
+
 	const fakedata = new Array(26).fill(".");
-	const [{minLoad, maxLoad}, setParameters] = useState({minLoad: 0, maxLoad: 30});
-	const updateParameters = (i) => {
-		if (i%(numberInView/2-10) === 0) {
-			let min = i - numberInView/2;
-			if (min < 0) {
-				min = 0;
+	const {minLoad, maxLoad} = parameters;
+
+
+
+	const [active, setActive] = useGlobal(
+		state => state.active,
+		actions => actions.setActive
+	);
+
+	const [, setTopInView] = useGlobal(
+		() => null,
+		actions => actions.setTopInView
+	);
+
+	const theme = useTheme() || {};
+
+
+	const groupedAKs = useMemo(() => {
+		const grouped = [];
+		const perGroup = Math.ceil(additionalColKeys.length / (salesMode ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock));
+		for (let i = 0; i < additionalColKeys.length; i += perGroup) {
+			grouped.push(additionalColKeys.slice(i, i+perGroup));
+		}
+		return grouped;
+	}, [additionalColKeys, salesMode]);
+
+	const now = () => moment(new Date()).tz("Europe/Amsterdam").format();
+
+	const triggerUpdate = (pk, value, hasBatches, colName, triggers, rowData) => {
+		if (triggers) {
+			const triggerArray = triggers.split(", ");
+			for (var trigger of triggerArray) {
+				const [conditionsAndcolToUpdate, math] = trigger.split(" = ");
+				const arr = conditionsAndcolToUpdate.split(" | ");
+				const colToUpdate = arr.length === 1 ? arr[0] : arr[1];
+				const conditions = arr.length === 1 ? [] : arr[0].split(", ");
+				let conditionsPassed = true;
+				for (const condition of conditions) {
+					if (value === condition) {
+						conditionsPassed = true;
+						break;
+					}
+					conditionsPassed = false;
+				}
+				if (conditionsPassed) {
+					let answer;
+					if (!hasBatches) {
+						answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "rowData."));
+					} else {
+						for (const mergedFrom of rowData.addedProps.mergedFrom) {
+							if (pk === mergedFrom[dataTable_pk]) {
+								answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "mergedFrom."));
+							}
+						}
+					}
+					const formattedColToUpdate = colToUpdate.replace("$", "");
+					const correctAnswer = !Number.isNaN(answer);
+					if ((formattedColToUpdate in rowData) && correctAnswer ) {
+						updateEntry(pk, formattedColToUpdate, answer);
+					}
+				}
 			}
-			setParameters({minLoad: min, maxLoad: min+numberInView});
 		}
 	};
-	useEffect(() => {
-		updateParameters(0);
-	}, [data]);
-
-	useEffect(() => {
-		if (scrollTop) {
-			setScrollTop(false);
-			updateParameters(0);
-		}
-	}, [scrollTop]);
-
-	useEffect(() => {
-		if (sortedRowKeys) {
-			console.log({sortedRowKeys});
-			for (const key of sortedRowKeys) {
-				init(key);
-			}
-		}
-	}, [sortedRowKeys]);
-
 
 	return (
 		<>
-			<tbody>
+			<div className="tablebody">
 				{hasLoaded && sortedRowKeys ?
 					<>
-						{sortedRowKeys.map((row, i) => (
+						{sortedRowKeys.map(([pk, row], i) => (
 							minLoad <= i && i <= maxLoad &&
 							<Row
 								onEnterViewport={() => updateParameters(i)}
-								id={data[row][dataTable_pk].toString()}
+								hasViewportListener={shouldUpdateParameters(i) || i ===4}
+								id={pk}
 								order={i}
 								totalRows={sortedRowKeys.length}
 								rowData={data[row]}
 								meta={meta}
 								keysForTableCols={keysForTableCols}
-								additionalColKeys={additionalColKeys}
+								groupedAdditionalColKeys={groupedAKs}
 								updateEntry={updateEntry}
-								key={data[row][dataTable_pk].toString()}
-								check={check(data[row][dataTable_pk].toString())}
-								toggle={toggle(data[row][dataTable_pk].toString())}
+								triggerUpdate={triggerUpdate}
+								key={pk}
+								check={check(pk, i)}
+								toggle={toggle(pk, i)}
+								checked={checked}
+								theme={theme}
+								selectMode={selectMode}
+								setTopInView={setTopInView}
+								setActive={setActive}
+								thisRowActive={equal(active, pk)}
+								conversionMode={conversionMode}
+								salesMode={salesMode}
+								user={user}
 							/>
 						))}
-					</> :
+					</>
+					 :
 					hasLoaded ?
 						<>
-							<tr>
-								<td>
+							<div>
+								<div>
 									Geen resultaat
-								</td>
-							</tr>
+								</div>
+							</div>
 						</>
 						:
 						<>
 							{fakedata.map((row, i) => (
-								<Row
-									id={i}
-									rowData={false}
+								<DummyRow
 									meta={meta}
 									keysForTableCols={keysForTableCols}
-									additionalColKeys={additionalColKeys}
+									theme={theme}
 									key={i}/>
 							))}
 						</>
 				}
-			</tbody>
+			</div>
+			<style jsx>{`
+				.tablebody {
+					display: grid;
+					background-color: white;
+				}
+			`}</style>
 		</>
 	);
 };

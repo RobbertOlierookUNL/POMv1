@@ -1,5 +1,8 @@
 import { NextApiHandler } from 'next'
+
 import { query } from '../../../lib/db'
+import { userTable } from '../../../config/globalvariables';
+
 
 const handler: NextApiHandler = async (req, res) => {
   const { email } = req.query
@@ -11,7 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
     const results = await query(
       `
       SELECT userId
-      FROM user_table_v3test
+      FROM ${userTable}
       WHERE email = ?
       `,
       email

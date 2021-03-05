@@ -27,7 +27,7 @@ const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig}) => {
 	);
 
 	return (
-		<th onClick={() => requestSort(colName, colMetaData.valuetype || allOptionsWithData.valuetype.default)}>
+		<div className="th" onClick={() => requestSort(colName, colMetaData.valuetype || allOptionsWithData.valuetype.default)}>
 			{
 				sortConfig && sortConfig.key === colName &&
 			(
@@ -36,7 +36,7 @@ const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig}) => {
 				sortConfig.direction === "descending" && <FontAwesomeIcon icon={faArrowUp} />
 			)}
 			<style jsx>{`
-          th{
+          .th{
 						background-color: ${primary.color};
 						color: ${primary.text};
             border: 1px solid ${gray_light.color};
@@ -48,17 +48,18 @@ const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig}) => {
 						cursor: pointer;
 						position: relative;
 						padding: 2px 0;
+						display: table-cell;
+				    vertical-align: middle;
+				    font-weight: bold;
+				    text-align: center;
           }
-					th:last-child {
+					.th:last-child {
 						border-width: 0;
 					}
-					th{
-
-					}
-					th::after {
+					.th::after {
 					  content: "${colMetaData.title || colName}";
 					}
-					th:hover {
+					.th:hover {
 						position: relative;
 						z-index: 5;
 						min-width: 100%;
@@ -68,13 +69,13 @@ const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig}) => {
 						background-color: ${tertiary.color};
 						color: ${tertiary.text};
 					}
-					th:hover::after {
+					.th:hover::after {
 						content: "${colMetaData.hovername || colMetaData.title || colName}";
 
 					}
         `}</style>
 			<style jsx global>{`
-					td.${colName} {
+					.td.${colName} {
 					${colMetaData.textdisplay === "mono-right" ?
 			`
 							font-family: monospace;
@@ -85,7 +86,7 @@ const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig}) => {
 							` : ""}
 					}
 				`}</style>
-		</th>
+		</div>
 
 
 	);

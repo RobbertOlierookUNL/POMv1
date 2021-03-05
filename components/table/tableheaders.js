@@ -23,11 +23,8 @@ import useGlobal from "../store";
 
 
 
-const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterParameters, numberOfEntries}) => {
-	const [selectMode] = useGlobal(
-		state => state.selectMode,
-		() => null
-	);
+const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterParameters, conversionMode, selectMode}) => {
+
 	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
 
 	const {primary, gray_light, gray_lighter} = useTheme();
@@ -63,8 +60,8 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 	});
 	colString += "[end]";
 	return (
-		<thead>
-			<tr className="headers gridded-row">
+		<>
+			<div className="headers gridded-row">
 				{selectMode && <th/>}
 				{
 					keysForTableCols.map((col, i) => (
@@ -77,12 +74,12 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 						/>
 					))
 				}
-			</tr>
-			<tr className="filters gridded-row">
+			</div>
+			<div className="filters gridded-row">
 				{selectMode &&
-				<th className="select-all">
+				<div className="select-all th">
 					<CheckAllBox/>
-				</th>}
+				</div>}
 				{
 					keysForTableCols.map((col, i) => (
 						<FilterAndUnitCell
@@ -95,10 +92,12 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 							parameters={filterParameters?.[col] || false}
 							reference={col}
 							key={i}
+							conversionMode={conversionMode}
+							convertable={meta[col].convertable}
 						/>
 					))
 				}
-			</tr>
+			</div>
 			<style jsx>{`
         .headers {
 			    position: sticky;
@@ -116,7 +115,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 					color: ${gray_lighter.text};
 					box-shadow: 0px 3px 5px rgba(0, 31, 130, 0.25);
 				}
-				th {
+				.th {
 					border: 1px solid ${gray_light.color};
 					border-width: 0 1px 0 0;
 				}
@@ -129,13 +128,15 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 				.gridded-row {
 					display: grid;
 		    	grid-template-columns: ${colString};
+					grid-template-rows: min-content;
+					width: 100%;
 				}
 				.blas {
 					width: 11.2px;
 				}
 
 			`}</style>
-		</thead>
+		</>
 	);
 };
 

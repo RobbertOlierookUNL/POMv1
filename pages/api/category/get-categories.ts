@@ -1,11 +1,14 @@
 import { NextApiHandler } from 'next'
+
+import { categoryTable } from '../../../config/globalvariables';
 import { query } from '../../../lib/db'
+
 
 const handler: NextApiHandler = async (req, res) => {
   try {
     if (req.method === "GET") {
       const results = await query(/* sql */`
-        SELECT * FROM category_metadata_table_v3test
+        SELECT * FROM ${categoryTable}
     `)
 
       return res.json(results)

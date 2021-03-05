@@ -1,5 +1,8 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
 import {useRouter} from "next/router";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -45,16 +48,19 @@ function titleCase(str) {
 	return splitStr.join(" ");
 }
 
-const RegisterScreen = ({active, initialData, transportData, admin}) => {
+const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, user}) => {
 	const { register, handleSubmit, watch, errors, control, getValues } = useForm();
+	const [updateThis, forceUpdate] = useState(0);
 	const [submitting, setSubmitting] = useState(false);
 	const [duplicateError, setDuplicateError] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [rollObj, setRollObj] = useState({});
 	const [data, setData] = useState(false);
 	const classes = useStyles();
 	const Router = useRouter();
 	const watchRoll = watch("roll");
 	const {rolls, isLoading: rollsAreLoading, isError: rollsGiveError} = useRolls();
-	const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
+	// const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
 	const {categories, isLoading: categoriesAreLoading, isError: categoriesGiveError} = useCategories();
 	const [, expandUserMenu] = useGlobal(
 		() => null,
@@ -69,42 +75,73 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 		setSubmitting(true);
 		setData(data);
 	};
+
+	useEffect(() => {
+		if (!rollsAreLoading) {
+			setRollObj(rolls.find(e => e.rollName === watchRoll) || {});
+			setLoading(false);
+		} else {
+			forceUpdate(updateThis+1);
+			setLoading(true);
+		}
+	}, [watchRoll, updateThis, rollsAreLoading]);
+
 	useEffect(() => {(async () => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
 		if (submitting && data) {
-			data.email = data.email.toLowerCase();
-			const [fName, lName] = data.email.replace("@unilever.com", "").replace("-", " ").split(".");
-			const firstName = titleCase(fName);
-			const lastName = titleCase(lName);
-			const roll = data.roll.rollName;
+			let firstName, lastName;
+			if (!loggedIn) {
+				data.email = data.email.toLowerCase();
+				const [fName, lName] = data.email.replace("@unilever.com", "").replace("-", " ").split(".");
+				firstName = titleCase(fName);
+				lastName = titleCase(lName);
+			}
+
+			const sf = {};
+			if (data.category !== "all" ) {
+				sf.category = data.category;
+			}
+			if (data.mrp) {
+				sf.mrpc = data.mrp.split(" ");
+			}
+			const thisRoll = rolls.find(r => r.rollName === data.roll);
+			if (thisRoll?.isSales) {
+				sf.n_step = "Offer2Sales";
+			}
 
 			try {
-				const res = await fetch("/api/user/create-user", {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({...data, roll, firstName, lastName}),
-				}, {signal});
-				console.log(2);
-				const json = await res.json();
-				if (!res.ok) throw Error(json.message);
-				await Router.push(`${admin ? "/admin" : ""}/${json.insertId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
-				expandUserMenu(false);
+				if (loggedIn) {
+					const res = await fetch("/api/user/update-user", {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							...data,
+							 sf: JSON.stringify(sf),
+							 userId: user.userId
+						 }),
+					}, {signal});
+					const json = await res.json();
+					if (!res.ok) throw Error(json.message);
+					expandUserMenu(false);
+					Router.reload();
+				} else {
+					const res = await fetch("/api/user/create-user", {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({...data, firstName, lastName, sf: JSON.stringify(sf)}),
+					}, {signal});
+					const json = await res.json();
+					if (!res.ok) throw Error(json.message);
+					expandUserMenu(false);
+					Router.push(`${admin ? "/admin" : ""}/${json.insertId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
 
-			// const res2 = await fetch(`/api/user/get-user-id?email=${data.email}`, {
-			// 	method: "GET",
-			// 	headers: {
-			// 		"Content-Type": "application/json",
-			// 	},
-			// });
-			// console.log(2);
-			// const json2 = await res2.json();
-			// if (!res2.ok) throw Error(json2.message);
-			// console.log(json2);
-			// Router.push("/user/");
+				}
 			} catch (e) {
 				setSubmitting(false);
 				if (e.message && e.message.includes("ER_DUP_ENTRY")) {
@@ -120,7 +157,8 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 	return (
 		<div>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<h3>Registreren</h3>
+				<h3>{loggedIn ? "Profiel" : "Registreren"}</h3>
+				{!loggedIn &&
 				<div className={classes.root}>
 					<TextField
 						id="email"
@@ -145,11 +183,12 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 						}
 						className="disable-on-inactive"
 						tabIndex={active ? 0 : -1}
-						defaultValue={initialData.email || ""}
+						defaultValue={ initialData.email || ""}
 						error={!!errors.email}
 						margin="dense"
 					/>
 				</div>
+				}
 				{(errors.email || duplicateError) &&
 					<div className="error-message">
 						{duplicateError || "Voer een geldig Unilever emailadres in"}
@@ -172,20 +211,19 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 							{...props}
 						>
 							{!rollsAreLoading && !rollsGiveError && rolls.map((roll, i) => (roll.rollName !== "Admin" &&
-								<MenuItem key={i} value={roll}>{roll.rollName}</MenuItem>
+								<MenuItem key={i} value={roll.rollName}>{roll.rollName}</MenuItem>
 							))}
 						</Select>
 					)
 					}
 					name="roll"
 					control={control}
-					defaultValue={initialData.roll || ""}
+					defaultValue={loggedIn ? user.roll.rollName : (initialData.roll || "")}
 					rules={{ required: true }}
 					/>
 					{errors.roll && <div className="error-message">Kies een rol</div>}
 
 				</FormControl>
-
 
 				<FormControl
 					className={classes.formControl +" "+ classes.formControlRight}
@@ -201,8 +239,8 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 							tabIndex={active ? 0 : -1}
 						>
 							{(!categoriesAreLoading && !categoriesGiveError) &&
-								watchRoll?.hasCategory ? categories.map((category, i) => (
-									<MenuItem key={i} value={category.categoryName}>{category.categoryName}</MenuItem>
+								rollObj.hasCategory ? categories.map((category, i) => (
+									<MenuItem key={i} value={category?.categoryName}>{category?.categoryName}</MenuItem>
 								)) :
 								<MenuItem value="all">Alle</MenuItem>
 							}
@@ -210,13 +248,12 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 					}
 					name="category"
 					control={control}
-					defaultValue={initialData.category || ""}
+					defaultValue={loggedIn ? user?.category?.categoryName : (initialData.category || "")}
 					rules={{ required: true }}
 					/>
 					{errors.category && <div className="error-message">Kies een categorie</div>}
 				</FormControl>
-				{console.log({watchRoll, chains, chainsAreLoading, chainsGiveError})}
-				{watchRoll && watchRoll.hasChain === 1 &&
+				{/* {watchRoll && rollObj.hasChain === 1 &&
 					<FormControl
 						className={classes.formControl}
 						error={!!errors.chain}
@@ -237,22 +274,44 @@ const RegisterScreen = ({active, initialData, transportData, admin}) => {
 						}
 						name="chain"
 						control={control}
-						defaultValue={initialData.chain || ""}
+						defaultValue={loggedIn ? user.chain.chainName : (initialData.chain || "")}
 						rules={{ required: true }}
 						/>
 						{errors.chain && <div className="error-message">Kies een chain</div>}
 					</FormControl>
+				} */}
+				{watchRoll && rollObj.hasMrp === 1 &&
+					<>
+						<div className={classes.root}>
+							<TextField
+								id="mrp"
+								name="mrp"
+								label="MRP's"
+								type="text"
+								inputRef={
+									register()
+								}
+								className="disable-on-inactive"
+								tabIndex={active ? 0 : -1}
+								defaultValue={(loggedIn && user.silentFilters) ? JSON.parse(user.silentFilters)?.mrpc?.join(" ") : (initialData.mrp || "")}
+								error={!!errors.mrp}
+								margin="dense"
+							/>
+						</div>
+						<p><small>Scheid verschillende MRPs met een spatie</small></p>
+					</>
 				}
 
+				{loading && <FontAwesomeIcon icon={faSpinner}/>}
 				<Button
 					className="disable-on-inactive"
 					width={"100%"}
 					style={{marginTop: "15px"}}
 					type={"submit"}
 					tabIndex={active ? 0 : -1}
-					disabled={submitting}
+					disabled={submitting || loading}
 				>
-					{submitting ? "Verwerken..." : "Registreren"}
+					{submitting ? "Verwerken..." : loggedIn ? "Profiel Updaten" : "Registreren"}
 				</Button>
 			</form>
 			<style jsx>{`

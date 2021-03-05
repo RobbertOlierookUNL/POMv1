@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
-import React, {useContext} from "react";
+import React, {useEffect, useState} from "react";
 
 import useGlobal from "./store";
 
@@ -9,6 +9,7 @@ import useGlobal from "./store";
 
 
 const ToTopButton = ({handleClick, top, right}) => {
+	const [mounted, setMounted] = useState(false);
 	const [topInView] = useGlobal(
 		state => state.topInView,
 		() => null
@@ -17,6 +18,9 @@ const ToTopButton = ({handleClick, top, right}) => {
 		state => state.tertiary,
 		() => null
 	);
+	useEffect(() => {
+	  setMounted(true);
+	}, []);
 	return (
 		<div onClick={handleClick} className="toTopButton">
 			<FontAwesomeIcon icon={faArrowUp} />
@@ -30,7 +34,7 @@ const ToTopButton = ({handleClick, top, right}) => {
           top: ${top};
           right: ${right};
           box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-          opacity: ${topInView ? 0 : 0.8};
+          opacity: ${(topInView || !mounted) ? 0 : 0.8};
           background-color: ${tertiary.color};
           color: ${tertiary.text};
           text-align: center;

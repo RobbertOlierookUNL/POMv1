@@ -24,7 +24,6 @@ const LoginScreen = ({active, initialData, transportData, admin}) => {
 	const [error, setError] = useState(false);
 	const [data, setData] = useState(false);
 	const Router = useRouter();
-	console.log(Router);
 	const [, expandUserMenu] = useGlobal(
 		() => null,
 		actions => actions.expandUserMenu
@@ -45,7 +44,8 @@ const LoginScreen = ({active, initialData, transportData, admin}) => {
 				const res = await fetch(`/api/user/get-user-id?email=${data.email.toLowerCase()}`, {signal});
 				const json = await res.json();
 				if (!res.ok) throw Error(json.message);
-				await Router.push(`${admin ? "/admin" : ""}/${json.userId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
+				Router.push(`${admin ? "/admin" : ""}/${json.userId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
+				// Router.reload();
 				expandUserMenu(false);
 			} catch (e) {
 				setSubmitting(false);

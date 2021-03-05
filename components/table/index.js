@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import {useRouter} from "next/router";
+import React, { useState, useRef, useEffect } from "react";
 import Skeleton, {SkeletonTheme} from "react-loading-skeleton";
 
 import {
@@ -8,8 +9,10 @@ import {
 	horPadding,
 	tableHeadersBarHeight,
 	toolBarHeight,
-	verPadding
+	verPadding,
+	numberInView
 } from "../../config/globalvariables";
+import { useCheckBox } from "../../lib/custom-hooks";
 import FilterBar from "./filterbar";
 import FilterModal from "./filterbar/filtermodal";
 import SharedShadowModal from "../sharedshadowmodal";
@@ -18,6 +21,8 @@ import TableHeaders from "./tableheaders";
 import ToTopButton from "../totopbutton";
 import Toolbar from "./toolbar";
 import useGlobal from "../store";
+
+
 
 
 
@@ -44,7 +49,8 @@ const Table = ({data}) => {
 		requestSort,
 		sortConfig,
 		updateEntry,
-		user,
+		salesMode,
+		user
 	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
@@ -53,15 +59,50 @@ const Table = ({data}) => {
 		state => state.primary_very_light,
 		() => null
 	);
+	const [gray_light] = useGlobal(
+		state => state.gray_light,
+		() => null
+	);
 	const [arrayOfFilters] = useGlobal(state => state.arrayOfFilters, () => null);
 	const [filterModal] = useGlobal(
 		state => state.filterModal,
 	);
+	const { isFallback } = useRouter();
+
+	const [conversionMode, setConversionMode] = useState("HE");
+
+	const [parameters, setParameters] = useState({minLoad: 0, maxLoad: 30});
+
+	const {check, toggle, checked} = useCheckBox(sortedKeys);
+	const [selectMode, setSelectMode] = useState(false);
 
 
-	const [scrollTop, setScrollTop] = useState(false);
+	const updateParameters = (i) => {
+		let min = i - (numberInView/2) + 10;
+		if (min < 0) {
+			min = 0;
+		}
+		let max = min+numberInView;
+		if (sortedKeys.length && (max > (sortedKeys.length - 1))) {
+			max = sortedKeys.length - 1;
+			min = max-numberInView;
+			if (min < 0) {
+				min = 0;
+			}
+		}
+
+		setParameters({minLoad: min, maxLoad: max});
+	};
+
+	const shouldUpdateParameters = i => i%(numberInView/2-10) === 0;
+
+	useEffect(() => {
+		updateParameters(0);
+	}, [data.length]);
+
+
 	const handleClick = () => {
-		setScrollTop(true);
+		updateParameters(0);
 		tableRef.current.scrollTo(0, 0);
 	};
 
@@ -69,7 +110,7 @@ const Table = ({data}) => {
 	return (
 
 		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
-			{hasLoaded &&
+			{hasLoaded && !isFallback &&
 				<ToTopButton
 					handleClick={handleClick}
 					top={
@@ -84,14 +125,16 @@ const Table = ({data}) => {
 					}
 					right={`${2*horPadding + 10}px`}
 				/>}
-			<SharedShadowModal open={filterModal}>
-				<FilterModal
-					meta={meta}
-					keys={keys}
-					filterParameters={filterParameters}
-					sortedRowKeys={sortedKeys}
-				/>
-			</SharedShadowModal>
+			{!isFallback &&
+				<SharedShadowModal open={filterModal}>
+					<FilterModal
+						meta={meta}
+						keys={keys}
+						filterParameters={filterParameters}
+						sortedRowKeys={sortedKeys}
+					/>
+				</SharedShadowModal>
+			}
 			<div className="tableContainer" ref={tableRef}>
 				<FilterBar/>
 				<Toolbar
@@ -99,9 +142,14 @@ const Table = ({data}) => {
 					keys={keys.compact.concat(keys.expanded)}
 					sortedRowKeys={sortedKeys}
 					meta={meta}
+					conversionMode={conversionMode}
+					setConversionMode={setConversionMode}
+					toggleSelectMode={() => setSelectMode(!selectMode)}
+					checked={checked}
+					selectMode={selectMode}
 				/>
-				{meta && Object.keys(meta)[0] ?
-					<table className="table">
+				{!isFallback ?
+					<div className="table">
 						<TableHeaders
 							requestSort={requestSort}
 							sortConfig={sortConfig}
@@ -109,6 +157,8 @@ const Table = ({data}) => {
 							keysForTableCols={keys.compact}
 							filterParameters={filterParameters}
 							numberOfEntries={sortedKeys && sortedKeys.length}
+							conversionMode={conversionMode}
+							selectMode={selectMode}
 						/>
 						<TableBody
 							meta={meta}
@@ -117,11 +167,19 @@ const Table = ({data}) => {
 							keysForTableCols={keys.compact}
 							additionalColKeys={keys.expanded}
 							sortedRowKeys={sortedKeys}
-							scrollTop={scrollTop}
-							setScrollTop={setScrollTop}
+							parameters={parameters}
+							updateParameters={updateParameters}
+							shouldUpdateParameters={shouldUpdateParameters}
 							updateEntry={updateEntry}
+							conversionMode={conversionMode}
+							toggle={toggle}
+							check={check}
+							checked={checked}
+							selectMode={selectMode}
+							salesMode={salesMode}
+							user={user}
 						/>
-					</table>
+					</div>
 					:
 					<table className="table">
 						<tbody>
@@ -159,14 +217,16 @@ const Table = ({data}) => {
 					left: ${horPadding}px;
 					box-shadow: -1px 2px 10px rgba(0, 0, 0, 0.2);
 					border-radius: 6px;
+					background-color: ${gray_light.color};
+
 
 
 				}
 				.table {
 					border-collapse: collapse;
-					background-color: white;
-					width: 100%;
-					font-size: 0.7em
+					background-color: ${isFallback ? "red" : "white"};
+					font-size: 0.7em;
+					display: grid;
 				}
 			`}
 			</style>

@@ -44,14 +44,18 @@ const UserOptions = ({loggedIn, admin, user}) => {
 						<div onClick={register}>Registreren</div>
 				}
 			</div>
-			{loggedIn ?
-				<UserScreen user={user}/>
-				: registerMode ?
-					<RegisterScreen
+			{
+				// loggedIn ?
+				// <UserScreen user={user}/>
+				// :
+				registerMode || loggedIn ?
+					userMenu && <RegisterScreen
 						active={userMenu}
 						initialData={transportedData}
 						transportData={setTransportedData}
 						admin={admin}
+						loggedIn={loggedIn}
+						user={user}
 					/>
 					:
 					<LoginScreen

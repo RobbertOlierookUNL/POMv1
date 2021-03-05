@@ -12,7 +12,6 @@ const SilentFilters = ({user, meta}) => {
 	const [,setSilentFilters] = useGlobal(() => null, actions => actions.setSilentFilters);
 	const [silentfilters, setSilentfilterstemplates] = useState([]);
 	const userSilentFilters = JSON.parse(user?.silentFilters || "[]");
-	console.log({userSilentFilters});
 	useEffect(() => {
 		const rollSilentFilters = JSON.parse(user?.roll?.silentFilters || "[]");
 		const categorySilentFilters = JSON.parse(user?.category?.silentFilters || "[]");
@@ -64,10 +63,8 @@ const SilentFilters = ({user, meta}) => {
 						"Content-type": "application/json; charset=UTF-8"
 					}
 				});
-				console.log("trying..");
 				const json = await res.json();
 				if (!res.ok) throw Error(json.message);
-				console.log({res});
 			} catch (e) {
 				throw Error(e.message);
 			}

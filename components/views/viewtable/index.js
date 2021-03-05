@@ -54,7 +54,7 @@ const ViewTable = ({data}) => {
 		state => state.gray_very_light,
 		() => null
 	);
-	const { keys, requestSort, sortConfig } = useSortableData(dataState);
+	const { keys, requestSort, sortConfig } = useSortableData(dataState, null, false);
 	const Router = useRouter();
 	const {pathname, query: {view, v: mode,}} = Router;
 	const fakedata = new Array(50).fill(".");
@@ -94,11 +94,10 @@ const ViewTable = ({data}) => {
 
 	const saveData = async (attr) => {
 		const value = JSON.stringify(dataState[attr]);
-		console.log({value});
 		if ((value !== viewdata[attr]) || mode === "duplicated") {
 			setSaving(true);
 			try {
-				console.log("trying..");
+
 				const res = await fetch("/api/view/edit-view", {
 					method: "PATCH",
 					body: JSON.stringify({
@@ -118,32 +117,18 @@ const ViewTable = ({data}) => {
 		}
 	};
 
-	// const changeAndTimeoutToSave = async (event, attr, option) => {
-	// 	if(myTimeout[attr]) {
-	// 		clearTimeout(myTimeout[attr]);
-	// 	}
-	// 	await setDataState({...dataState, [attr]: {...dataState[attr], [option]: event.target.value}});
-	// 	console.log(dataState);
-	// 	setMyTimeout({...myTimeout, [attr]: setTimeout(() => {
-	// 		console.log("saving...");
-	// 		saveData(attr);
-	// 	}, 5000)});
-	// };
+
 
 	useEffect(() => {
 		if (!init) {
 			if(myTimeout) {
 				clearTimeout(myTimeout);
-				console.log("clear");
-
 			}
 			setMyTimeout(setTimeout(() => {
 				for (const attr in dataState) {
 					if (dataState[attr] !== lastSavedDataState[attr]) {
 						saveData(attr);
 					}
-				// setLastSavedDataState(dataState);
-				// setSaving(false);
 				}
 				setLastSavedDataState(dataState);
 				setSaved(true);
@@ -204,7 +189,7 @@ const ViewTable = ({data}) => {
 					</colgroup>
 					<thead>
 						<tr>
-							<th className="crossdivider" onClick={() => requestSort(null)}>{sortConfig && sortConfig.key && <FontAwesomeIcon icon={faTimes} />}</th>
+							<th className="crossdivider sticky" onClick={() => requestSort(null)}>{sortConfig && sortConfig.key && <FontAwesomeIcon icon={faTimes} />}</th>
 							{allOptions.map((option, i) =>
 								<th key={i} onClick={() => requestSort(option,
 									typeof allOptionsWithData[option].input === "string" ? allOptionsWithData[option].input : "text" )}>
@@ -223,7 +208,7 @@ const ViewTable = ({data}) => {
 						{Object.keys(dataState)[0] ?
 							keys.map((attribute, i) => (
 								<tr key={i}>
-									<td key={0} className="firstcol">{attribute}</td>
+									<td key={0} className="firstcol sticky">{attribute}</td>
 									{allOptions.map((option, j) =>
 										<td key={j+1}>
 											{mode === "edit" ?
@@ -345,6 +330,7 @@ const ViewTable = ({data}) => {
 			.crossdivider {
 				background-color: ${primary_very_light.color};
 				color: ${primary_very_light.text};
+				z-index: 4;
 			}
 			td {
 				text-align: right;
@@ -372,6 +358,7 @@ const ViewTable = ({data}) => {
 				text-overflow: clip;
 				white-space: nowrap;
 				overflow: hidden;
+				z-index: 3;
 			}
 			th:last-child {
 				border-width: 0;
@@ -379,6 +366,19 @@ const ViewTable = ({data}) => {
 			.firstcol{
 				font-weight: bold;
 				text-align: left;
+				z-index: 2;
+				border: 1px solid ${gray_light.color};
+				border-width: 0 1px 1px 0;
+			}
+			.sticky {
+				position: sticky;
+				left: 0;
+			}
+			tr:nth-child(even) .firstcol{
+				background-color: ${gray_very_light.color};
+			}
+			tr:nth-child(odd) .firstcol{
+				background-color: white;
 			}
 			.optionInput{
 				width: 100%;

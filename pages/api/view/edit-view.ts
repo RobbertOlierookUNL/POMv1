@@ -1,5 +1,7 @@
 import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
+import { viewTable } from '../../../config/globalvariables';
+
 
 const handler: NextApiHandler = async (req, res) => {
   const { attr, view_name, value } = req.body
@@ -12,7 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
 
     const results = await query(
       `
-      UPDATE view_metadata_table_v3test
+      UPDATE ${viewTable}
       SET ${attr} = ?
       WHERE view_name = ?
       `,

@@ -1,5 +1,7 @@
 import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
+import { viewTable } from '../../../config/globalvariables';
+
 
 const handler: NextApiHandler = async (req, res) => {
   const { view_name } = req.query
@@ -9,7 +11,7 @@ const handler: NextApiHandler = async (req, res) => {
     }
     const results = await query(
       `
-      DELETE FROM view_metadata_table_v3test
+      DELETE FROM ${viewTable}
       WHERE view_name = ?
   `,
       view_name

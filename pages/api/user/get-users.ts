@@ -1,11 +1,14 @@
 import { NextApiHandler } from 'next'
+
 import { query } from '../../../lib/db'
+import { userTable } from '../../../config/globalvariables';
+
 
 const handler: NextApiHandler = async (req, res) => {
   try {
     if (req.method === "GET") {
       const results = await query(/* sql */`
-        SELECT * FROM user_table_v3test
+        SELECT * FROM ${userTable}
     `)
 
       return res.json(results)

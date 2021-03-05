@@ -39,6 +39,7 @@ const FilterBar = () => {
           transition: height 100ms ease-in;
           position: sticky;
           top:0;
+					left:0;
           background-color: ${primary_very_light.color};
           color: ${primary_very_light.text};
         }

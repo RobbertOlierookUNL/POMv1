@@ -45,6 +45,16 @@ export const allOptionsWithData = {
 		input: ["text", "number", "date"],
 		extendable: true,
 	},
+	specialnumberformat : {
+		default: "",
+		input: ["", "percentage", "money"],
+		extendable: true,
+	},
+	convertable : {
+		default: "",
+		input: ["", "divide", "multiply"],
+		extendable: true,
+	},
 	filtertype: {
 		default: "inherit",
 		input: ["inherit", "range", "datePicker", "searchField", "dropdown", false],
@@ -70,6 +80,11 @@ export const allOptionsWithData = {
 		input: "text",
 		extendable: true,
 	},
+	inrangeof: {
+		default: "",
+		input: "text",
+		extendable: true,
+	},
 	allowinputfrom: {
 		default: "op1, sa1",
 		input: [
@@ -82,7 +97,23 @@ export const allOptionsWithData = {
 		default: null,
 		input: "text",
 		extendable: true,
-	}
+	},
+	dateerroronweeks: {
+		default: null,
+		input: "number",
+		extendable: true,
+	},
+	datewarnonweeks: {
+		default: null,
+		input: "number",
+		extendable: true,
+	},
+	hardcoded: {
+		default: null,
+		input: "text",
+		extendable: true,
+	},
+
 
 
 

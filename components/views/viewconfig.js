@@ -30,7 +30,7 @@ const ViewConfig = ({data: {view_name, config}, close}) => {
 	const handleSubmit = async () =>
 	  {
 	    try {
-			console.log("trying..");
+
 			const res = await fetch("/api/view/edit-view", {
 				method: "PATCH",
 				body: JSON.stringify({
@@ -49,17 +49,6 @@ const ViewConfig = ({data: {view_name, config}, close}) => {
 		}
 		close();
 	};
-
-	//init
-	// useEffect(() => {
-	// 	const parsedConfig = JSON.parse(config) || {};
-	// 	console.log({fx: "ik zit erin"});
-	// 	console.log({parsedConfig, options});
-	// 	handleChange("extendable", true)({target: {checked: parsedConfig.extendable || false}});
-	// 	console.log(parsedConfig.extend || options[0] || "");
-	// 	handleChange("extend")({target: {value: parsedConfig.extend || options[0]?.view_name || ""}});
-	// 	handleChange("theme")({target: {value: parsedConfig.theme || 10}});
-	// }, [options, config]);
 
 
 	return (
