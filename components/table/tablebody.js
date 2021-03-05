@@ -7,6 +7,7 @@ import {
 import { useCheckBox, useTheme } from "../../lib/custom-hooks";
 import DummyRow from "./dummyrow";
 import Row from "./row";
+import moment from "moment-timezone";
 import useGlobal from "../store";
 
 
@@ -46,7 +47,7 @@ function equal(a, b) {
 
 
 
-const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, parameters, updateParameters, shouldUpdateParameters, conversionMode, updateEntry, check, toggle, checked, selectMode, salesMode}) => {
+const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, parameters, updateParameters, shouldUpdateParameters, conversionMode, updateEntry, check, toggle, checked, selectMode, salesMode}) => {
 
 
 	const fakedata = new Array(26).fill(".");
@@ -75,6 +76,8 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 		}
 		return grouped;
 	}, [additionalColKeys, salesMode]);
+
+	const now = () => moment(new Date()).tz("Europe/Amsterdam").format();
 
 	const triggerUpdate = (pk, value, hasBatches, colName, triggers, rowData) => {
 		if (triggers) {
@@ -145,6 +148,7 @@ const TableBody = ({meta, data, keysForTableCols, hasLoaded, sortedRowKeys, addi
 								thisRowActive={equal(active, pk)}
 								conversionMode={conversionMode}
 								salesMode={salesMode}
+								user={user}
 							/>
 						))}
 					</>

@@ -16,7 +16,7 @@ import Input from "./input";
 
 
 
-const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, triggerUpdate, inEuro, isPercentage, hasBatches = false, theme, selectMode, checked, convertable, conversionRate}) => {
+const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, merge, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, triggerUpdate, inEuro, isPercentage, hasBatches = false, theme, selectMode, checked, convertable, conversionRate}) => {
 	const [editMode, setEditMode] = useState(false);
 	const [temporaryState, setTemporaryState] = useState(false);
 	const {gray_light, primary_light, primary_overlay, secondary} = theme;
@@ -43,15 +43,11 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 				let checkedPks = [];
 				for (const pk in checked) {
 					if (checked[pk]) {
-						console.log({pk});
 						checkedPks.push(pk.split(","));
 					}
 				}
-				console.log({checkedPks});
 				checkedPks = checkedPks.flat();
-				console.log({checkedPks});
 				for (const pk of checkedPks) {
-					console.log({pk});
 					updateEntry(pk, colName, newValue);
 					triggerUpdate(pk,newValue, hasBatches, colName, triggers, rowData);
 				}
@@ -84,7 +80,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 			return "loading";
 		} else if (temporaryState !== false) {
 			return "temp";
-		} else if (!(!editMode || (updateable === "withDropdown") || ((valueType === "number") && (hasBatches || selectMode)))) {
+		} else if (!(!editMode || (updateable === "withDropdown") || ((merge === "add") && (hasBatches || selectMode)))) {
 			return "freeInput";
 		} else if (!cellData || cellData === "0" || omit) {
 			return "empty";
@@ -96,7 +92,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 			return "multi";
 		} else if (updateable === "withDropdown") {
 			return "dropdown";
-		} else if (updateable === "withFreeInput" && valueType ==="number" && (hasBatches || selectMode)) {
+		} else if (updateable === "withFreeInput" && merge ==="add" && (hasBatches || selectMode)) {
 			return "allOrNothing";
 		} else if (valueType === "number") {
 			return "number";
@@ -154,16 +150,16 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 				/>)
 				||
 				(formatDisplay === "dropdown" && <DropDown
-					defaultValue={cellData}
+					defaultValue={convertedData}
 					save={save}
 					options={dropdownUpdateOptions}
 				/>)
 				||
 				(formatDisplay === "allOrNothing" && <DropDown
-					defaultValue={cellData}
+					defaultValue={convertedData}
 					formattedFirstOption={
 						<NumberFormat
-							value={cellData}
+							value={convertedData}
 							decimalScale={2}
 							thousandSeparator={"."}
 							decimalSeparator={","}
@@ -171,7 +167,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 							prefix={inEuro ? "€" : ""}
 							suffix={isPercentage ? "%" : ""}
 							displayType={"text"}
-							renderText={value => <option value={cellData}>{value}</option>}
+							renderText={value => <option value={convertedData}>{value}</option>}
 						/>
 					}
 					save={save}

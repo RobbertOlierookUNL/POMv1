@@ -11,6 +11,8 @@ import React, {useEffect} from "react";
 import { accounts, stati } from "../../config/globalvariables";
 import { isNumeric } from "../../lib/custom-hooks";
 import { useDeal } from "../../lib/swr-hooks";
+import moment from "moment-timezone";
+
 
 
 
@@ -34,7 +36,7 @@ import { useDeal } from "../../lib/swr-hooks";
 // }));
 
 
-const DealRow = ({theme, conversionMode, conversionRate, number, pk, totalReserved, setTotalReserved}) => {
+const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, totalReserved, setTotalReserved}) => {
 	const {gray_light} = theme;
 
 	const {data, mutate} = useDeal(number, pk);
@@ -84,6 +86,8 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, totalReserv
 					id: pk,
 					col,
 					val,
+					usr: `${user.firstName} ${user.lastName}`,
+					now: moment(new Date()).tz("Europe/Amsterdam").format()
 				}),
 				headers: {
 					"Content-type": "application/json; charset=UTF-8"

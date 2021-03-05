@@ -30,7 +30,7 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 	const {users, isLoading: usersAreLoading, isError: usersGiveError} = useUsers();
 	const {views, isLoading: viewsAreLoading, isError: viewsGiveError} = useViews();
 	const {rolls, isLoading: rollsAreLoading, isError: rollsGiveError} = useRolls();
-	const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
+	// const {chains, isLoading: chainsAreLoading, isError: chainsGiveError} = useChains();
 	const {categories, isLoading: categoriesAreLoading, isError: categoriesGiveError} = useCategories();
 
 
@@ -94,7 +94,7 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 						hasRead={hasRead}
 						hasWrite={hasWrite}
 						loggedIn={loggedIn}
-						columns="rollName defaultView hasChain adminRights"
+						columns="rollName defaultView isSales adminRights"
 						height="30px"
 						width="3fr 3fr 2fr 2fr"
 					/>
@@ -127,7 +127,8 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 					// <Link href={`/admin/${userId}/edit/chains`}><div className={"act-as-button"}><FontAwesomeIcon icon={faEdit}/></div>
 					// </Link>}
 					bodyPadding>
-					<ShowEntries
+					Deprecated
+					{/* <ShowEntries
 						data={chains}
 						loading={chainsAreLoading}
 						error={chainsGiveError}
@@ -137,7 +138,7 @@ const AdminRedirectGrid = ({loggedIn, hasRead, hasWrite}) => {
 						columns="chainName stores"
 						height="30px"
 						width="1fr 3fr"
-					/>
+					/> */}
 				</Card>
 			</div>
 			<div className="grid-item views" onMouseOver={expandThirdCol} onMouseLeave={resetCols}>

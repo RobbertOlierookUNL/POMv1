@@ -6,7 +6,11 @@ import { query } from '../../../lib/db'
 
 
 const handler: NextApiHandler = async (req, res) => {
-  const { id, col, val } = req.body
+  const { id, col, val, usr, now } = req.body
+  const vars = [val];
+  if (usr) vars.push(usr);
+  if (now) vars.push(now);
+  vars.push(id);
   try {
     if (!id || !col) {
       return res
@@ -17,10 +21,10 @@ const handler: NextApiHandler = async (req, res) => {
     const results = await query(
       `
       UPDATE ${dataTable}
-      SET ${col} = ?
+      SET ${col} = ?${usr ? ", usr = ?" : ""}${now ? ", timestamp_last_change = ?" : ""}
       WHERE tkey = ?
       `,
-      [val, id]
+      vars
     )
 
     return res.json(results)

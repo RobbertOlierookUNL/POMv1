@@ -13,8 +13,9 @@
     "migrate-chain": "node scripts/migrate-db_chain-table.js",
     "seed": "node scripts/create-template-view.js",
     "analyze": "cross-env ANALYZE=true next build",
-    "pom": "next build && pm2 start \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js\" --name \"POM\" -- start",
-    "new": "git pull && npm i"
+    "pom": "next build && next start -p 8000",
+    "pom-background": "next build && pm2 start \"C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js\" --name \"POM\" -- start",
+    "upgrade": "git pull && npm i"
   },
   "dependencies": {
     "@date-io/moment": "^1.3.13",

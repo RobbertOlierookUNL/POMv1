@@ -34,10 +34,10 @@ const ShowEntries = ({data, loading, error, hasRead, hasWrite, loggedIn, columns
 			return string;
 		}
 		if (string === 0) {
-			return "false";
+			return "no";
 		}
 		if (string === 1) {
-			return "true";
+			return "yes";
 		}
 		if (isJsonArray(string)) {
 			return JSON.parse(string).join(", ");

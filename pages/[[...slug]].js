@@ -78,7 +78,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		requestSort,
 		sortConfig,
 		updateEntry,
-	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, updatedFilters, user?.userId, user?.totalLogins, user?.allLogins);
+	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, updatedFilters, user);
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -150,7 +150,8 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 						requestSort,
 						sortConfig,
 						updateEntry,
-						salesMode
+						salesMode,
+						user
 					}
 				}
 			/>
@@ -209,6 +210,9 @@ export async function getStaticProps(context) {
 						 `,
 					user.category
 					);
+					if (user?.roll?.viewOverride && JSON.parse(user.roll.viewOverride)?.[user.category]) {
+						view = JSON.parse(user.roll.viewOverride)[user.category];
+					}
 					user.category = getCategory[0];
 				}
 

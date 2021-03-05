@@ -18,11 +18,11 @@ export const filterAndUnitBarHeight = "18px";
 
 //table names
 export const dataTable = "website_output_table_v4";
-export const categoryTable = "category_metadata_table_v3test";
-export const chainTable = "chain_metadata_table_v3test";
-export const rollTable = "roll_metadata_table_v3test";
+export const categoryTable = "category_metadata_table_v4";
+export const chainTable = "chain_metadata_table_v4";
+export const rollTable = "roll_metadata_table_v4";
 export const viewTable = "view_metadata_table_v4";
-export const userTable = "user_table_v3test";
+export const userTable = "user_table_v4";
 
 //primary keys
 export const dataTable_pk = "tkey";
@@ -77,11 +77,11 @@ export const ZAN = [
 		label: "HE/Pallet",
 		col: "cs_pal",
 	},
-	// {
-	//   label: "800(EURO)/1000(BLOK)",
-	//   col: "type_pal",
-	//   factor: "",
-	// },
+	{
+	  label: "800(EURO)/1000(BLOK)",
+	  col: "type_pal",
+	  factor: "",
+	},
 	{
 		label: "CE/CS",
 		col: "cu_cs",
@@ -103,15 +103,15 @@ export const ZAN = [
 		label: "Discount",
 		col: "gsv",
 	},
-	// {
-	//   label: "Price/CE",
-	//   col: "m_niv_cs",
-	//   divide: "cu_cs",
-	// },
-	// {
-	//   label: "Price/CS",
-	//   col: "m_niv_cs",
-	// },
+	{
+	  label: "Price/CE",
+	  col: "m_niv_cs",
+	  divide: "cu_cs",
+	},
+	{
+	  label: "Price/CS",
+	  col: "m_niv_cs",
+	},
 	{
 		label: "Aantal PAL",
 		col: "qty_to_offer",

@@ -19,7 +19,6 @@ function Alert(props) {
 
 const ViewTable = ({data}) => {
 	const {view_name, created_at, updated_at, config, ...viewdata} = data || {};
-	console.log({viewdata});
 	// belangrijk om alle niet-JSON hierboven weg te filteren
 	const [dataState, setDataState] = useState({});
 	const [allOptions, setAllOptions] = useState(Object.keys(allOptionsWithData));
@@ -135,8 +134,6 @@ const ViewTable = ({data}) => {
 		if (!init) {
 			if(myTimeout) {
 				clearTimeout(myTimeout);
-				console.log("clear");
-
 			}
 			setMyTimeout(setTimeout(() => {
 				for (const attr in dataState) {

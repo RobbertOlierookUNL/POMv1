@@ -1,24 +1,32 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
-import { cePerHe, dataTable_pk } from "../../config/globalvariables";
+import {
+	cePerHe,
+	dataTable_pk,
+	warningRGB
+} from "../../config/globalvariables";
 import { useGlobalUser } from "../../lib/store-hooks";
 import Cell from "./cell";
 import CheckBox from "../checkbox";
 import EditableCell from "./editablecell";
 import Expand from "./expand";
+import Risk4SalesCell from "./risk4salescell";
 import useInViewport from "../../lib/forked-useInViewport";
+
+
 
 
 
 
 const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAdditionalColKeys,
 	// inViewport, forwardedRef,
-	onEnterViewport, hasViewportListener, updateEntry, triggerUpdate, toggle, check, checked, theme, selectMode, setTopInView, setActive, thisRowActive, conversionMode, salesMode
+	onEnterViewport, hasViewportListener, updateEntry, triggerUpdate, toggle, check, checked, theme, user, selectMode, setTopInView, setActive, thisRowActive, conversionMode, salesMode
 }) => {
 	// const [thisRowActive, setThisRowActive] = useState(active === id);
 	const {tertiary, gray_light, gray_very_light, gray_dark} = theme;
 	const expandRef = useRef(null);
+	const [untouched, setUntouched] = useState(false);
 	const {inViewport, getNode} = useInViewport({onEnterViewport}, {rootMargin: "300px"}, { disconnectOnLeave: true }, hasViewportListener);
 
 	const handleClick = (event) => {
@@ -50,7 +58,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 	// useEffect(() => () => stopObserver(), []);
 
 	// console.log({opLevel, saLevel});
-	const user = useGlobalUser();
+	// const user = useGlobalUser();
 	const {operationsInputRights, salesInputRights} = user?.roll || {};
 
 	const conversionRate = useMemo(() => {
@@ -72,6 +80,21 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 					<CheckBox id={id} toggle={toggle} check={check}/>
 				</div>}
 				{keysForTableCols.map((key, i) => {
+					if (key === "risk4sales") {
+						return (
+							<Risk4SalesCell
+								cellData={rowData === false ? false : rowData[key]}
+								rowData={rowData}
+								active={thisRowActive}
+								colName={key}
+								key={key}
+								theme={theme}
+								primaryKey={rowData && rowData[dataTable_pk]}
+								updateEntry={updateEntry}
+								hasBatches={rowData?.addedProps?.merged}
+							/>
+						);
+					}
 					const updateable = meta[key].updateable;
 					const allowInputFrom = meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default;
 					const [elemOpLevel, elemSaLevel] = allowInputFrom.split(", ").map(el => parseInt(el[2]));
@@ -89,12 +112,13 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 								checked={checked}
 								updateable={meta[key].updateable}
 								dropdownUpdateOptions={meta[key].dropdownupdateoptions}
+								merge={meta[key].merge}
 								valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 								triggers={meta[key].triggers}
 								inRangeOf={meta[key].inrangeof}
 								inEuro={meta[key].specialnumberformat === "money"}
 								isPercentage={meta[key].specialnumberformat === "percentage"}
-								key={i}
+								key={key}
 								theme={theme}
 								convertable={meta[key].convertable}
 								conversionRate={conversionRate}
@@ -123,7 +147,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 						inRangeOf={meta[key].inrangeof}
 						dateErrorOn={meta[key].dateerroronweeks}
 						dateWarnOn={meta[key].datewarnonweeks}
-						key={i}
+						key={key}
 						convertable={meta[key].convertable}
 						conversionRate={conversionRate}
 						rowInViewPort={inViewport}
@@ -159,13 +183,20 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 					conversionRate={conversionRate}
 					conversionMode={conversionMode}
 					salesMode={salesMode}
+					user={user}
+					setUntouched={setUntouched}
 				/>
 			</>
 			<style jsx>{`
-        .tr:nth-child(even){background-color: ${gray_very_light.color};}
+        .tr:nth-child(even){
+					background-color: ${gray_very_light.color};
+					${untouched ? `background-color: rgba(${warningRGB}, 0.1);` : ""}
+
+				}
         .tr:hover {background-color: ${gray_light.color};}
 				.tr {
 					min-height: 18px;
+					${untouched ? `background-color: rgba(${warningRGB}, 0.1);` : ""}
 				}
 				.disabled {
 					color: ${gray_dark.color} !important;

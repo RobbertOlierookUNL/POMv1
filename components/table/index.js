@@ -50,6 +50,7 @@ const Table = ({data}) => {
 		sortConfig,
 		updateEntry,
 		salesMode,
+		user
 	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
@@ -178,6 +179,7 @@ const Table = ({data}) => {
 							checked={checked}
 							selectMode={selectMode}
 							salesMode={salesMode}
+							user={user}
 						/>
 					</div>
 					:

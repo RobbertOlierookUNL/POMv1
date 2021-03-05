@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { faTable } from "@fortawesome/free-solid-svg-icons";
 import {useRouter} from "next/router";
 import Head from "next/head";
 import Link from "next/link";
@@ -51,11 +51,11 @@ const Admin = () => {
 				<link rel="icon" href="/unilever.ico" />
 			</Head>
 			<Header admin fName={user && user.firstName} lName={user && user.lastName}>
-				<Link href="/view-manager/new">
+				<Link href={`/${userId}`}>
 					<div>
 						<Button style={{fontSize: "1.1em"}}>
 							<div>
-								<FontAwesomeIcon icon={faPlusSquare} />
+								<FontAwesomeIcon icon={faTable} />
 							</div>
 						</Button>
 					</div>

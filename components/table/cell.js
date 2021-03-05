@@ -33,7 +33,6 @@ const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, in
 	const convertedData = useMemo(() => {
 		if (formatDisplay === "number" && (convertable === "multiply" || convertable === "divide")) {
 			if (convertable === "multiply") {
-				console.log({cellData});
 				return cellData * conversionRate;
 			}
 			return cellData / (conversionRate || 1);

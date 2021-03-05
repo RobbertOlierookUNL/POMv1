@@ -9,7 +9,7 @@ import DealRow from "./dealrow";
 
 
 
-const CustomerDealsContent = ({theme, active, conversionRate, conversionMode, mergedFrom, rowData}) => {
+const CustomerDealsContent = ({theme, active, conversionRate, user, conversionMode, mergedFrom, rowData}) => {
 	const defaultRes = [0, 0, 0, 0];
 	const {primary_light, primary} = theme;
 	const [pk, setPk] = useState(mergedFrom ? mergedFrom[0][dataTable_pk] : rowData[dataTable_pk]);
@@ -99,10 +99,10 @@ const CustomerDealsContent = ({theme, active, conversionRate, conversionMode, me
 				}
 			</div>
 			<div className="body">
-				<DealRow number={1} pk={pk} theme={theme} conversionMode={conversionMode} totalReserved={totalReserved} setTotalReserved={setTotalReserved} conversionRate={conversionRate}/>
-				<DealRow number={2} pk={pk} theme={theme} conversionMode={conversionMode} totalReserved={totalReserved} setTotalReserved={setTotalReserved} conversionRate={conversionRate}/>
-				<DealRow number={3} pk={pk} theme={theme} conversionMode={conversionMode} totalReserved={totalReserved} setTotalReserved={setTotalReserved} conversionRate={conversionRate}/>
-				<DealRow number={4} pk={pk} theme={theme} conversionMode={conversionMode} totalReserved={totalReserved} setTotalReserved={setTotalReserved} conversionRate={conversionRate}/>
+				<DealRow number={1} pk={pk} theme={theme} user={user} conversionMode={conversionMode} totalReserved={totalReserved} setTotalReserved={setTotalReserved} conversionRate={conversionRate}/>
+				<DealRow number={2} pk={pk} theme={theme} user={user} conversionMode={conversionMode} totalReserved={totalReserved} setTotalReserved={setTotalReserved} conversionRate={conversionRate}/>
+				<DealRow number={3} pk={pk} theme={theme} user={user} conversionMode={conversionMode} totalReserved={totalReserved} setTotalReserved={setTotalReserved} conversionRate={conversionRate}/>
+				<DealRow number={4} pk={pk} theme={theme} user={user} conversionMode={conversionMode} totalReserved={totalReserved} setTotalReserved={setTotalReserved} conversionRate={conversionRate}/>
 				{/* <div className="addOne">
 				<FontAwesomeIcon icon={faPlus}/>
 			</div> */}

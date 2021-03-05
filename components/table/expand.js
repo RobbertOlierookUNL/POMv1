@@ -1,12 +1,16 @@
 import React, {useRef, useMemo, forwardRef} from "react";
 
 import { allOptionsWithData } from "../../config/viewOptions";
-import { numberOfColumnsInExpandBlock, dataTable_pk } from "../../config/globalvariables";
+import {
+	dataTable_pk,
+	numberOfColumnsInExpandBlock
+} from "../../config/globalvariables";
 import { useToolkit } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import CustomerDeals from "./customerdeals";
 import EditableCell from "./editablecell";
 import ExpandBlock from "./expandblock";
+import Risk4SalesCell from "./risk4salescell";
 
 
 
@@ -20,7 +24,8 @@ import ExpandBlock from "./expandblock";
 
 
 
-const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, triggerUpdate, salesInputRights, theme, conversionRate, conversionMode, salesMode}, ref) => {
+
+const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, triggerUpdate, salesInputRights, theme, conversionRate, conversionMode, salesMode, setUntouched}, ref) => {
 	const expandCell = useRef(null);
 	const {mergeRefs} = useToolkit();
 	const {gray_light, gray_lighter, gray, tertiary} = theme;
@@ -36,8 +41,22 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 				<div className={"sub-table"}>
 					<div>
 						{mergedFrom.map((row, idx) =>
-							<div className="tr gridded-row" key={idx}>
+							<div className="tr gridded-row" key={row[dataTable_pk]}>
 								{keysForMergedRows.map((key, i) => {
+									if (key === "risk4sales") {
+										return (
+											<Risk4SalesCell
+												cellData={rowData === false ? false : row[key]}
+												rowData={row}
+												active={active}
+												colName={key}
+												key={key}
+												theme={theme}
+												primaryKey={rowData && row[dataTable_pk]}
+												updateEntry={updateEntry}
+											/>
+										);
+									}
 									const updateable = meta[key].updateable;
 									const allowInputFrom = meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default;
 									const [elemOpLevel, elemSaLevel] = allowInputFrom.split(", ").map(el => parseInt(el[2]));
@@ -58,7 +77,8 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 												updateable={meta[key].updateable}
 												dropdownUpdateOptions={meta[key].dropdownupdateoptions}
 												valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
-												key={i}
+												merge={meta[key].merge}
+												key={key}
 												theme={theme}
 												inEuro={meta[key].specialnumberformat === "money"}
 												isPercentage={meta[key].specialnumberformat === "percentage"}
@@ -90,7 +110,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 										convertable={meta[key].convertable}
 										conversionRate={conversionRate}
 										valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
-										key={i}
+										key={key}
 										inEuro={meta[key].specialnumberformat === "money"}
 										isPercentage={meta[key].specialnumberformat === "percentage"}
 										active={active}
@@ -119,6 +139,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 							rowData={rowData}
 							meta={meta}
 							conversionRate={conversionRate}
+							setUntouched={setUntouched}
 							active={active}/>;
 					}
 					)
@@ -149,6 +170,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, active, mergedFrom, ke
 						conversionMode={conversionMode}
 						mergedFrom={mergedFrom}
 						rowData={rowData}
+						user={user}
 					/>}
 			</div>
 

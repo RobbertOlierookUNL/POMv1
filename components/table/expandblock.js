@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React, {useEffect} from "react";
 import moment from "moment-timezone";
 import NumberFormat from "react-number-format";
 
@@ -8,13 +8,32 @@ import { useTheme } from "../../lib/custom-hooks";
 
 
 
-const ExpandBlock = ({additionalColKeys, rowData, meta, conversionRate}) => {
+const ExpandBlock = ({additionalColKeys, rowData, meta, conversionRate, setUntouched}) => {
+	useEffect(() => {
+		if (additionalColKeys.includes("timestamp_last_change")) {
+			const cellData = rowData.timestamp_last_change;
+			if (!cellData || moment().diff(moment(cellData), "weeks", true) > 2) {
+				setUntouched(true);
+			}
+			else {
+				setUntouched(false);
+			}
+		}
+	}, [additionalColKeys, rowData]);
 	const {primary, gray_light} = useTheme();
 	return (
 		<div className="block">
 			{additionalColKeys.map((key, i) => {
 				const {valuetype, convertable, hovername, title, merge, specialnumberformat} = meta[key];
 				const cellData = rowData[key];
+				// if (key === "timestamp_last_change") {
+				// 	if (!cellData || moment().diff(moment(cellData), "weeks", true) > 2) {
+				// 		setUntouched(true);
+				// 	}
+				// 	else {
+				// 		setUntouched(false);
+				// 	}
+				// }
 				const convertedData = (valuetype === "number" && (convertable === "multiply" || convertable === "divide") && cellData) ? (convertable === "multiply" ? (cellData * conversionRate) : (cellData / conversionRate)) : cellData;
 				return <div key={i} className={"block-row"}>
 					<span className="block-row-left">
@@ -27,7 +46,10 @@ const ExpandBlock = ({additionalColKeys, rowData, meta, conversionRate}) => {
 					<span className="block-row-right">
 						{
 							(valuetype === "date" && cellData)
-								? moment(cellData).tz("Europe/Amsterdam").format("LL")
+								?
+								key.includes("timestamp_last")
+									? moment(cellData).tz("Europe/Amsterdam").format("LLL")
+									: moment(cellData).tz("Europe/Amsterdam").format("LL")
 								:
 								(valuetype === "number" && cellData)
 									? <NumberFormat
