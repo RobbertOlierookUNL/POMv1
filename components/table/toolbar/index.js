@@ -91,8 +91,6 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta, conversionMode, setC
 	};
 
 
-	// console.log({data, headers});
-
 	return (
 		<>
 			<div className="toolbar">

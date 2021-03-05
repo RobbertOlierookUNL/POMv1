@@ -5,7 +5,6 @@ import { categories } from "../../config/globalvariables";
 
 const CategoryDropdown = ({setter, getter}) => {
 	const handleChange = e => {
-		console.log("start");
 		setter(e.target.value);
 	};
 	return (

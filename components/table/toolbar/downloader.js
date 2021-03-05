@@ -5,7 +5,6 @@ import { useEntries } from "../../../lib/swr-hooks";
 
 const Downloader = ({terminate, download}) => {
 	const {data, isLoading} = useEntries();
-	console.log("hi");
 	useEffect(() => {
 		if (!isLoading) {
 			download(data);

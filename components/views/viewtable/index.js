@@ -94,11 +94,10 @@ const ViewTable = ({data}) => {
 
 	const saveData = async (attr) => {
 		const value = JSON.stringify(dataState[attr]);
-		console.log({value});
 		if ((value !== viewdata[attr]) || mode === "duplicated") {
 			setSaving(true);
 			try {
-				console.log("trying..");
+
 				const res = await fetch("/api/view/edit-view", {
 					method: "PATCH",
 					body: JSON.stringify({
@@ -118,17 +117,7 @@ const ViewTable = ({data}) => {
 		}
 	};
 
-	// const changeAndTimeoutToSave = async (event, attr, option) => {
-	// 	if(myTimeout[attr]) {
-	// 		clearTimeout(myTimeout[attr]);
-	// 	}
-	// 	await setDataState({...dataState, [attr]: {...dataState[attr], [option]: event.target.value}});
-	// 	console.log(dataState);
-	// 	setMyTimeout({...myTimeout, [attr]: setTimeout(() => {
-	// 		console.log("saving...");
-	// 		saveData(attr);
-	// 	}, 5000)});
-	// };
+
 
 	useEffect(() => {
 		if (!init) {
@@ -140,8 +129,6 @@ const ViewTable = ({data}) => {
 					if (dataState[attr] !== lastSavedDataState[attr]) {
 						saveData(attr);
 					}
-				// setLastSavedDataState(dataState);
-				// setSaving(false);
 				}
 				setLastSavedDataState(dataState);
 				setSaved(true);

@@ -116,8 +116,6 @@ const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys
 		}
 	};
 
-
-	console.log({tablebody: {hasLoaded, sortedRowKeys, data, minLoad, maxLoad}});
 	return (
 		<>
 			<div className="tablebody">

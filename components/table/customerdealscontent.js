@@ -13,13 +13,10 @@ const CustomerDealsContent = ({theme, active, conversionRate, user, conversionMo
 	const defaultRes = [0, 0, 0, 0];
 	const {primary_light, primary} = theme;
 	const [pk, setPk] = useState(mergedFrom ? mergedFrom[0][dataTable_pk] : rowData[dataTable_pk]);
-	console.log({pk});
 	const [totalReserved, setTotalReserved] = useState(defaultRes);
 	const {data, mutate} = useReserveLogic(pk);
-	console.log({data});
 	const {total_left, total_qty, qty_to_offer} = data || {};
 	const sumReserved = totalReserved.reduce((a, b) => {
-		console.log({a, b});
 		if (b !== "na") {
 			return a + parseFloat(b);
 		} else return a;
@@ -28,7 +25,6 @@ const CustomerDealsContent = ({theme, active, conversionRate, user, conversionMo
 	useEffect(() => (async () => {
 		if (data && active) {
 			const newTotalLeft = qty_to_offer - sumReserved;
-			console.log({newTotalLeft, total_left, qty_to_offer, sumReserved, total_qty});
 			if (newTotalLeft != parseInt(total_left)) {
 				try {
 					const res = await fetch("/api/data/edit-entry", {
@@ -42,10 +38,8 @@ const CustomerDealsContent = ({theme, active, conversionRate, user, conversionMo
 							"Content-type": "application/json; charset=UTF-8"
 						}
 					});
-					console.log("trying..");
 					const json = await res.json();
 					if (!res.ok) throw Error(json.message);
-					console.log({res});
 				} catch (e) {
 					throw Error(e.message);
 				}
@@ -64,10 +58,8 @@ const CustomerDealsContent = ({theme, active, conversionRate, user, conversionMo
 							"Content-type": "application/json; charset=UTF-8"
 						}
 					});
-					console.log("trying..");
 					const json = await res.json();
 					if (!res.ok) throw Error(json.message);
-					console.log({res});
 				} catch (e) {
 					throw Error(e.message);
 				}

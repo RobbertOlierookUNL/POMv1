@@ -60,7 +60,6 @@ const zanGetter = () => entry => {
 		}
 		if (round) {
 			const factor = Math.pow(10, round);
-			console.log({factor, value, round});
 			value = Math.round((value + Number.EPSILON) * factor) / factor;
 		}
 		formattedEntry[label] = value;
@@ -75,7 +74,6 @@ export const getLevels =  (meta, keys, selectMode, checked, data, sortedRowKeys,
 	let topLevel;
 
 	if (selectMode) {
-		console.log({checked});
 		const checkedPks = [];
 		for (const pk in checked) {
 			if (checked[pk]) {
@@ -88,7 +86,6 @@ export const getLevels =  (meta, keys, selectMode, checked, data, sortedRowKeys,
 		}
 		topLevel = checkedPks.map(pk => {
 			const entry = data.find(el => equal(pk, el[dataTable_pk]));
-			console.log({checkedPks, pk, entry});
 			const formattedEntry = getRightCells(entry);
 			if (entry.addedProps?.merged && entry.addedProps?.mergedFrom) {
 				for (const subEntry of entry.addedProps.mergedFrom) {

@@ -2,7 +2,6 @@ import React from "react";
 import ViewCard from "./viewcard.js";
 
 const GetViews = ({views}) => {
-	console.log(views);
 	return (
 		<div className="container">
 			{views.map(view => (

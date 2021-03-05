@@ -91,8 +91,6 @@ const Table = ({data}) => {
 			}
 		}
 
-		console.log({i, min, max, numberInView});
-
 		setParameters({minLoad: min, maxLoad: max});
 	};
 

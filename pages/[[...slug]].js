@@ -64,7 +64,6 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		} else {
 			delete obj.mrpc;
 		}
-		console.log({silentFilters, category, salesMode, mrpcMode, obj});
 		return obj;
 	}, [silentFilters, category, salesMode, mrpcMode, hasMrp]);
 

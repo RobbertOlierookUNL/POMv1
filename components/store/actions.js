@@ -80,17 +80,14 @@ export const clearBoxes = (store) => {
 };
 export const setLastChecked = (store, order, checked) => {
 	store.setState({lastChecked: {order, checked}});
-	console.log({lastChecked: {order, checked}});
 };
 export const checkRange = (store, end, boxId, fallBack) => {
 	const	{order: start, checked} = store.state.lastChecked;
 	if (start) {
-		console.log("found a start");
 		store.setState({rangeChecked: {rangeFound: true, start, end, checked}});
 	} else {
 		store.setState({checked: {...store.state.checked, [boxId]: fallBack}});
 	}
-	console.log({range: store.state.rangeChecked});
 
 };
 export const clearRange = (store) => {

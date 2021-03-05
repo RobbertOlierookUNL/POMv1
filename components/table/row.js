@@ -55,10 +55,6 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 		}
 	}, [inViewport, order, totalRows]);
 
-	// useEffect(() => () => stopObserver(), []);
-
-	// console.log({opLevel, saLevel});
-	// const user = useGlobalUser();
 	const {operationsInputRights, salesInputRights} = user?.roll || {};
 
 	const conversionRate = useMemo(() => {

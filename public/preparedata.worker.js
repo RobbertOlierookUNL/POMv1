@@ -254,7 +254,7 @@ onmessage = function(e) {
   	if (!isLoading && preData && meta && allOptionsWithData && allKeys)
   	{
 		const res = JSON.parse(JSON.stringify(prepareData(preData, meta, allOptionsWithData, allKeys)));
-		console.log({res});
+
 		postMessage({res});
   	}
 };

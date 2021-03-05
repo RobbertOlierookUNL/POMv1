@@ -128,7 +128,6 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 					if (!res.ok) throw Error(json.message);
 					expandUserMenu(false);
 					Router.reload();
-					// Router.push(`${admin ? "/admin" : ""}/${json.insertId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
 				} else {
 					const res = await fetch("/api/user/create-user", {
 						method: "PUT",
@@ -137,23 +136,11 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 						},
 						body: JSON.stringify({...data, firstName, lastName, sf: JSON.stringify(sf)}),
 					}, {signal});
-					console.log(2);
 					const json = await res.json();
 					if (!res.ok) throw Error(json.message);
 					expandUserMenu(false);
 					Router.push(`${admin ? "/admin" : ""}/${json.insertId}${Router.query.slug ? `/${Router.query.slug[0]}` : ""}`);
 
-					// const res2 = await fetch(`/api/user/get-user-id?email=${data.email}`, {
-					// 	method: "GET",
-					// 	headers: {
-					// 		"Content-Type": "application/json",
-					// 	},
-					// });
-					// console.log(2);
-					// const json2 = await res2.json();
-					// if (!res2.ok) throw Error(json2.message);
-					// console.log(json2);
-					// Router.push("/user/");
 				}
 			} catch (e) {
 				setSubmitting(false);
@@ -266,7 +253,6 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 					/>
 					{errors.category && <div className="error-message">Kies een categorie</div>}
 				</FormControl>
-				{/* {console.log({watchRoll, chains, chainsAreLoading, chainsGiveError})} */}
 				{/* {watchRoll && rollObj.hasChain === 1 &&
 					<FormControl
 						className={classes.formControl}

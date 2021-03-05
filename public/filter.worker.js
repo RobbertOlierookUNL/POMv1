@@ -145,13 +145,11 @@ const filter = (data, [filter, level, reference], values) => {
 
 onmessage = function(e) {
 	const {dataSet, mergedFilters, done} = e.data;
-	console.log({dataSet, mergedFilters});
 	if (Array.isArray(dataSet) && done) {
 		let iteratingData = [...dataSet];
   	for (var filterKey in mergedFilters) {
   		iteratingData = filter(iteratingData, filterKey.split(",,>"), mergedFilters[filterKey] );
   	}
-		console.log({iteratingData});
   	postMessage({res: iteratingData});
 	}
 };

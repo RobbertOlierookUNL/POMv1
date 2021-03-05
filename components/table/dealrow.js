@@ -93,10 +93,10 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 					"Content-type": "application/json; charset=UTF-8"
 				}
 			});
-			console.log("trying..");
+
 			const json = await res.json();
 			if (!res.ok) throw Error(json.message);
-			console.log({res});
+
 		} catch (e) {
 			throw Error(e.message);
 		}
