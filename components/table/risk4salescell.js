@@ -22,7 +22,7 @@ const Risk4SalesCell = ({cellData, rowData, colName, active, noExpand, theme, up
 		<div className={"td " + colName}>
 			{(isNaN(cellData) || cellData === false) ? <Skeleton/> : <NumberFormat
 				value={cellData}
-				decimalScale={2}
+				decimalScale={0}
 				thousandSeparator={"."}
 				decimalSeparator={","}
 				fixedDecimalScale={true}

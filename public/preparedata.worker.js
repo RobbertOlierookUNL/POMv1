@@ -201,6 +201,16 @@ const prepareData = (myData, myMeta, allOptionsWithData, allKeys) => {
 								:
 								acc[key];
 							break;
+						case "lastDate":
+							//Check of de waarde een datum is
+							//Vergelijk de data en pak de eerste
+							//Is het geen datum? doe dan niks.
+							acc[key] = moment.isMoment(acc[key])
+								?
+								(acc[key].isAfter(obj[key]) ? acc[key] : obj[key])
+								:
+								acc[key];
+							break;
 						case "displayMulti":
 							//Zijn er verschillende waardes?
 							//Maak er een array van, begin met de hoeveelheid aan zelfde waardes (de huidige index) toevoegen aan de aary

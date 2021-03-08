@@ -1,6 +1,6 @@
 
 // max number of tablerows in DOM (for lazyloading)
-export const numberInView = 80;
+export const numberInView = 180;
 
 //number of additionalColKeys in expand block
 export const numberOfColumnsInExpandBlock = 3;
@@ -98,6 +98,7 @@ export const ZAN = [
 	{
 		label: "THT",
 		col: "bbd",
+		date: true,
 	},
 	{
 		label: "Discount",

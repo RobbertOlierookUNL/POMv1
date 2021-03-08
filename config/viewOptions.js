@@ -47,7 +47,7 @@ export const allOptionsWithData = {
 	},
 	specialnumberformat : {
 		default: "",
-		input: ["", "percentage", "money"],
+		input: ["", "percentage", "money", "money-round"],
 		extendable: true,
 	},
 	convertable : {
@@ -67,7 +67,7 @@ export const allOptionsWithData = {
 	},
 	merge : {
 		default: "getOne",
-		input: ["add", "mergeBy", "firstDate", "getOne", "displayMulti", "count"],
+		input: ["add", "mergeBy", "firstDate", "lastDate", "getOne", "displayMulti", "count"],
 		extendable: true,
 	},
 	updateable : {
