@@ -50,8 +50,11 @@ const zanGetter = () => entry => {
 	const formattedEntry = {};
 
 	for (const zanEntry of ZAN) {
-		const {label, col, divide, multiply, round} = zanEntry;
+		const {label, col, divide, multiply, round, date} = zanEntry;
 		let value = entry[col];
+		if (date) {
+			value = moment(value).format("YYYY-MM-DD");
+		}
 		if (divide) {
 			value = value / entry[divide];
 		}

@@ -111,8 +111,9 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 								merge={meta[key].merge}
 								valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 								triggers={meta[key].triggers}
+								isRound={meta[key].specialnumberformat === "money-round" ? 0 : 2}
 								inRangeOf={meta[key].inrangeof}
-								inEuro={meta[key].specialnumberformat === "money"}
+								inEuro={meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round"}
 								isPercentage={meta[key].specialnumberformat === "percentage"}
 								key={key}
 								theme={theme}

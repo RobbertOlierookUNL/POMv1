@@ -9,7 +9,7 @@ import { errorRGB, warningRGB } from "../../config/globalvariables";
 
 
 
-const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, inEuro, isPercentage, theme, rowData, inRangeOf, dateErrorOn, dateWarnOn, convertable, conversionRate, count}) => {
+const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, isRound, inEuro, isPercentage, theme, rowData, inRangeOf, dateErrorOn, dateWarnOn, convertable, conversionRate, count}) => {
 	const {gray_light, gray_very_light, gray_dark} = theme;
 	const rangeError = useMemo(() => (inRangeOf && (cellData > rowData[inRangeOf]) || (Math.sign(cellData) === -1)), [inRangeOf, cellData, rowData]);
 	const formatDisplay = useMemo(() => {
@@ -80,7 +80,7 @@ const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, in
 				||
 				(formatDisplay === "number" && <NumberFormat
 					value={convertedData}
-					decimalScale={2}
+					decimalScale={isRound}
 					thousandSeparator={"."}
 					decimalSeparator={","}
 					fixedDecimalScale={inEuro}

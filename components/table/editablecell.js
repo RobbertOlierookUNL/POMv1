@@ -16,7 +16,7 @@ import Input from "./input";
 
 
 
-const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, merge, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, triggerUpdate, inEuro, isPercentage, hasBatches = false, theme, selectMode, checked, convertable, conversionRate}) => {
+const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExpand, valueType, merge, inRangeOf, updateable, dropdownUpdateOptions, primaryKey, updateEntry, triggerUpdate, isRound, inEuro, isPercentage, hasBatches = false, theme, selectMode, checked, convertable, conversionRate}) => {
 	const [editMode, setEditMode] = useState(false);
 	const [temporaryState, setTemporaryState] = useState(false);
 	const {gray_light, primary_light, primary_overlay, secondary} = theme;
@@ -132,7 +132,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 				||
 				(formatDisplay === "number" && <NumberFormat
 					value={convertedData}
-					decimalScale={2}
+					decimalScale={isRound}
 					thousandSeparator={"."}
 					decimalSeparator={","}
 					fixedDecimalScale={inEuro}
@@ -160,7 +160,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 					formattedFirstOption={
 						<NumberFormat
 							value={convertedData}
-							decimalScale={2}
+							decimalScale={isRound}
 							thousandSeparator={"."}
 							decimalSeparator={","}
 							fixedDecimalScale={inEuro}
@@ -206,10 +206,10 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 						linear-gradient(to top right,transparent 50%,${primary_light.color} 0) top right/3.5px 3.5px no-repeat,
 						${primary_overlay.color};
 				}
-				.topLevel {
+				/* .topLevel {
 					background:
 						linear-gradient(to top right,transparent 50%,${primary_light.color} 0) top right/3.5px 3.5px no-repeat;
-				}
+				} */
 				.still-saving {
 					animation: saving 3s infinite;
 				}
