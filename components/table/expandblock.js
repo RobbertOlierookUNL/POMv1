@@ -80,8 +80,10 @@ const ExpandBlock = ({additionalColKeys, rowData, meta, conversionRate, setUntou
 			<style jsx>{`
         .block {
           background-color: white;
-          box-shadow: 1px 1px 2px gray;
+					box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
           padding: 5px;
+					min-width: 400px;
+					place-self: center;
         }
         .block-row {
           padding: 3px;
@@ -93,6 +95,7 @@ const ExpandBlock = ({additionalColKeys, rowData, meta, conversionRate, setUntou
         .block-row-left {
         }
         .block-row-right {
+					margin-left: 30px;
           float: right;
 					font-weight: bolder;
 					color: ${primary.color};

@@ -191,14 +191,14 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 					border
 				}
 				.container {
-					background-color: ${gray.color};
+					background-color: ${gray_light.color};
 					padding: 8px;
 					color: black;
 					border: 1px solid ${gray_light.color};
 					border-width: 0 0 1px 0;
 					font-weight: normal;
 					display: grid;
-					grid-template-columns: repeat(${salesMode ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock}, 1fr) ${salesMode ? "710px" : ""};
+					grid-template-columns: repeat(${salesMode ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock}, auto) ${salesMode ? "minmax(710px, auto)" : ""};
 					grid-template-rows: repeat(1, fit-content);
 					gap: 8px;
 				}
