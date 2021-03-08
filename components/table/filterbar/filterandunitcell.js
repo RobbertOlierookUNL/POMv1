@@ -7,7 +7,7 @@ import FilterBox from "./filterbox";
 
 
 
-const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, filterName, parameters, reference, conversionMode, convertable}) => {
+const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, last, seperation, filterName, parameters, reference, conversionMode, convertable}) => {
 	const {primary, tertiary, gray, gray_dark, gray_lighter} = useTheme();
 	const [boxActive, setBoxActive] = useState(false);
 	const parsedUnit = (unit === "HE" && (convertable === "divide" || convertable === "multiply")) ? conversionMode : unit;
@@ -29,6 +29,7 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, seperation, f
         		close={() => setBoxActive(false)}
         		parameters={parameters}
         		seperation={seperation}
+        		last={last}
         	/>
         </>
 			}

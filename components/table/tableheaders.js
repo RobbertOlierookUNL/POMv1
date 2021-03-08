@@ -91,7 +91,8 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 							seperation={meta[col].filterseperation || allOptionsWithData.filterseperation.default}
 							parameters={filterParameters?.[col] || false}
 							reference={col}
-							key={i}
+							key={col}
+							last={keysForTableCols.length-1 === i}
 							conversionMode={conversionMode}
 							convertable={meta[col].convertable}
 						/>

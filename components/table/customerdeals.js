@@ -17,6 +17,9 @@ const CustomerDeals = (props) => {
         .container {
           background-color: white;
           height: 270px;
+					width: 710px;
+					place-self: center;
+					box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
       `}</style>
 		</div>

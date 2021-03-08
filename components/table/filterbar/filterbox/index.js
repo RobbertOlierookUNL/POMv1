@@ -14,7 +14,7 @@ import SearchField from "./searchfield";
 
 
 
-const FilterBox = ({active, filtertype, filterName, valuetype, seperation, title, parameters, reference, close}) => {
+const FilterBox = ({active, filtertype, filterName, valuetype, seperation, title, parameters, reference, close, last}) => {
 	const {gray_light, primary_light} = useTheme();
 	const placeholder = () => <></>;
 	const [Filter, setFilter] = useState(() => placeholder);
@@ -88,7 +88,7 @@ const FilterBox = ({active, filtertype, filterName, valuetype, seperation, title
         .filter-box {
           position: absolute;
           top: 0;
-          left: 0;
+          ${last ? "right" : "left"}: 0;
           z-index: 4;
           height: ${active ? "auto" : 0};
           min-height: ${active ? "150px" : 0};
