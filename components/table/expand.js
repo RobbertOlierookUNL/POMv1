@@ -80,7 +80,8 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 												merge={meta[key].merge}
 												key={key}
 												theme={theme}
-												inEuro={meta[key].specialnumberformat === "money"}
+												isRound={meta[key].specialnumberformat === "money-round" ? 0 : 2}
+												inEuro={meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round"}
 												isPercentage={meta[key].specialnumberformat === "percentage"}
 												active={active}
 												primaryKey={row[dataTable_pk]}
@@ -111,7 +112,8 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 										conversionRate={conversionRate}
 										valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
 										key={key}
-										inEuro={meta[key].specialnumberformat === "money"}
+										isRound={meta[key].specialnumberformat === "money-round" ? 0 : 2}
+										inEuro={meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round"}
 										isPercentage={meta[key].specialnumberformat === "percentage"}
 										active={active}
 										count={meta[key].merge === "count" && idx+1}
