@@ -148,7 +148,8 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 						convertable={meta[key].convertable}
 						conversionRate={conversionRate}
 						rowInViewPort={inViewport}
-						inEuro={meta[key].specialnumberformat === "money"}
+						isRound={meta[key].specialnumberformat === "money-round" ? 0 : 2}
+						inEuro={meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round"}
 						isPercentage={meta[key].specialnumberformat === "percentage"}
 						theme={theme}
 						active={thisRowActive}
