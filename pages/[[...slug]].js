@@ -45,6 +45,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 	useEffect(() => {setCategory(silentFilters.category || category);}, [silentFilters]);
 
 	const [salesMode, setSalesMode] = useState(!!user?.roll?.isSales);
+	useEffect(() => {setSalesMode(!!user?.roll?.isSales);}, [!!user?.roll?.isSales]);
 
 	const hasMrp = useMemo(() => user.roll?.hasMrp, [user]);
 	const [mrpcMode, setMrpcMode] = useState(!!silentFilters.mrpc && !!hasMrp);

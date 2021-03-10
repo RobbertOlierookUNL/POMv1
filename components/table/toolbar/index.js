@@ -97,6 +97,7 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta, conversionMode, setC
 				<div className="toolbarPart leftSide">
 					<ToolbarIcon type={"multi-select"} iconClick={toggleSelectMode}/>
 					<ToolbarIcon type={"filter"} iconClick={() => openFilterModal(true)}/>
+					{sortedRowKeys && <span className="results">{sortedRowKeys.length} resultaten</span>}
 				</div>
 				<div className="toolbarPart mid">
 					<ConversionSwitch getter={conversionMode} setter={setConversionMode}/>
@@ -147,6 +148,9 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta, conversionMode, setC
 				grid-column: midRight / end;
 				display: flex;
 				justify-content: flex-end;
+			}
+			.results {
+				font-size: small;
 			}
     `}</style>
 		</>

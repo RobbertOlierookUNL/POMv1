@@ -194,6 +194,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
         .tr:hover {background-color: ${gray_light.color};}
 				.tr {
 					min-height: 18px;
+					/* content-visibility: auto; */
 					${untouched ? `background-color: rgba(${warningRGB}, 0.1);` : ""}
 				}
 				.disabled {
