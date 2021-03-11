@@ -9,10 +9,12 @@ import useGlobal from "../../../store";
 
 
 
-const RangeSlider = ({reference, filterName, close, parameters = {}, level}) => {
+const RangeSlider = ({reference, filterName, close, parameters = {}, level, conversionMode}) => {
 
 	const [, addToFilters] = useGlobal(() => null, actions => actions.addToFilters);
-	const {min, max, ggd} = parameters;
+	const {min: minHE, max: maxHE, minCE, maxCE, ggd} = parameters;
+	const min = conversionMode === "CE" ? minCE : minHE;
+	const max = conversionMode === "CE" ? maxCE : maxHE;
 	const [value, setValue] = useState([min, max]);
 
 	// const focusRef = useRef(null);
@@ -53,7 +55,7 @@ const RangeSlider = ({reference, filterName, close, parameters = {}, level}) => 
 	};
 
 	const forceLimits = (value, parameters) => {
-		const {min, max} = parameters;
+		// const {min, max} = parameters;
 		const newValue = [...value];
 		if (newValue[0] < min) {
 			newValue[0] = min;
@@ -73,7 +75,7 @@ const RangeSlider = ({reference, filterName, close, parameters = {}, level}) => 
 
 	useEffect(() => {
 		forceLimits(value, parameters);
-	}, [parameters]);
+	}, [parameters, conversionMode]);
 
 	return (
 		<form onSubmit={add} className="rangeslider">

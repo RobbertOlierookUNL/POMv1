@@ -2,7 +2,8 @@
 
 import moment from "moment-timezone";
 
-import { ZAN, dataTable_pk } from "../../../config/globalvariables";
+import { ZAN, cePerHe, dataTable_pk } from "../../../config/globalvariables";
+
 
 
 function equal(a, b) {
@@ -24,11 +25,20 @@ function equal(a, b) {
 	return true;
 }
 
-const cellGetter = (meta, keys) => entry => {
+const cellGetter = (meta, keys, conversionMode) => entry => {
 	const formattedEntry = {};
+	const conversionRate = conversionMode === "CE" ? entry[cePerHe] : 1;
 	for (const key of keys) {
+		let convertedCell;
+		if (meta[key].convertable === "multiply") {
+				 convertedCell = entry[key] * conversionRate;
+		}
+		if (meta[key].convertable === "divide") {
+				 convertedCell = entry[key ]/ conversionRate;
+		}
 		const label = meta[key].hovername || meta[key].title || key;
-		formattedEntry[label] =  (meta[key].valuetype === "date"
+		formattedEntry[label] =  convertedCell ||
+		(meta[key].valuetype === "date"
 			?
 			moment(entry[key]).format("YYYY-MM-DD")
 			:
@@ -71,8 +81,8 @@ const zanGetter = () => entry => {
 };
 
 
-export const getLevels =  (meta, keys, selectMode, checked, data, sortedRowKeys, zanMode = false) => {
-	const getRightCells = zanMode ? zanGetter() : cellGetter(meta, keys);
+export const getLevels =  (meta, keys, selectMode, checked, data, sortedRowKeys, zanMode = false, conversionMode) => {
+	const getRightCells = zanMode ? zanGetter() : cellGetter(meta, keys, conversionMode);
 	const batchLevel = [];
 	let topLevel;
 

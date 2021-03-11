@@ -14,7 +14,7 @@ import SearchField from "./searchfield";
 
 
 
-const FilterBox = ({active, filtertype, filterName, valuetype, seperation, title, parameters, reference, close, last}) => {
+const FilterBox = ({active, filtertype, filterName, valuetype, seperation, title, parameters, reference, close, last, conversionMode}) => {
 	const {gray_light, primary_light} = useTheme();
 	const placeholder = () => <></>;
 	const [Filter, setFilter] = useState(() => placeholder);
@@ -83,6 +83,7 @@ const FilterBox = ({active, filtertype, filterName, valuetype, seperation, title
         	parameters={parameters[level]}
         	level={level}
         	seperation={seperation}
+        	conversionMode={conversionMode}
         />}
 			<style jsx>{`
         .filter-box {

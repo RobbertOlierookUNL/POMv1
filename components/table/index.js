@@ -50,7 +50,9 @@ const Table = ({data}) => {
 		sortConfig,
 		updateEntry,
 		salesMode,
-		user
+		user,
+		conversionMode,
+		setConversionMode
 	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
@@ -69,7 +71,6 @@ const Table = ({data}) => {
 	);
 	const { isFallback } = useRouter();
 
-	const [conversionMode, setConversionMode] = useState("HE");
 
 	const [parameters, setParameters] = useState({minLoad: 0, maxLoad: 30});
 

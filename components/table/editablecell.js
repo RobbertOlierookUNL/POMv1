@@ -31,7 +31,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 
 	useEffect(() => {
 		if (temporaryState !== false) {
-			let newValue = temporaryState;
+			let newValue = temporaryState || 0;
 			if (cellData !== convertedData) {
 				if (convertable === "multiply") {
 					newValue = temporaryState / conversionRate;

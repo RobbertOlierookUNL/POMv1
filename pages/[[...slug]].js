@@ -50,6 +50,8 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 	const hasMrp = useMemo(() => user.roll?.hasMrp, [user]);
 	const [mrpcMode, setMrpcMode] = useState(!!silentFilters.mrpc && !!hasMrp);
 
+	const [conversionMode, setConversionMode] = useState("HE");
+
 
 	const updatedFilters = useMemo(() => {
 		const obj = {...silentFilters, category};
@@ -78,7 +80,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		requestSort,
 		sortConfig,
 		updateEntry,
-	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, updatedFilters, user);
+	} = useDataForView(view, initialViewMeta, extendedView, initialExtendedView, updatedFilters, user, conversionMode);
 	const [secondary] = useGlobal(
 		state => state.secondary,
 		() => null
@@ -151,7 +153,9 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 						sortConfig,
 						updateEntry,
 						salesMode,
-						user
+						user,
+						conversionMode,
+						setConversionMode
 					}
 				}
 			/>
