@@ -30,6 +30,7 @@ const FilterAndUnitCell = ({filtertype, valuetype, unit, boxTitle, last, seperat
         		parameters={parameters}
         		seperation={seperation}
         		last={last}
+        		conversionMode={conversionMode}
         	/>
         </>
 			}

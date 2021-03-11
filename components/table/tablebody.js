@@ -79,7 +79,7 @@ const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys
 
 	const now = () => moment(new Date()).tz("Europe/Amsterdam").format();
 
-	const triggerUpdate = (pk, value, hasBatches, colName, triggers, rowData) => {
+	const triggerUpdate = (pk, value = 0, hasBatches, colName, triggers, rowData) => {
 		if (triggers) {
 			const triggerArray = triggers.split(", ");
 			for (var trigger of triggerArray) {
@@ -98,11 +98,11 @@ const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys
 				if (conditionsPassed) {
 					let answer;
 					if (!hasBatches) {
-						answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "rowData."));
+						answer = eval(math.replace(`$${colName}`, `${value}`).replaceAll("$", "rowData."));
 					} else {
 						for (const mergedFrom of rowData.addedProps.mergedFrom) {
 							if (pk === mergedFrom[dataTable_pk]) {
-								answer = eval(math.replace(`$${colName}`, `${value}`).replace(/\$/g, "mergedFrom."));
+								answer = eval(math.replace(`$${colName}`, `${value}`).replaceAll("$", "mergedFrom."));
 							}
 						}
 					}

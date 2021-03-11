@@ -1,10 +1,19 @@
-const filter = (data, [filter, level, reference], values) => {
+const cePerHe = "cu_cs";
+
+
+const filter = (data, [filter, level, reference], values, meta, mode) => {
 	const filteredData = [];
 	for (var entry of data) {
 		if (level === "batchlevel" && entry.addedProps?.merged) {
 			let pushEntry = false;
 			for (var batchEntry of entry.addedProps.mergedFrom) {
-				const valueGettingFilterOn = batchEntry[reference];
+				let valueGettingFilterOn = batchEntry[reference];
+				const conversionRate = mode === "CE" ? batchEntry[cePerHe] : 1;
+				if (meta[reference].convertable === "multiply") {
+					valueGettingFilterOn = valueGettingFilterOn * conversionRate;
+				} else if (meta[reference].convertable ==="divide") {
+					valueGettingFilterOn = valueGettingFilterOn / conversionRate;
+				}
 				switch (filter) {
 				case "searchField":
 					for (const value of values) {
@@ -55,7 +64,7 @@ const filter = (data, [filter, level, reference], values) => {
 				}
 			}
 		} else {
-			const valueGettingFilterOn = entry[reference];
+			let valueGettingFilterOn = entry[reference];
 			const arrayMode = Array.isArray(valueGettingFilterOn);
 
 			switch (filter) {
@@ -93,14 +102,25 @@ const filter = (data, [filter, level, reference], values) => {
 				break;
 			case "range":
 				for (const value of values) {
+					const conversionRate = mode === "CE" ? entry[cePerHe] : 1;
 					if (arrayMode) {
-						for (const vgfo of valueGettingFilterOn) {
+						for (let vgfo of valueGettingFilterOn) {
+							if (meta[reference].convertable === "multiply") {
+								vgfo = vgfo * conversionRate;
+							} else if (meta[reference].convertable ==="divide") {
+								vgfo = vgfo / conversionRate;
+							}
 							if (value[0] <= vgfo && vgfo <= value[1] ) {
 								filteredData.push(entry);
 								break;
 							}
 						}
 					} else {
+						if (meta[reference].convertable === "multiply") {
+							valueGettingFilterOn = valueGettingFilterOn * conversionRate;
+						} else if (meta[reference].convertable ==="divide") {
+							valueGettingFilterOn = valueGettingFilterOn / conversionRate;
+						}
 						if (value[0] <= valueGettingFilterOn && valueGettingFilterOn <= value[1] ) {
 							filteredData.push(entry);
 						}
@@ -144,11 +164,11 @@ const filter = (data, [filter, level, reference], values) => {
 };
 
 onmessage = function(e) {
-	const {dataSet, mergedFilters, done} = e.data;
+	const {dataSet, mergedFilters, done, meta, conversionMode} = e.data;
 	if (Array.isArray(dataSet) && done) {
 		let iteratingData = [...dataSet];
   	for (var filterKey in mergedFilters) {
-  		iteratingData = filter(iteratingData, filterKey.split(",,>"), mergedFilters[filterKey] );
+  		iteratingData = filter(iteratingData, filterKey.split(",,>"), mergedFilters[filterKey], meta, conversionMode);
   	}
   	postMessage({res: iteratingData});
 	}

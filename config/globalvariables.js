@@ -51,6 +51,7 @@ export const accounts = [ { Name: "", Id: "" },
 	{ Name: "Kruidvat", Id: "Kruidvat" },
 	{ Name: "na", Id: "na" },
 	{ Name: "Nettorama", Id: "Nettorama" },
+	{ Name: "Overig", Id: "Overig" },
 	{ Name: "PenTrade", Id: "PenTrade"},
 	{ Name: "Plus", Id: "Plus" },
 	{ Name: "Poiesz", Id: "Poiesz" },
@@ -61,7 +62,7 @@ export const accounts = [ { Name: "", Id: "" },
 
 export const stati = ["Plan", "Confirmed", "Sold", "Canceled"];
 
-
+//staat ook in de prepareData webworker
 export const cePerHe = "cu_cs";
 
 export const ZAN = [

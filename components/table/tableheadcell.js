@@ -12,7 +12,7 @@ import useGlobal from "../store";
 
 
 
-const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig}) => {
+const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig, conversionMode}) => {
 	const [primary] = useGlobal(
 		state => state.primary,
 		() => null
@@ -27,7 +27,7 @@ const TableHeadCell = ({colMetaData, colName, requestSort, sortConfig}) => {
 	);
 
 	return (
-		<div className="th" onClick={() => requestSort(colName, colMetaData.valuetype || allOptionsWithData.valuetype.default)}>
+		<div className="th" onClick={() => requestSort(colName, colMetaData.valuetype || allOptionsWithData.valuetype.default, conversionMode)}>
 			{
 				sortConfig && sortConfig.key === colName &&
 			(

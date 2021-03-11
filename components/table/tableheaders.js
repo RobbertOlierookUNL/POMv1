@@ -71,6 +71,7 @@ const TableHeaders = ({meta, keysForTableCols, requestSort, sortConfig, filterPa
 							colMetaData={meta[col]}
 							colName={col}
 							key={i}
+							conversionMode={conversionMode}
 						/>
 					))
 				}

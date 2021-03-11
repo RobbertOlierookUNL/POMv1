@@ -53,7 +53,7 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta, conversionMode, setC
 
 	const exportToCSV = async () => {
 		const XLSX = await import("xlsx");
-		const {topLevel, batchLevel} = getLevels(meta, keys, selectMode, checked, data, sortedRowKeys);
+		const {topLevel, batchLevel} = getLevels(meta, keys, selectMode, checked, data, sortedRowKeys, false, conversionMode);
 
 		const tl = XLSX.utils.json_to_sheet(topLevel);
 		const bl = XLSX.utils.json_to_sheet(batchLevel);

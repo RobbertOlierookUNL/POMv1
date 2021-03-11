@@ -2,18 +2,29 @@
 // import moment from "moment-timezone";
 // importScripts("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js");
 importScripts("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js");
+const cePerHe = "cu_cs";
 
 const countDecimals = function (value) {
 	if(Math.floor(value) === value) return 0;
-	return value.toString().split(".")[1]?.length || 0;
+	const dec = value.toString().split(".")[1]?.length || 0;
+	return dec > 2 ? 2 : 0;
 };
 
-const getRangeFilterParameters = (theNumber, myMeta, key, parameters, level) => {
+const getRangeFilterParameters = (theNumber, myMeta, key, parameters, level, factor) => {
 	if (myMeta[key]?.filtertype === "range"
 			||
 			myMeta[key]?.filtertype === "inherit"
 	) {
 		var numberOfDecimals = countDecimals(theNumber);
+		var ceValue = theNumber;
+		if ((myMeta[key].convertable === "multiply" || myMeta[key].convertable === "divide")) {
+			if (myMeta[key].convertable === "multiply") {
+				ceValue = theNumber * factor;
+			}
+			else {
+				ceValue = theNumber / (factor || 1);
+			}
+		}
 		if (!parameters[key]) {
 			parameters[key] = {};
 		}
@@ -28,6 +39,12 @@ const getRangeFilterParameters = (theNumber, myMeta, key, parameters, level) => 
 		}
 		if (!parameters[key][level].min || parameters[key][level].min > theNumber) {
 			parameters[key][level].min = theNumber;
+		}
+		if (!parameters[key][level].maxCE || parameters[key][level].maxCE < ceValue) {
+			parameters[key][level].maxCE = ceValue;
+		}
+		if (!parameters[key][level].minCE || parameters[key][level].minCE > ceValue) {
+			parameters[key][level].minCE = ceValue;
 		}
 	}
 	return parameters;
@@ -66,7 +83,7 @@ const mapOverData = (allKeys, myMeta, obj, parameters, level) => {
 				var theNumber = parseFloat(obj[key]) || 0;
 				processedObj[key] = theNumber;
 				/* haal de rangefilter parameters op */
-				parameters = getRangeFilterParameters(theNumber, myMeta, key, parameters, level);
+				parameters = getRangeFilterParameters(theNumber, myMeta, key, parameters, level, obj[cePerHe]);
 				break;
 			case "text":
 				processedObj[key] = String(obj[key]) || "";
