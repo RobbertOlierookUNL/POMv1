@@ -76,7 +76,7 @@ const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, is
 				||
 				(formatDisplay === "count" && count)
 				||
-				(formatDisplay === "date" && moment(cellData).format("YYYY-MM-DD"))
+				(formatDisplay === "date" && moment(cellData).format("DD-MM-YYYY"))
 				||
 				(formatDisplay === "number" && <NumberFormat
 					value={convertedData}
@@ -107,7 +107,7 @@ const Cell = ({cellData, omit, active, colName, noExpand, compare, valueType, is
 					:
 					(valueType === "date"
 						?
-						moment(cellData).format("YYYY-MM-DD")
+						moment(cellData).format("DD-MM-YYYY")
 						:
 						(valueType === "number")
 						  ?
