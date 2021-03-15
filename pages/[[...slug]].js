@@ -39,16 +39,18 @@ const Table = dynamic(() => import("../components/table"));
 
 
 export default function Home({user, view, initialViewMeta, extendedView, initialExtendedView}) {
-	const silentFilters = useMemo(() => user?.silentFilters ? JSON.parse(user.silentFilters) : {}, [user]);
+	const silentFilters = useMemo(() => user?.silentFilters ? JSON.parse(user.silentFilters) : {}, [user?.silentFilters]);
 
 	const [category, setCategory] = useState(silentFilters.category || categories[0]);
-	useEffect(() => {setCategory(silentFilters.category || category);}, [silentFilters]);
+	useEffect(() => {setCategory(silentFilters.category || category);}, [silentFilters.category]);
 
 	const [salesMode, setSalesMode] = useState(!!user?.roll?.isSales);
-	useEffect(() => {setSalesMode(!!user?.roll?.isSales);}, [!!user?.roll?.isSales]);
+	useEffect(() => {console.log("fx");setSalesMode(!!user?.roll?.isSales);}, [!!user?.roll?.isSales]);
 
 	const hasMrp = useMemo(() => user.roll?.hasMrp, [user]);
 	const [mrpcMode, setMrpcMode] = useState(!!silentFilters.mrpc && !!hasMrp);
+	useEffect(() => {setMrpcMode(hasMrp);}, [hasMrp]);
+
 
 	const [conversionMode, setConversionMode] = useState("HE");
 

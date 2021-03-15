@@ -47,7 +47,7 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta, conversionMode, setC
 	const [downloadAll, setDownloadAll] = useState(false);
 
 	const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-	const fileName = `POM-dump_${moment().format("YYYY-MM-DD")}_${user?.firstName ? user.firstName : ""}${user?.lastName ? `-${user.lastName}` : "user"}`;
+	const fileName = `POM-dump_${moment().format("DD-MM-YYYY")}_${user?.firstName ? user.firstName : ""}${user?.lastName ? `-${user.lastName}` : "user"}`;
 	const fileExtension = ".xlsx";
 
 

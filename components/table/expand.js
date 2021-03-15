@@ -156,7 +156,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 					// 			return (
 					// 				<div key={i}>
 					// 					<dt key={"dt" + i}>{meta[key].hovername || meta[key].title || key}</dt>
-					// 					<dd key={"dd" + i}>{(moment.isMoment(cellData)) ? cellData.format("YYYY-MM-DD") :
+					// 					<dd key={"dd" + i}>{(moment.isMoment(cellData)) ? cellData.format("DD-MM-YYYY") :
 					// 						(!cellData || cellData === "0" || omit) ? "" : cellData}</dd>
 					// 				</div>
 					// 			);})
