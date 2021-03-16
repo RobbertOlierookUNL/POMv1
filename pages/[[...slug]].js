@@ -44,8 +44,8 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 	const [category, setCategory] = useState(silentFilters.category || categories[0]);
 	useEffect(() => {setCategory(silentFilters.category || category);}, [silentFilters.category]);
 
-	const [salesMode, setSalesMode] = useState(!!user?.roll?.isSales);
-	useEffect(() => {console.log("fx");setSalesMode(!!user?.roll?.isSales);}, [!!user?.roll?.isSales]);
+	const [salesMode, setSalesMode] = useState(user?.roll?.isSales ? "Sales" : "Operations");
+	useEffect(() => {console.log("fx");setSalesMode(user?.roll?.isSales ? "Sales" : "Operations");}, [user?.roll?.isSales]);
 
 	const hasMrp = useMemo(() => user.roll?.hasMrp, [user]);
 	const [mrpcMode, setMrpcMode] = useState(!!silentFilters.mrpc && !!hasMrp);
@@ -57,8 +57,10 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 
 	const updatedFilters = useMemo(() => {
 		const obj = {...silentFilters, category};
-		if (salesMode) {
+		if (salesMode === "Sales") {
 			obj.n_step = "Offer2Sales";
+		} else if (salesMode === "Trader") {
+			obj.n_step = "Offer2Trader";
 		} else {
 			if (obj.n_step) {
 				delete obj.n_step;

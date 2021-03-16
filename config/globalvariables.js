@@ -79,6 +79,10 @@ export const ZAN = [
 		col: "cs_pal",
 	},
 	{
+		label: "MRDR",
+		col: "mrdr_id",
+	},
+	{
 	  label: "800(EURO)/1000(BLOK)",
 	  col: "type_pal",
 	  factor: "",

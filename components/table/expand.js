@@ -164,7 +164,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 					//
 					// 	</dl></div>
 				}
-				{salesMode &&
+				{salesMode === "Sales" &&
 					<CustomerDeals
 						theme={theme}
 						active={active}
@@ -200,7 +200,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 					border-width: 0 0 1px 0;
 					font-weight: normal;
 					display: grid;
-					grid-template-columns: repeat(${salesMode ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock}, auto) ${salesMode ? "minmax(710px, auto)" : ""};
+					grid-template-columns: repeat(${salesMode === "Sales" ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock}, auto) ${salesMode === "Sales" ? "minmax(710px, auto)" : ""};
 					grid-template-rows: repeat(1, fit-content);
 					gap: 8px;
 				}

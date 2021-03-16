@@ -40,7 +40,7 @@ const cellGetter = (meta, keys, conversionMode) => entry => {
 		formattedEntry[label] =  convertedCell ||
 		(meta[key].valuetype === "date"
 			?
-			moment(entry[key]).format("DD-MM-YYYY")
+			moment(entry[key]).format("DD/MM/YYYY")
 			:
 			(!entry[key] || entry[key] === "0")
 				?
@@ -63,7 +63,7 @@ const zanGetter = () => entry => {
 		const {label, col, divide, multiply, round, date} = zanEntry;
 		let value = entry[col];
 		if (date) {
-			value = moment(value).format("DD-MM-YYYY");
+			value = moment(value).toDate();
 		}
 		if (divide) {
 			value = value / entry[divide];
