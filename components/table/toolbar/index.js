@@ -68,10 +68,10 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta, conversionMode, setC
 		const XLSX = await import("xlsx");
 		const {batchLevel: zan} = getLevels(meta, keys, selectMode, checked, data, sortedRowKeys, true);
 
-		const z = XLSX.utils.json_to_sheet(zan);
+		const z = XLSX.utils.json_to_sheet(zan, {cellDates: true, dateNF: "D-MMM-YY"});
 
 		const wb = { Sheets: { "ZAN": z}, SheetNames: ["ZAN"] };
-		const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+		const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array", cellDates:true });
 		const blob = new Blob([excelBuffer], {type: fileType});
 		FileSaver.saveAs(blob, fileName + fileExtension);
 	};

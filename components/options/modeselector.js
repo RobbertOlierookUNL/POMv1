@@ -33,8 +33,9 @@ const ModeSelector = ({hasMrp, mrpcMode, setMrpcMode, salesMode, setSalesMode}) 
 						value={salesMode}
 						onChange={(e) => setSalesMode(e.target.value)}
 					>
-						<MenuItem value={true}>Sales</MenuItem>
-						<MenuItem value={false}>Operations</MenuItem>
+						<MenuItem value={"Sales"}>Sales</MenuItem>
+						<MenuItem value={"Trader"}>Trader</MenuItem>
+						<MenuItem value={"Operations"}>Operations</MenuItem>
 
 					</Select>
 				</div>
