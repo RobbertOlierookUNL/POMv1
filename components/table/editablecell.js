@@ -70,7 +70,7 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 
 	const save = (e) => {
 		setEditMode(false);
-		if (e.target.value || 0 != convertedData || 0) {
+		if ((e.target.value || 0) != (convertedData || 0)) {
 			setTemporaryState(e.target.value);
 		}
 	};
