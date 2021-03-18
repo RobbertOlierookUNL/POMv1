@@ -21,7 +21,10 @@ const CategoryDropdown = ({setter, getter}) => {
           color: inherit;
           padding: 0;
           margin: 0;
+					margin-left: 14px;
+					/* transform: translateY(-1.5px); */
           font: inherit;
+					font-size: 1.2em;
           /* -webkit-appearance: none;
           -moz-appearance: none; */
           text-indent: 0px;

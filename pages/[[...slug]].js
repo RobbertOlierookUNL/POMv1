@@ -121,8 +121,12 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 				<>
 					<MenuButton/>
 					{(user.roll?.adminRights === "read" || user.roll?.adminRights === "write") && <AdminButton/>}
+					<CategoryDropdown getter={category} setter={setCategory}/>
 				</>
-			 <>POM<img style={{height: "120%"}} src="/Logo_voor_kleur_vierkant.png"/><CategoryDropdown getter={category} setter={setCategory}/></>
+			 <>
+			 <span style={{transform: "translateX(14px)"}}>POM</span>
+			 <img style={{height: "150%", transform: "translateX(0)"}} src="/Logo_voor_kleur_groot_POIA.png"/>
+		 </>
 			</Header>
 			<Shadow
 				zIndex={8}
