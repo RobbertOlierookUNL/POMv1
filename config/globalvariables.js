@@ -27,13 +27,15 @@ export const userTable = "user_table_v4";
 //primary keys
 export const dataTable_pk = "tkey";
 
-//error
+//themeless colors
 export const errorRGB = "187, 33, 29";
 export const warningRGB = "255, 96, 79";
 export const background = "#7070a0";
 
-//categories
+//hardcoded
 export const categories = ["FOOD", "BPC", "HC", "ICE", "TEA"];
+export const countries = ["NL", "BE"];
+
 export const accounts = [ { Name: "", Id: "" },
 	{ Name: "Action", Id: "Action"},
 	{ Name: "Advion", Id: "Advion"},
@@ -59,6 +61,11 @@ export const accounts = [ { Name: "", Id: "" },
 	{ Name: "Top_Brands", Id: "Top_Brands"},
 	{ Name: "Van Dijk", Id: "Van Dijk"},
 	{ Name: "Vomar", Id: "Vomar" }];
+
+export const BEaccounts = [ { Name: "", Id: "" },
+	{ Name: "na", Id: "na" },
+	{ Name: "Overig", Id: "Overig" },
+];
 
 export const stati = ["Plan", "Confirmed", "Sold", "Canceled"];
 

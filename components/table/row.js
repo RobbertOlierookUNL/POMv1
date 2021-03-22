@@ -21,7 +21,7 @@ import useInViewport from "../../lib/forked-useInViewport";
 
 const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAdditionalColKeys,
 	// inViewport, forwardedRef,
-	onEnterViewport, hasViewportListener, updateEntry, triggerUpdate, toggle, check, checked, theme, user, selectMode, setTopInView, setActive, thisRowActive, conversionMode, salesMode
+	onEnterViewport, hasViewportListener, updateEntry, triggerUpdate, toggle, check, checked, theme, user, selectMode, setTopInView, setActive, thisRowActive, conversionMode, salesMode, country
 }) => {
 	// const [thisRowActive, setThisRowActive] = useState(active === id);
 	const {tertiary, gray_light, gray_very_light, gray_dark} = theme;
@@ -183,6 +183,7 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 					salesMode={salesMode}
 					user={user}
 					setUntouched={setUntouched}
+				 	country={country}
 				/>
 			</>
 			<style jsx>{`

@@ -1,8 +1,7 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { useForm, Controller } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-
+import { makeStyles } from "@material-ui/core/styles";
+import { useForm, Controller } from "react-hook-form";
 import {useRouter} from "next/router";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -11,9 +10,11 @@ import React, { useState, useEffect } from "react";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
+import { countries } from "../../config/globalvariables";
 import { useCategories, useChains, useRolls } from "../../lib/swr-hooks";
 import Button from "../button";
 import useGlobal from "../store";
+
 
 
 
@@ -25,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
 	formControl: {
 		marginTop: theme.spacing(1),
 		width: 120,
+	},
+	formControlFullWidth: {
+		marginTop: theme.spacing(1),
+		width: "100%",
 	},
 	formControlRight: {
 		float: "right",
@@ -196,7 +201,7 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 				}
 
 				<FormControl
-					className={classes.formControl}
+					className={classes.formControlFullWidth}
 					error={!!errors.roll}
 					margin="dense"
 				>
@@ -226,7 +231,7 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 				</FormControl>
 
 				<FormControl
-					className={classes.formControl +" "+ classes.formControlRight}
+					className={classes.formControl}
 					error={!!errors.category}
 					margin="dense"
 				>
@@ -252,6 +257,33 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 					rules={{ required: true }}
 					/>
 					{errors.category && <div className="error-message">Kies een categorie</div>}
+				</FormControl>
+
+				<FormControl
+					className={classes.formControl +" "+ classes.formControlRight}
+					error={!!errors.category}
+					margin="dense"
+				>
+					<InputLabel id="countryLabel">Land</InputLabel>
+					<Controller as={
+						<Select
+							labelId="countryLabel"
+							id="country"
+							className="disable-on-inactive"
+							tabIndex={active ? 0 : -1}
+						>
+							{countries.map((country, i) => (
+								<MenuItem key={i} value={country}>{country}</MenuItem>
+							))
+							}
+						</Select>
+					}
+					name="country"
+					control={control}
+					defaultValue={loggedIn ? user?.country : (initialData.country || "")}
+					rules={{ required: true }}
+					/>
+					{errors.category && <div className="error-message">Kies een land</div>}
 				</FormControl>
 				{/* {watchRoll && rollObj.hasChain === 1 &&
 					<FormControl
@@ -280,6 +312,7 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 						{errors.chain && <div className="error-message">Kies een chain</div>}
 					</FormControl>
 				} */}
+
 				{watchRoll && rollObj.hasMrp === 1 &&
 					<>
 						<div className={classes.root}>
@@ -301,6 +334,7 @@ const RegisterScreen = ({active, initialData, transportData, admin, loggedIn, us
 						<p><small>Scheid verschillende MRPs met een spatie</small></p>
 					</>
 				}
+
 
 				{loading && <FontAwesomeIcon icon={faSpinner}/>}
 				<Button

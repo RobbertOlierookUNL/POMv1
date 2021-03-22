@@ -25,7 +25,7 @@ import Risk4SalesCell from "./risk4salescell";
 
 
 
-const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, triggerUpdate, salesInputRights, theme, conversionRate, conversionMode, salesMode, setUntouched}, ref) => {
+const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFrom, keysForMergedRows, updateEntry, operationsInputRights, triggerUpdate, salesInputRights, theme, conversionRate, conversionMode, salesMode, setUntouched, country}, ref) => {
 	const expandCell = useRef(null);
 	const {mergeRefs} = useToolkit();
 	const {gray_light, gray_lighter, gray, tertiary} = theme;
@@ -173,6 +173,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 						mergedFrom={mergedFrom}
 						rowData={rowData}
 						user={user}
+						country={country}
 					/>}
 			</div>
 
@@ -200,7 +201,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 					border-width: 0 0 1px 0;
 					font-weight: normal;
 					display: grid;
-					grid-template-columns: repeat(${salesMode === "Sales" ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock}, auto) ${salesMode === "Sales" ? "minmax(710px, auto)" : ""};
+					grid-template-columns: repeat(${(salesMode === "Sales") ? (numberOfColumnsInExpandBlock - 2) : numberOfColumnsInExpandBlock}, auto) ${salesMode === "Sales" ? "minmax(710px, auto)" : ""};
 					grid-template-rows: repeat(1, fit-content);
 					gap: 8px;
 				}

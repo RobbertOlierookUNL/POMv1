@@ -7,11 +7,12 @@ import {
 	TextField
 } from "@material-ui/core";
 import React, {useEffect} from "react";
+import moment from "moment-timezone";
 
-import { accounts, stati } from "../../config/globalvariables";
+import { BEaccounts, accounts, stati } from "../../config/globalvariables";
 import { isNumeric } from "../../lib/custom-hooks";
 import { useDeal } from "../../lib/swr-hooks";
-import moment from "moment-timezone";
+
 
 
 
@@ -36,7 +37,7 @@ import moment from "moment-timezone";
 // }));
 
 
-const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, totalReserved, setTotalReserved}) => {
+const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, totalReserved, setTotalReserved, country}) => {
 	const {gray_light} = theme;
 
 	const {data, mutate} = useDeal(number, pk);
@@ -126,7 +127,11 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 						onChange={save}
 						value={account !== "na" ? account : ""}
 					>
-						{accounts.map(({Name, Id}) => <MenuItem key={Id} value={Id}>{Name}</MenuItem>)}
+						{(country === "NL") ?
+							accounts.map(({Name, Id}) => <MenuItem key={Id} value={Id}>{Name}</MenuItem>)
+							:
+							BEaccounts.map(({Name, Id}) => <MenuItem key={Id} value={Id}>{Name}</MenuItem>)
+						}
 					</Select>
 				</FormControl>}
 			</div>
