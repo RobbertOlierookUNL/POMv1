@@ -5,7 +5,7 @@ import { userTable } from '../../../config/globalvariables';
 
 
 const handler: NextApiHandler = async (req, res) => {
-  const { userId, roll, category, sf } = req.body
+  const { userId, roll, category, country, sf } = req.body
   try {
     if (!userId) {
       return res
@@ -20,9 +20,10 @@ const handler: NextApiHandler = async (req, res) => {
       SET
         roll = ?,
         category = ?,
+        country = ?,
         silentFilters = ?
       WHERE userId = ?
-      `, [roll, category, sf, userId]
+      `, [roll, category, country, sf, userId]
     )
 
     return res.json(results)

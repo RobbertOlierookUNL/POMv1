@@ -18,6 +18,7 @@ export function useEntries() {
 export function useUserSpecificEntries(columns: Array<any>, conditions: Object ) {
   const colString = columns ? JSON.stringify(columns) : undefined;
   const conString = conditions ? JSON.stringify(conditions) : undefined;
+
   const { data, error } = useSWR(`/api/data/get-entries?columns=${colString}&conditions=${conString}`, fetcher, {refreshInterval: 1000 })
 
   return {

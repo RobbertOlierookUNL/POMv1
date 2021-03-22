@@ -47,7 +47,7 @@ function equal(a, b) {
 
 
 
-const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, parameters, updateParameters, shouldUpdateParameters, conversionMode, updateEntry, check, toggle, checked, selectMode, salesMode}) => {
+const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys, additionalColKeys, parameters, updateParameters, shouldUpdateParameters, conversionMode, updateEntry, check, toggle, checked, selectMode, salesMode, country}) => {
 
 
 	const fakedata = new Array(26).fill(".");
@@ -70,13 +70,14 @@ const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys
 
 	const groupedAKs = useMemo(() => {
 		const grouped = [];
-		const perGroup = Math.ceil(additionalColKeys.length / (salesMode ? numberOfColumnsInExpandBlock - 2 : numberOfColumnsInExpandBlock));
+		const perGroup = Math.ceil(additionalColKeys.length / ((salesMode === "Sales") ? (numberOfColumnsInExpandBlock - 2) : numberOfColumnsInExpandBlock));
 		for (let i = 0; i < additionalColKeys.length; i += perGroup) {
 			grouped.push(additionalColKeys.slice(i, i+perGroup));
 		}
 		return grouped;
 	}, [additionalColKeys, salesMode]);
 
+	//functie kan gebruikt worden in de triggerupdate met eval
 	const now = () => moment(new Date()).tz("Europe/Amsterdam").format();
 
 	const triggerUpdate = (pk, value = 0, hasBatches, colName, triggers, rowData) => {
@@ -147,6 +148,7 @@ const TableBody = ({meta, data, user, keysForTableCols, hasLoaded, sortedRowKeys
 								conversionMode={conversionMode}
 								salesMode={salesMode}
 								user={user}
+								country={country}
 							/>
 						))}
 					</>

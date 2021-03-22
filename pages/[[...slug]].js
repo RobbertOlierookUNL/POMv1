@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import {
 	background,
 	categories,
+	countries,
 	categoryTable,
 	rollTable,
 	userTable,
@@ -16,6 +17,7 @@ import { useDataForView } from "../lib/enhanced-swr-hooks";
 import { useGlobalUser } from "../lib/store-hooks";
 import AdminButton from "../components/header/adminbutton";
 import CategoryDropdown from "../components/header/categorydropdown";
+import CountryDropdown from "../components/header/countrydropdown";
 import Header from "../components/header";
 import MenuButton from "../components/header/menubutton";
 import OptionDrawer from "../components/header/optiondrawer";
@@ -24,6 +26,7 @@ import Shadow from "../components/shadow";
 import UserMenu from "../components/header/usermenu";
 import UserOptions from "../components/useroptions";
 import useGlobal from "../components/store";
+
 
 
 
@@ -40,23 +43,27 @@ const Table = dynamic(() => import("../components/table"));
 
 export default function Home({user, view, initialViewMeta, extendedView, initialExtendedView}) {
 	const silentFilters = useMemo(() => user?.silentFilters ? JSON.parse(user.silentFilters) : {}, [user?.silentFilters]);
+	const defaultCountry = useMemo(() => user?.country || "", [user?.silentFilters]);
 
 	const [category, setCategory] = useState(silentFilters.category || categories[0]);
 	useEffect(() => {setCategory(silentFilters.category || category);}, [silentFilters.category]);
+
+	const [country, setCountry] = useState(defaultCountry || countries[0]);
+	useEffect(() => {setCountry(defaultCountry || country);}, [defaultCountry]);
 
 	const [salesMode, setSalesMode] = useState(user?.roll?.isSales ? "Sales" : "Operations");
 	useEffect(() => {console.log("fx");setSalesMode(user?.roll?.isSales ? "Sales" : "Operations");}, [user?.roll?.isSales]);
 
 	const hasMrp = useMemo(() => user.roll?.hasMrp, [user]);
 	const [mrpcMode, setMrpcMode] = useState(!!silentFilters.mrpc && !!hasMrp);
-	useEffect(() => {setMrpcMode(hasMrp);}, [hasMrp]);
+	useEffect(() => {setMrpcMode(!!hasMrp);}, [hasMrp]);
 
 
 	const [conversionMode, setConversionMode] = useState("HE");
 
 
 	const updatedFilters = useMemo(() => {
-		const obj = {...silentFilters, category};
+		const obj = {...silentFilters, category, country};
 		if (salesMode === "Sales") {
 			obj.n_step = "Offer2Sales";
 		} else if (salesMode === "Trader") {
@@ -71,8 +78,9 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 		} else {
 			delete obj.mrpc;
 		}
+		console.log({obj});
 		return obj;
-	}, [silentFilters, category, salesMode, mrpcMode, hasMrp]);
+	}, [silentFilters, category, salesMode, country, mrpcMode, hasMrp]);
 
 	const {
 		filteredData,
@@ -122,6 +130,7 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 					<MenuButton/>
 					{(user.roll?.adminRights === "read" || user.roll?.adminRights === "write") && <AdminButton/>}
 					<CategoryDropdown getter={category} setter={setCategory}/>
+					<CountryDropdown getter={country} setter={setCountry}/>
 				</>
 			 <>
 			 <span style={{transform: "translateX(14px)"}}>POM</span>
@@ -163,7 +172,8 @@ export default function Home({user, view, initialViewMeta, extendedView, initial
 						salesMode,
 						user,
 						conversionMode,
-						setConversionMode
+						setConversionMode,
+						country
 					}
 				}
 			/>

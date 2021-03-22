@@ -52,7 +52,8 @@ const Table = ({data}) => {
 		salesMode,
 		user,
 		conversionMode,
-		setConversionMode
+		setConversionMode,
+		country,
 	} = data;
 	const tableRef = useRef(null);
 	const fakedata = new Array(50).fill(".");
@@ -109,9 +110,9 @@ const Table = ({data}) => {
 
 
 	return (
-
-		<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
-			{hasLoaded && !isFallback &&
+		<div className="outerContainer">
+			<SkeletonTheme color={primary_very_light.color} highlightColor={"white"}>
+				{hasLoaded && !isFallback &&
 				<ToTopButton
 					handleClick={handleClick}
 					top={
@@ -126,7 +127,7 @@ const Table = ({data}) => {
 					}
 					right={`${2*horPadding + 10}px`}
 				/>}
-			{!isFallback &&
+				{!isFallback &&
 				<SharedShadowModal open={filterModal}>
 					<FilterModal
 						meta={meta}
@@ -135,80 +136,88 @@ const Table = ({data}) => {
 						sortedRowKeys={sortedKeys}
 					/>
 				</SharedShadowModal>
-			}
-			<div className="tableContainer" ref={tableRef}>
-				<FilterBar/>
-				<Toolbar
-					data={filteredData}
-					keys={keys.compact.concat(keys.expanded)}
-					sortedRowKeys={sortedKeys}
-					meta={meta}
-					conversionMode={conversionMode}
-					setConversionMode={setConversionMode}
-					toggleSelectMode={() => setSelectMode(!selectMode)}
-					checked={checked}
-					selectMode={selectMode}
-				/>
-				{!isFallback ?
-					<div className="table">
-						<TableHeaders
-							requestSort={requestSort}
-							sortConfig={sortConfig}
-							meta={meta}
-							keysForTableCols={keys.compact}
-							filterParameters={filterParameters}
-							numberOfEntries={sortedKeys && sortedKeys.length}
-							conversionMode={conversionMode}
-							selectMode={selectMode}
-						/>
-						<TableBody
-							meta={meta}
-							data={filteredData}
-							hasLoaded={hasLoaded}
-							keysForTableCols={keys.compact}
-							additionalColKeys={keys.expanded}
-							sortedRowKeys={sortedKeys}
-							parameters={parameters}
-							updateParameters={updateParameters}
-							shouldUpdateParameters={shouldUpdateParameters}
-							updateEntry={updateEntry}
-							conversionMode={conversionMode}
-							toggle={toggle}
-							check={check}
-							checked={checked}
-							selectMode={selectMode}
-							salesMode={salesMode}
-							user={user}
-						/>
-					</div>
-					:
-					<table className="table">
-						<tbody>
-							{fakedata.map((_, row) => (
-								<tr key={row}>
-									<td>
-										<Skeleton />
-									</td>
-									<td>
-										<Skeleton />
-									</td>
-									<td>
-										<Skeleton />
-									</td>
-									<td>
-										<Skeleton />
-									</td>
-									<td>
-										<Skeleton />
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-
 				}
-			</div>
+				<div className="tableContainer" ref={tableRef}>
+					<FilterBar/>
+					<Toolbar
+						data={filteredData}
+						keys={keys.compact.concat(keys.expanded)}
+						sortedRowKeys={sortedKeys}
+						meta={meta}
+						conversionMode={conversionMode}
+						setConversionMode={setConversionMode}
+						toggleSelectMode={() => setSelectMode(!selectMode)}
+						checked={checked}
+						selectMode={selectMode}
+					/>
+					{!isFallback ?
+						<div className="table">
+							<TableHeaders
+								requestSort={requestSort}
+								sortConfig={sortConfig}
+								meta={meta}
+								keysForTableCols={keys.compact}
+								filterParameters={filterParameters}
+								numberOfEntries={sortedKeys && sortedKeys.length}
+								conversionMode={conversionMode}
+								selectMode={selectMode}
+							/>
+							<TableBody
+								meta={meta}
+								data={filteredData}
+								hasLoaded={hasLoaded}
+								keysForTableCols={keys.compact}
+								additionalColKeys={keys.expanded}
+								sortedRowKeys={sortedKeys}
+								parameters={parameters}
+								updateParameters={updateParameters}
+								shouldUpdateParameters={shouldUpdateParameters}
+								updateEntry={updateEntry}
+								conversionMode={conversionMode}
+								toggle={toggle}
+								check={check}
+								checked={checked}
+								selectMode={selectMode}
+								salesMode={salesMode}
+								user={user}
+							 	country={country}
+							/>
+						</div>
+						:
+						<table className="table">
+							<tbody>
+								{fakedata.map((_, row) => (
+									<tr key={row}>
+										<td>
+											<Skeleton />
+										</td>
+										<td>
+											<Skeleton />
+										</td>
+										<td>
+											<Skeleton />
+										</td>
+										<td>
+											<Skeleton />
+										</td>
+										<td>
+											<Skeleton />
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+
+					}
+				</div>
+
+			</SkeletonTheme>
 			<style jsx>{`
+				.outerContainer {
+					max-width: 1400px;
+					margin: auto;
+					position: relative;
+				}
 				.tableContainer {
 					width: calc(100% - ${horPadding *2 - 0}px);
 					overflow: auto;
@@ -221,7 +230,6 @@ const Table = ({data}) => {
 					background-color: ${gray_light.color};
 
 
-
 				}
 				.table {
 					border-collapse: collapse;
@@ -229,9 +237,9 @@ const Table = ({data}) => {
 					font-size: 0.7em;
 					display: grid;
 				}
-			`}
+		`}
 			</style>
-		</SkeletonTheme>
+		</div>
 	);
 
 };
