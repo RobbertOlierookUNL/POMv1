@@ -63,9 +63,21 @@ export const accounts = [ { Name: "", Id: "" },
 	{ Name: "Vomar", Id: "Vomar" }];
 
 export const BEaccounts = [ { Name: "", Id: "" },
+	{ Name: "Albert_Heijn", Id: "Albert_Heijn"},
+	{ Name: "Aldi", Id: "Aldi"},
+	{ Name: "Carrefour", Id: "Carrefour"},
+	{ Name: "Colruyt", Id: "Colruyt"},
+	{ Name: "Delhaize", Id: "Delhaize"},
+	{ Name: "E_Commerce", Id: "E_Commerce"},
+	{ Name: "Kruidvat", Id: "Kruidvat"},
+	{ Name: "Lidl", Id: "Lidl"},
+	{ Name: "Makro", Id: "Makro"},
 	{ Name: "na", Id: "na" },
 	{ Name: "Overig", Id: "Overig" },
+	{ Name: "Provera", Id: "Provera"},
+	{ Name: "Spar", Id: "Spar"},
 ];
+
 
 export const stati = ["Plan", "Confirmed", "Sold", "Canceled"];
 
