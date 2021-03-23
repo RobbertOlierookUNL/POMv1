@@ -56,7 +56,7 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 
 	const getParams = e => {
 		const {name, value} = e.target;
-		console.log({name, value, conversionMode});
+		// console.log({name, value, conversionMode});
 		let val = value;
 		if (conversionMode === "CE") {
 			switch (name) {
@@ -74,11 +74,11 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 	};
 
 	const localSave = e => {
-		console.log("START DEBUG");
-		console.log({e});
+		// console.log("START /*DEBbUG*/");
+		// console.log({e});
 		const {col, val} = getParams(e);
-		console.log({col, val});
-		console.log("MUTATE", {...data, [col]: val});
+		// console.log({col, val});
+		// console.log("MUTATE", {...data, [col]: val});
 		mutate({...data, [col]: val}, false);
 	};
 
@@ -169,7 +169,7 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 					onBlur={save}
 					onChange={localSave}
 					onKeyDown={(e) => {e.code === "Enter" && save(e);}}
-					value={convert(qty, true)}
+					value={Math.round(convert(qty, true) + Number.EPSILON)}
 					InputProps={{
 						startAdornment: <InputAdornment position="start">{conversionMode}</InputAdornment>,
 					}}
