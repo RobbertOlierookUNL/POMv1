@@ -56,6 +56,7 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 
 	const getParams = e => {
 		const {name, value} = e.target;
+		console.log({name, value, conversionMode});
 		let val = value;
 		if (conversionMode === "CE") {
 			switch (name) {
@@ -73,7 +74,11 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 	};
 
 	const localSave = e => {
+		console.log("START DEBUG");
+		console.log({e});
 		const {col, val} = getParams(e);
+		console.log({col, val});
+		console.log("MUTATE", {...data, [col]: val});
 		mutate({...data, [col]: val}, false);
 	};
 
