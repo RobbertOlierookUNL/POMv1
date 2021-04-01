@@ -1,5 +1,5 @@
 // import { useForm } from "react-hook-form";
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { FormControl, InputLabel, MenuItem, Select, Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, {useState, useEffect} from "react";
 
@@ -32,7 +32,7 @@ const DropDown = ({reference, filterName, close, parameters = {}, level}) => {
 	const {options = []} = parameters;
 
 	const sortedOptions = options.sort();
-	const [value, setValue] = useState("");
+	const [value, setValue] = useState([]);
 	const [error, setError] = useState(false);
 
 	const add = (event) => {
@@ -41,10 +41,17 @@ const DropDown = ({reference, filterName, close, parameters = {}, level}) => {
 			setError(true);
 			return;
 		}
+		const filter = value.join(", ");
+		let reducedLength;
+		if (filter.length < 10) {
+			reducedLength = filter;
+		} else {
+			reducedLength = `${filter.substring(0,8)}..`;
+		}
 		addToFilters({
 			shorthand: {
 				filterName,
-				value,
+				value: reducedLength,
 			},
 			value,
 			reference,
@@ -59,6 +66,14 @@ const DropDown = ({reference, filterName, close, parameters = {}, level}) => {
 	// }, [parameters]);
 
 	const handleChange = (event) => {
+		console.log({event});
+		// const options  = event.target.value;
+		// const value = [];
+		// for (let i = 0, l = options.length; i < l; i += 1) {
+		// 	if (options[i].selected) {
+		// 		value.push(options[i].value);
+		// 	}
+		// }
 		setError(false);
 		setValue(event.target.value);
 	};
@@ -75,6 +90,8 @@ const DropDown = ({reference, filterName, close, parameters = {}, level}) => {
 					labelId={"label"}
 					id="options"
 					value={value}
+					input={<Input />}
+					multiple
 					onChange={handleChange}
 				>
 					{sortedOptions.map((option, i) => (
