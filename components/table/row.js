@@ -9,10 +9,12 @@ import {
 import { useGlobalUser } from "../../lib/store-hooks";
 import Cell from "./cell";
 import CheckBox from "../checkbox";
+import DynamicCell from "./dynamiccell";
 import EditableCell from "./editablecell";
 import Expand from "./expand";
 import Risk4SalesCell from "./risk4salescell";
 import useInViewport from "../../lib/forked-useInViewport";
+
 
 
 
@@ -76,21 +78,21 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 					<CheckBox id={id} toggle={toggle} check={check}/>
 				</div>}
 				{keysForTableCols.map((key, i) => {
-					if (key === "risk4sales") {
-						return (
-							<Risk4SalesCell
-								cellData={rowData === false ? false : rowData[key]}
-								rowData={rowData}
-								active={thisRowActive}
-								colName={key}
-								key={key}
-								theme={theme}
-								primaryKey={rowData && rowData[dataTable_pk]}
-								updateEntry={updateEntry}
-								hasBatches={rowData?.addedProps?.merged}
-							/>
-						);
-					}
+					// if (key === "risk4sales") {
+					// 	return (
+					// 		<Risk4SalesCell
+					// 			cellData={rowData === false ? false : rowData[key]}
+					// 			rowData={rowData}
+					// 			active={thisRowActive}
+					// 			colName={key}
+					// 			key={key}
+					// 			theme={theme}
+					// 			primaryKey={rowData && rowData[dataTable_pk]}
+					// 			updateEntry={updateEntry}
+					// 			hasBatches={rowData?.addedProps?.merged}
+					// 		/>
+					// 	);
+					// }
 					const updateable = meta[key].updateable;
 					const allowInputFrom = meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default;
 					const [elemOpLevel, elemSaLevel] = allowInputFrom.split(", ").map(el => parseInt(el[2]));
@@ -99,67 +101,67 @@ const Row = ({id, order, totalRows, meta, rowData, keysForTableCols, groupedAddi
 								(elemOpLevel && (operationsInputRights >= elemOpLevel))
 								|| (elemSaLevel && (salesInputRights >= elemSaLevel))
 							) && (!selectMode || check);
-					if (isEditable) {
-						return (
-							<EditableCell
-								cellData={rowData === false ? false : rowData[key]}
-								rowData={rowData}
-								colName={key}
-								checked={checked}
-								updateable={meta[key].updateable}
-								dropdownUpdateOptions={meta[key].dropdownupdateoptions}
-								merge={meta[key].merge}
-								valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
-								triggers={meta[key].triggers}
-								isRound={meta[key].specialnumberformat === "money-round" ? 0 : 2}
-								inRangeOf={meta[key].inrangeof}
-								inEuro={meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round"}
-								isPercentage={meta[key].specialnumberformat === "percentage"}
-								key={key}
-								theme={theme}
-								convertable={meta[key].convertable}
-								conversionRate={conversionRate}
-								rowInViewPort={inViewport}
-								rowId={id}
-								active={thisRowActive}
-								primaryKey={rowData && rowData[dataTable_pk]}
-								updateEntry={updateEntry}
-								triggerUpdate={triggerUpdate}
-								selectMode={selectMode}
-								hasBatches={rowData?.addedProps?.merged}
-								omit={
-									(rowData
-										&& rowData.addedProps
-										&& !rowData.addedProps.merged
-										&& meta[key].merge === "count")
-								}
-							/>
-						);
-					}
-					return <Cell
-						cellData={rowData === false ? false : rowData[key]}
-						colName={key}
-						rowData={rowData}
-						valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
-						inRangeOf={meta[key].inrangeof}
-						dateErrorOn={meta[key].dateerroronweeks}
-						dateWarnOn={meta[key].datewarnonweeks}
-						key={key}
-						convertable={meta[key].convertable}
-						conversionRate={conversionRate}
-						rowInViewPort={inViewport}
-						isRound={meta[key].specialnumberformat === "money-round" ? 0 : 2}
-						inEuro={meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round"}
-						isPercentage={meta[key].specialnumberformat === "percentage"}
-						theme={theme}
-						active={thisRowActive}
-						omit={
-							(rowData
+					const genericProps = {
+						cellData: rowData === false ? false : rowData[key],
+						colName: key,
+						valueType: meta[key].valuetype || allOptionsWithData.valuetype.default,
+						isRound: meta[key].specialnumberformat === "money-round" ? 0 : 2,
+						inRangeOf: meta[key].inrangeof,
+						inEuro: meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round",
+						isPercentage: meta[key].specialnumberformat === "percentage",
+						convertable: meta[key].convertable,
+						omit: rowData
 								&& rowData.addedProps
 								&& !rowData.addedProps.merged
-								&& meta[key].merge === "count")
-						}
-					/>;
+								&& meta[key].merge === "count",
+						active: thisRowActive,
+						rowData,
+						theme,
+						conversionRate,
+					};
+					const dynamicProps = {
+						triggers: meta[key].triggers,
+						cellData: rowData === false ? false : rowData[key],
+						colName: key,
+						active: thisRowActive,
+						primaryKey: rowData && rowData[dataTable_pk],
+						updateEntry,
+						triggerUpdate,
+						rowData
+					};
+
+					const InputCell = (props) => (
+						<EditableCell {...genericProps} {...props}
+							checked={checked}
+							updateable={meta[key].updateable}
+							dropdownUpdateOptions={meta[key].dropdownupdateoptions}
+							merge={meta[key].merge}
+							primaryKey={rowData && rowData[dataTable_pk]}
+							updateEntry={updateEntry}
+							selectMode={selectMode}
+							hasBatches={rowData?.addedProps?.merged}
+						/>
+					);
+
+					const StaticCell = (props) => (
+						<Cell {...genericProps} {...props}
+							dateErrorOn={meta[key].dateerroronweeks}
+							dateWarnOn={meta[key].datewarnonweeks}
+						/>
+					);
+
+					let ThisCell = StaticCell;
+					if (isEditable) {
+						ThisCell = InputCell;
+					}
+					if (meta[key].triggers) {
+						return (
+							<DynamicCell key={key} ChildCell={ThisCell} {...dynamicProps}/>
+						);
+					}
+					return (
+						<ThisCell key={key}	/>
+					);
 				})}
 				<Expand
 					groupedAdditionalColKeys={groupedAdditionalColKeys}

@@ -49,17 +49,17 @@ const EditableCell = ({cellData, rowData, omit, active, colName, triggers, noExp
 				checkedPks = checkedPks.flat();
 				for (const pk of checkedPks) {
 					updateEntry(pk, colName, newValue);
-					triggerUpdate(pk,newValue, hasBatches, colName, triggers, rowData);
+					// triggerUpdate(pk,newValue, hasBatches, colName, triggers, rowData);
 				}
 			}
 			if (hasBatches) {
 				for (const pk of primaryKey) {
 					updateEntry(pk, colName, newValue);
-					triggerUpdate(pk,newValue, hasBatches, colName, triggers, rowData);
+					// triggerUpdate(pk,newValue, hasBatches, colName, triggers, rowData);
 				}
 			} else {
 				updateEntry(primaryKey, colName, newValue);
-				triggerUpdate(primaryKey,newValue, hasBatches, colName, triggers, rowData);
+				// triggerUpdate(primaryKey,newValue, hasBatches, colName, triggers, rowData);
 			}
 		}
 	}, [temporaryState, hasBatches, selectMode, convertable, convertedData]);

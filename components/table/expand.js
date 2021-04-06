@@ -8,9 +8,11 @@ import {
 import { useToolkit } from "../../lib/custom-hooks";
 import Cell from "./cell";
 import CustomerDeals from "./customerdeals";
+import DynamicCell from "./dynamiccell";
 import EditableCell from "./editablecell";
 import ExpandBlock from "./expandblock";
 import Risk4SalesCell from "./risk4salescell";
+
 
 
 
@@ -43,20 +45,7 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 						{mergedFrom.map((row, idx) =>
 							<div className="tr gridded-row" key={row[dataTable_pk]}>
 								{keysForMergedRows.map((key, i) => {
-									if (key === "risk4sales") {
-										return (
-											<Risk4SalesCell
-												cellData={rowData === false ? false : row[key]}
-												rowData={row}
-												active={active}
-												colName={key}
-												key={key}
-												theme={theme}
-												primaryKey={rowData && row[dataTable_pk]}
-												updateEntry={updateEntry}
-											/>
-										);
-									}
+
 									const updateable = meta[key].updateable;
 									const allowInputFrom = meta[key].allowinputfrom || allOptionsWithData.allowinputfrom.default;
 									const [elemOpLevel, elemSaLevel] = allowInputFrom.split(", ").map(el => parseInt(el[2]));
@@ -65,68 +54,66 @@ const Expand = ({groupedAdditionalColKeys, rowData, meta, user, active, mergedFr
 												(elemOpLevel && (operationsInputRights >= elemOpLevel))
 												|| (elemSaLevel && (salesInputRights >= elemSaLevel))
 											);
-									if (isEditable) {
-										return (
-											<EditableCell
-												cellData={rowData === false ? false : row[key]}
-												rowData={row}
-												triggers={meta[key].triggers}
-												inRangeOf={meta[key].inrangeof}
-												noExpand
-												colName={key}
-												updateable={meta[key].updateable}
-												dropdownUpdateOptions={meta[key].dropdownupdateoptions}
-												valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
-												merge={meta[key].merge}
-												key={key}
-												theme={theme}
-												isRound={meta[key].specialnumberformat === "money-round" ? 0 : 2}
-												inEuro={meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round"}
-												isPercentage={meta[key].specialnumberformat === "percentage"}
-												active={active}
-												primaryKey={row[dataTable_pk]}
-												convertable={meta[key].convertable}
-												conversionRate={conversionRate}
-												updateEntry={updateEntry}
-												triggerUpdate={triggerUpdate}
-												omit={
-													(rowData
+									const genericProps = {
+										cellData: rowData === false ? false : row[key],
+										colName: key,
+										valueType: meta[key].valuetype || allOptionsWithData.valuetype.default,
+										isRound: meta[key].specialnumberformat === "money-round" ? 0 : 2,
+										inRangeOf: meta[key].inrangeof,
+										inEuro: meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round",
+										isPercentage: meta[key].specialnumberformat === "percentage",
+										convertable: meta[key].convertable,
+										omit: rowData
 														&& rowData.addedProps
 														&& !rowData.addedProps.merged
-														&& meta[key].merge === "count")
-												}
-											/>
+														&& meta[key].merge === "count",
+										active,
+										rowData,
+										theme,
+										conversionRate,
+										noExpand: true,
+									};
+									const dynamicProps = {
+										triggers: meta[key].triggers,
+										cellData: rowData === false ? false : row[key],
+										colName: key,
+										active,
+										primaryKey: row && row[dataTable_pk],
+										updateEntry,
+										triggerUpdate,
+										rowData
+									};
+
+									const InputCell = (props) => (
+										<EditableCell {...genericProps} {...props}
+											updateable={meta[key].updateable}
+											dropdownUpdateOptions={meta[key].dropdownupdateoptions}
+											merge={meta[key].merge}
+											primaryKey={row && row[dataTable_pk]}
+											updateEntry={updateEntry}
+										/>
+									);
+
+									const StaticCell = (props) => (
+										<Cell {...genericProps} {...props}
+											dateErrorOn={meta[key].dateerroronweeks}
+											dateWarnOn={meta[key].datewarnonweeks}
+										/>
+									);
+
+									let ThisCell = StaticCell;
+									if (isEditable) {
+										ThisCell = InputCell;
+									}
+									if (meta[key].triggers) {
+										return (
+											<DynamicCell key={key} ChildCell={ThisCell} {...dynamicProps}/>
 										);
 									}
-									return <Cell
-										cellData={rowData === false ? false : row[key]}
-										colName={key}
-										rowData={rowData}
-										inRangeOf={meta[key].inrangeof}
-										dateErrorOn={meta[key].dateerroronweeks}
-										dateWarnOn={meta[key].datewarnonweeks}
-										noExpand
-										compare={rowData[key]}
-										theme={theme}
-										convertable={meta[key].convertable}
-										conversionRate={conversionRate}
-										valueType={meta[key].valuetype || allOptionsWithData.valuetype.default}
-										key={key}
-										isRound={meta[key].specialnumberformat === "money-round" ? 0 : 2}
-										inEuro={meta[key].specialnumberformat === "money" || meta[key].specialnumberformat === "money-round"}
-										isPercentage={meta[key].specialnumberformat === "percentage"}
-										active={active}
-										count={meta[key].merge === "count" && idx+1}
-										omit={
-											(rowData
-												&& rowData.addedProps
-												&& !rowData.addedProps.merged
-												&& meta[key].merge === "count")
-										}
-									/>;
-								}
-
-								)}
+									return (
+										<ThisCell key={key}	/>
+									);
+								})}
 							</div>
 						)}
 					</div>

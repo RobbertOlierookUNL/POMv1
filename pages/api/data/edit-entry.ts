@@ -29,7 +29,11 @@ const handler: NextApiHandler = async (req, res) => {
 
     return res.json(results)
   } catch (e) {
-    res.status(500).json({ message: e.message })
+    res.status(500).json({ message: `
+    UPDATE ${dataTable}
+    SET ${col} = ?${usr ? ", usr = ?" : ""}${now ? ", timestamp_last_change = ?" : ""}
+    WHERE tkey = ?
+    `, })
   }
 }
 
