@@ -66,7 +66,6 @@ const filter = (data, [filter, level, reference], values, meta, mode) => {
 		} else {
 			let valueGettingFilterOn = entry[reference];
 			const arrayMode = Array.isArray(valueGettingFilterOn);
-
 			switch (filter) {
 			case "searchField":
 				for (const value of values) {

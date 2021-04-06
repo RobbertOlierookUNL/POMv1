@@ -169,7 +169,7 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 					onBlur={save}
 					onChange={localSave}
 					onKeyDown={(e) => {e.code === "Enter" && save(e);}}
-					value={Math.round(convert(qty, true) + Number.EPSILON)}
+					value={conversionMode === "CE" ? Math.round(convert(qty, true) + Number.EPSILON) : convert(qty, true)}
 					InputProps={{
 						startAdornment: <InputAdornment position="start">{conversionMode}</InputAdornment>,
 					}}
