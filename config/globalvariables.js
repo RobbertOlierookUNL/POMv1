@@ -145,6 +145,45 @@ export const ZAN = [
 	},
 ];
 
+export const salesExport = [
+	{
+		label: "Beschrijving",
+		col: "maktx",
+	},
+	{
+		label: "MRDR",
+		col: "mrdr_id",
+	},
+	{
+		label: "EAN (CE)",
+		col: "cu_ean",
+	},
+	{
+		label: "EAN (HE)",
+		col: "cs_ean",
+	},
+	{
+		label: "THT",
+		col: "bbd",
+		date: true,
+	},
+	{
+		label: "INTERNAL: SCC",
+		col: "costprice",
+		divide: "cu_cs",
+		round: 2,
+	},
+	{
+		label: "CE per HE",
+		col: "cu_cs",
+	},
+	{
+		label: "Totaal CE",
+		col: "total_left",
+		multiply: "cu_cs",
+	},
+];
+
 //Hard coded columns:
 //category
 //mprc

@@ -66,11 +66,23 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta, conversionMode, setC
 
 	const zanExport = async () => {
 		const XLSX = await import("xlsx");
-		const {batchLevel: zan} = getLevels(meta, keys, selectMode, checked, data, sortedRowKeys, true);
+		const {batchLevel: zan} = getLevels(meta, keys, selectMode, checked, data, sortedRowKeys, "ZAN");
 
 		const z = XLSX.utils.json_to_sheet(zan, {cellDates: true, dateNF: "D-MMM-YY"});
 
 		const wb = { Sheets: { "ZAN": z}, SheetNames: ["ZAN"] };
+		const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array", cellDates:true });
+		const blob = new Blob([excelBuffer], {type: fileType});
+		FileSaver.saveAs(blob, fileName + fileExtension);
+	};
+
+	const salesExport = async () => {
+		const XLSX = await import("xlsx");
+		const {batchLevel: sales} = getLevels(meta, keys, selectMode, checked, data, sortedRowKeys, "Sales");
+
+		const z = XLSX.utils.json_to_sheet(sales, {cellDates: true, dateNF: "D-MMM-YY"});
+
+		const wb = { Sheets: { "Sales Export": z}, SheetNames: ["Sales Export"] };
 		const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array", cellDates:true });
 		const blob = new Blob([excelBuffer], {type: fileType});
 		FileSaver.saveAs(blob, fileName + fileExtension);
@@ -106,6 +118,7 @@ const Toolbar = ({options, data, keys, sortedRowKeys, meta, conversionMode, setC
 					{/* <CSVLink data={data} headers={headers}> */}
 					<ToolbarIcon type={"export"} iconClick={exportToCSV} button={selectMode ? "Selectie" : "Scherm"}/>
 					<ToolbarIcon type={"export"} iconClick={zanExport} button="ZAN"/>
+					<ToolbarIcon type={"export"} iconClick={salesExport} button="Sales Offer"/>
 					<ToolbarIcon type={downloadAll ? "spinner" : "export"} iconClick={exportAll} button="Database"/>
 					{downloadAll && <Downloader terminate={() => setDownloadAll(false)} download={exportAllToCSV}/>}
 
