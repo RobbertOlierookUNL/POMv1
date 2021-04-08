@@ -2,7 +2,14 @@
 
 import moment from "moment-timezone";
 
-import { ZAN, cePerHe, dataTable_pk } from "../../../config/globalvariables";
+import {
+	ZAN,
+	cePerHe,
+	dataTable_pk,
+	salesExport
+} from "../../../config/globalvariables";
+
+
 
 
 
@@ -80,9 +87,33 @@ const zanGetter = () => entry => {
 	return formattedEntry;
 };
 
+const saleGetter = () => entry => {
+	const formattedEntry = {};
 
-export const getLevels =  (meta, keys, selectMode, checked, data, sortedRowKeys, zanMode = false, conversionMode) => {
-	const getRightCells = zanMode ? zanGetter() : cellGetter(meta, keys, conversionMode);
+	for (const sEntry of salesExport) {
+		const {label, col, divide, multiply, round, date} = sEntry;
+		let value = entry[col];
+		if (date) {
+			value = moment(value).toDate();
+		}
+		if (divide) {
+			value = value / entry[divide];
+		}
+		if (multiply) {
+			value = value * entry[multiply];
+		}
+		if (round) {
+			const factor = Math.pow(10, round);
+			value = Math.round((value + Number.EPSILON) * factor) / factor;
+		}
+		formattedEntry[label] = value;
+	}
+	return formattedEntry;
+};
+
+
+export const getLevels =  (meta, keys, selectMode, checked, data, sortedRowKeys, mode = false, conversionMode) => {
+	const getRightCells = mode === "ZAN" ? zanGetter() : mode === "Sales" ? saleGetter() : cellGetter(meta, keys, conversionMode);
 	const batchLevel = [];
 	let topLevel;
 
