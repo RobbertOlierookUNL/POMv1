@@ -54,14 +54,14 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 		}
 	}, [status, qty, totalReserved]);
 
-	const getParams = e => {
+	const getParams = (e, definiteMode) => {
 		const {name, value} = e.target;
 		// console.log({name, value, conversionMode});
 		let val = value;
 		if (conversionMode === "CE") {
 			switch (name) {
 			case "qty":
-				val = convert(val, false);
+				val = definiteMode ? Math.ceil(convert(val, false)) : convert(val, false);
 				break;
 			case "deal":
 				val = convert(val, true);
@@ -84,7 +84,7 @@ const DealRow = ({theme, conversionMode, conversionRate, number, pk, user, total
 
 
 	const save = async e => {
-		const {col, val} = getParams(e);
+		const {col, val} = getParams(e, true);
 		try {
 			const res = await fetch("/api/data/edit-entry", {
 				method: "PATCH",
