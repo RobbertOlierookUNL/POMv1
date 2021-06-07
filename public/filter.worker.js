@@ -1,4 +1,5 @@
 const cePerHe = "cu_cs";
+const dataTable_pk = "tkey";
 
 
 const filter = (data, [filter, level, reference], values, meta, mode) => {
@@ -58,7 +59,7 @@ const filter = (data, [filter, level, reference], values, meta, mode) => {
 				default:
 					pushEntry = true;
 				}
-				if (pushEntry) {
+				if (pushEntry && !filteredData.some(e => e[dataTable_pk] === entry[dataTable_pk])) {
 					filteredData.push(entry);
 					break;
 				}
