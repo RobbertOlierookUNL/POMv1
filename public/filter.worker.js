@@ -59,7 +59,7 @@ const filter = (data, [filter, level, reference], values, meta, mode) => {
 				default:
 					pushEntry = true;
 				}
-				if (pushEntry && !filteredData.some(e => e[dataTable_pk] === entry[dataTable_pk])) {
+				if (pushEntry) {
 					filteredData.push(entry);
 					break;
 				}
@@ -170,6 +170,13 @@ onmessage = function(e) {
   	for (var filterKey in mergedFilters) {
   		iteratingData = filter(iteratingData, filterKey.split(",,>"), mergedFilters[filterKey], meta, conversionMode);
   	}
-  	postMessage({res: iteratingData});
+		const seen = new Set();
+		const filteredOutput = iteratingData.filter(el => {
+			const uniqueId = Array.isArray(el[dataTable_pk]) ? el[dataTable_pk].join() : el[dataTable_pk];
+			const duplicate = seen.has(uniqueId);
+			seen.add(uniqueId);
+			return !duplicate;
+		});
+  	postMessage({res: filteredOutput});
 	}
 };
